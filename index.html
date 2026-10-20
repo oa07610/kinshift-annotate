@@ -3,20 +3,22 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>KINSHIFT annotation</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Noto+Nastaliq+Urdu:wght@400;600&family=Noto+Naskh+Arabic:wght@400;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css">
+<title>KINSHIFT · Annotation</title>
+<link rel="stylesheet" href="style.css?v=0.2.6">
 </head>
 <body>
 <header class="top">
-  <a href="#/home" class="brand">KINSHIFT <span>annotation</span></a>
-  <div id="who"></div>
+  <a href="#/home" class="brand"><span class="dot"></span>KINSHIFT <small>· Annotation</small></a>
+  <div class="user-area">
+    <a href="guidelines.html" target="_blank" rel="noopener" class="btn ghost">Guidelines</a>
+    <span id="who"></span>
+  </div>
 </header>
-<div id="banner" hidden></div>
+<div id="banner" class="hidden"></div>
+<div id="focusbar" class="focusbar hidden"></div>
 <main id="app"><p class="muted">Loading…</p></main>
-<div id="palette" hidden></div>
-<script src="app.js"></script>
+<div id="palette" class="hidden"></div>
+<div id="toast" class="hidden"></div>
+<script src="app.js?v=0.2.6"></script>
 </body>
 </html>

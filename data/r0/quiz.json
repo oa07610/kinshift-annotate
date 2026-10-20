@@ -34,8 +34,8 @@
  {
   "q": "Your language uses one word for both father's sister and mother's sister. What do you do?",
   "options": [
-   "Write the word in the first row, and pick \"same word as\" that row in the second",
-   "Leave the second row empty"
+   "Give the word for the first aunt, then choose \"Same word as another relative\" for the second",
+   "Skip the second aunt"
   ],
   "answer": 0
  }

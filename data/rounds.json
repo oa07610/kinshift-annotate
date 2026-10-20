@@ -6,8 +6,8 @@
    "annotator",
    "adjudicator"
   ],
-  "open": true,
-  "about": "Consent, a short background form, the guidelines and a 5-question check."
+  "batch": false,
+  "about": "Consent, a few questions about you, and a 5-question check. About 20 minutes."
  },
  {
   "id": "r1",
@@ -15,8 +15,8 @@
   "who": [
    "annotator"
   ],
-  "open": true,
-  "about": "Give the words your language uses for 150 relatives."
+  "batch": false,
+  "about": "Give your language's words for 150 relatives. About 3 hours, in as many sittings as you like."
  },
  {
   "id": "r1b",
@@ -24,52 +24,17 @@
   "who": [
    "adjudicator"
   ],
-  "open": false,
-  "about": "Choose the right word where the two annotators differ."
+  "batch": true,
+  "about": "Where the two annotators gave different words, choose the right one."
  },
  {
   "id": "r2",
-  "title": "Question wording",
+  "title": "Review questions",
   "who": [
-   "annotator"
-  ],
-  "open": false,
-  "about": "Correct or approve question templates and name lists."
- },
- {
-  "id": "r3",
-  "title": "Pilot item check",
-  "who": [
-   "annotator"
-  ],
-  "open": false,
-  "about": "Check every pilot question: natural, correct, one answer."
- },
- {
-  "id": "r4",
-  "title": "Full-set check",
-  "who": [
-   "annotator"
-  ],
-  "open": false,
-  "about": "Check a sample of the final questions."
- },
- {
-  "id": "r5",
-  "title": "Answer questions",
-  "who": [
+   "annotator",
    "adjudicator"
   ],
-  "open": false,
-  "about": "Answer questions yourself, without seeing the answers."
- },
- {
-  "id": "r6",
-  "title": "Check model answers",
-  "who": [
-   "annotator"
-  ],
-  "open": false,
-  "about": "Mark model answers correct, wrong or invalid."
+  "batch": true,
+  "about": "Check that sample questions read naturally and have the right answer."
  }
 ]
