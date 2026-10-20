@@ -2,7 +2,7 @@
 // KINSHIFT annotator dashboard. Static page; everything stays in this browser
 // until the annotator exports a file and sends it to the team.
 
-const APP_VERSION = "0.5.0";
+const APP_VERSION = "0.5.1";
 const SCHEMA = "kinshift-annotation/1";
 const D = {};            // loaded data files
 const BATCH = {};        // decrypted batches per round, or null when not ready
@@ -193,11 +193,13 @@ function renderLogin() {
     e.preventDefault();
     if (!name.value.trim()) return;
     btn.disabled = true; btn.textContent = "Signing in…"; msg.textContent = "";
+    const slow = setTimeout(() => { if (btn.disabled) msg.textContent = "Still connecting to the server, a moment more…"; msg.className = "muted"; }, 2500);
     try {
-      const { account } = await api("login", { name: name.value });
-      S = account; writeKey("kinshift:session", S);
+      const reply = await api("login", { name: name.value });
+      S = reply.account; writeKey("kinshift:session", S);
+      if (reply.batches) for (const [r, items] of Object.entries(reply.batches)) rememberBatch(r, items || null);
       try {   // bring back work saved on the server (new device or cleared browser)
-        const { payload } = await api("latest", { handle: S.handle });
+        const payload = "payload" in reply ? reply.payload : (await api("latest", { handle: S.handle })).payload;
         if (payload) {
           const n = mergeIn(payload);
           writeKey(`kinshift:${S.handle}:lastSubmit`, new Date().toISOString());   // what came from the server is already saved there
@@ -207,7 +209,8 @@ function renderLogin() {
       go("#/home");
     } catch (err) {
       msg.textContent = /not found/.test(err.message) ? "We could not find that name. Type it exactly as the team sent it to you." : err.message;
-    } finally { btn.disabled = false; btn.textContent = "Sign in"; }
+    } finally { clearTimeout(slow); msg.className = msg.textContent.startsWith("Still") ? "muted" : "bad";
+                if (msg.textContent.startsWith("Still")) msg.textContent = ""; btn.disabled = false; btn.textContent = "Sign in"; }
   }
   setMain(h("div", { class: "login" },
     h("div", { class: "card" }, h("h2", {}, "Sign in"),
@@ -221,11 +224,30 @@ function renderLogin() {
 
 // ---------- home ----------
 function r0Done() { const r = loadRound("r0"); return !!(r.consent && r.background && r.quiz && r.quiz.passed); }
+// Review batches change rarely: show the last known copy at once, refresh in the background.
+function rememberBatch(round, items) { BATCH[round] = items; writeKey(`kinshift:${S.handle}:batch:${round}`, items); }
+function knownBatch(round) { return round in BATCH ? BATCH[round] : readKey(`kinshift:${S.handle}:batch:${round}`, undefined); }
 async function loadBatch(round) {
   if (round in BATCH) return BATCH[round];
-  try { BATCH[round] = (await api("batch", { handle: S.handle, round })).items || null; }
-  catch { return null; }   // offline: try again next time
+  try { rememberBatch(round, (await api("batch", { handle: S.handle, round })).items || null); }
+  catch { return knownBatch(round) ?? null; }   // offline: use what we had
   return BATCH[round];
+}
+let refreshing = false;
+function refreshBatches(rounds) {
+  if (refreshing) return;
+  refreshing = true;
+  Promise.all(rounds.map(r => api("batch", { handle: S.handle, round: r }).then(j => [r, j.items || null]).catch(() => null)))
+    .then(res => {
+      let changed = false;
+      for (const x of res.filter(Boolean)) {
+        const before = knownBatch(x[0]);
+        if (before === undefined || JSON.stringify(before) !== JSON.stringify(x[1])) changed = true;
+        rememberBatch(x[0], x[1]);
+      }
+      refreshing = false;
+      if (changed && (location.hash || "#/home").startsWith("#/home")) renderHome();
+    });
 }
 function progressOf(round, items, isDone) {
   const rows = loadRound(round).rows;
@@ -242,8 +264,9 @@ async function renderHome() {
       const n = progressOf("r1", D.relations, r1Done); done = n === D.relations.length;
       right = h("span", { class: "tag " + (done ? "good" : "") }, `${n} / ${D.relations.length}`); href = "#/r1";
     } else {
-      const items = await loadBatch(r.id);
-      if (!items) { locked = true; right = h("span", { class: "tag" }, "not ready yet"); }
+      const items = knownBatch(r.id);
+      if (items === undefined) { locked = true; right = h("span", { class: "tag" }, "checking…"); }
+      else if (!items) { locked = true; right = h("span", { class: "tag" }, "not ready yet"); }
       else { const n = progressOf(r.id, items, BATCH_DONE[r.id]); done = n === items.length;
              right = h("span", { class: "tag " + (done ? "good" : "") }, `${n} / ${items.length}`); href = `#/${r.id}/0`; }
     }
@@ -252,6 +275,8 @@ async function renderHome() {
   }
   const fileIn = h("input", { type: "file", accept: "application/json", class: "hidden",
                               onchange: e => e.target.files[0] && importFile(e.target.files[0]) });
+  const batchRounds = mine.filter(r => r.batch).map(r => r.id).filter(id => !(id in BATCH));
+  if (batchRounds.length && r0Done()) refreshBatches(batchRounds);
   setMain(h("h1", {}, `Welcome, ${S.name}`),
     h("p", { class: "lead" }, `${lang().name} · ${S.role === "adjudicator" ? "reviewer" : "annotator"}. Work through the rounds in order; your answers save automatically.`),
     h("div", { class: "card" }, h("h2", {}, "Your rounds"), rowsEl),
@@ -506,7 +531,7 @@ const BATCH_DONE = {
 };
 async function renderBatchRound(round, i) {
   if (!r0Done()) return go("#/r0");
-  const items = await loadBatch(round);
+  const items = knownBatch(round) || await loadBatch(round);
   if (!items || !items.length) { toast("This round is not ready yet."); return go("#/home"); }
   i = Math.min(Math.max(i, 0), items.length - 1);
   const it = items[i], data = loadRound(round), title = D.rounds.find(r => r.id === round).title;
@@ -639,7 +664,12 @@ async function renderAdmin(tab) {
   const body = h("div", {}, h("p", { class: "muted" }, "Loading…"));
   setMain(h("h1", {}, "Team admin"), h("p", { class: "lead" }, "Accounts, progress and agreement for every language."), tabs, body);
   try {
-    const [{ accounts }, { latest }] = await Promise.all([adminCall("accounts"), adminCall("all_latest")]);
+    let accounts, latest;
+    try { ({ accounts, latest } = await adminCall("overview")); }
+    catch (err) {   // older backend without "overview"
+      if (!/unknown action/.test(err.message)) throw err;
+      [{ accounts }, { latest }] = await Promise.all([adminCall("accounts"), adminCall("all_latest")]);
+    }
     const parts = tab === "progress" ? adminProgress(accounts, latest) : tab === "agreement" ? adminAgreement(accounts, latest) : adminAccounts(accounts, latest);
     body.replaceChildren(...parts.filter(Boolean));
   } catch (err) {
