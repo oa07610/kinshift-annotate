@@ -1,0 +1,42 @@
+[
+ {
+  "q": "\"father's elder brother\" is older than whom?",
+  "options": [
+   "Your father",
+   "You"
+  ],
+  "answer": 0
+ },
+ {
+  "q": "\"elder sister\" is older than whom?",
+  "options": [
+   "Your parents",
+   "You"
+  ],
+  "answer": 1
+ },
+ {
+  "q": "\"mother's sister's husband\": is he related to your mother by blood?",
+  "options": [
+   "Yes",
+   "No, he is married into the family"
+  ],
+  "answer": 1
+ },
+ {
+  "q": "Which word goes in the \"talking about\" box?",
+  "options": [
+   "The word you use when telling someone else about this relative",
+   "The word you say to this relative's face"
+  ],
+  "answer": 0
+ },
+ {
+  "q": "Your language uses one word for both father's sister and mother's sister. What do you do?",
+  "options": [
+   "Write the word in the first row, and pick \"same word as\" that row in the second",
+   "Leave the second row empty"
+  ],
+  "answer": 0
+ }
+]

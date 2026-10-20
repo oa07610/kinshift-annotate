@@ -1,0 +1,3198 @@
+[
+ {
+  "id": "F",
+  "tier": "core",
+  "group": "parents",
+  "path_en": "father",
+  "ego_sex": "m/f",
+  "referent_sex": "m",
+  "steps": [
+   {
+    "rel": "F",
+    "age": null
+   }
+  ]
+ },
+ {
+  "id": "M",
+  "tier": "core",
+  "group": "parents",
+  "path_en": "mother",
+  "ego_sex": "m/f",
+  "referent_sex": "f",
+  "steps": [
+   {
+    "rel": "M",
+    "age": null
+   }
+  ]
+ },
+ {
+  "id": "FF",
+  "tier": "core",
+  "group": "grandparents",
+  "path_en": "father's father",
+  "ego_sex": "m/f",
+  "referent_sex": "m",
+  "steps": [
+   {
+    "rel": "F",
+    "age": null
+   },
+   {
+    "rel": "F",
+    "age": null
+   }
+  ]
+ },
+ {
+  "id": "FM",
+  "tier": "core",
+  "group": "grandparents",
+  "path_en": "father's mother",
+  "ego_sex": "m/f",
+  "referent_sex": "f",
+  "steps": [
+   {
+    "rel": "F",
+    "age": null
+   },
+   {
+    "rel": "M",
+    "age": null
+   }
+  ]
+ },
+ {
+  "id": "MF",
+  "tier": "core",
+  "group": "grandparents",
+  "path_en": "mother's father",
+  "ego_sex": "m/f",
+  "referent_sex": "m",
+  "steps": [
+   {
+    "rel": "M",
+    "age": null
+   },
+   {
+    "rel": "F",
+    "age": null
+   }
+  ]
+ },
+ {
+  "id": "MM",
+  "tier": "core",
+  "group": "grandparents",
+  "path_en": "mother's mother",
+  "ego_sex": "m/f",
+  "referent_sex": "f",
+  "steps": [
+   {
+    "rel": "M",
+    "age": null
+   },
+   {
+    "rel": "M",
+    "age": null
+   }
+  ]
+ },
+ {
+  "id": "FeB",
+  "tier": "core",
+  "group": "parents' siblings",
+  "path_en": "father's elder brother",
+  "ego_sex": "m/f",
+  "referent_sex": "m",
+  "steps": [
+   {
+    "rel": "F",
+    "age": null
+   },
+   {
+    "rel": "B",
+    "age": "e"
+   }
+  ]
+ },
+ {
+  "id": "FyB",
+  "tier": "core",
+  "group": "parents' siblings",
+  "path_en": "father's younger brother",
+  "ego_sex": "m/f",
+  "referent_sex": "m",
+  "steps": [
+   {
+    "rel": "F",
+    "age": null
+   },
+   {
+    "rel": "B",
+    "age": "y"
+   }
+  ]
+ },
+ {
+  "id": "FeZ",
+  "tier": "core",
+  "group": "parents' siblings",
+  "path_en": "father's elder sister",
+  "ego_sex": "m/f",
+  "referent_sex": "f",
+  "steps": [
+   {
+    "rel": "F",
+    "age": null
+   },
+   {
+    "rel": "Z",
+    "age": "e"
+   }
+  ]
+ },
+ {
+  "id": "FyZ",
+  "tier": "core",
+  "group": "parents' siblings",
+  "path_en": "father's younger sister",
+  "ego_sex": "m/f",
+  "referent_sex": "f",
+  "steps": [
+   {
+    "rel": "F",
+    "age": null
+   },
+   {
+    "rel": "Z",
+    "age": "y"
+   }
+  ]
+ },
+ {
+  "id": "MeB",
+  "tier": "core",
+  "group": "parents' siblings",
+  "path_en": "mother's elder brother",
+  "ego_sex": "m/f",
+  "referent_sex": "m",
+  "steps": [
+   {
+    "rel": "M",
+    "age": null
+   },
+   {
+    "rel": "B",
+    "age": "e"
+   }
+  ]
+ },
+ {
+  "id": "MyB",
+  "tier": "core",
+  "group": "parents' siblings",
+  "path_en": "mother's younger brother",
+  "ego_sex": "m/f",
+  "referent_sex": "m",
+  "steps": [
+   {
+    "rel": "M",
+    "age": null
+   },
+   {
+    "rel": "B",
+    "age": "y"
+   }
+  ]
+ },
+ {
+  "id": "MeZ",
+  "tier": "core",
+  "group": "parents' siblings",
+  "path_en": "mother's elder sister",
+  "ego_sex": "m/f",
+  "referent_sex": "f",
+  "steps": [
+   {
+    "rel": "M",
+    "age": null
+   },
+   {
+    "rel": "Z",
+    "age": "e"
+   }
+  ]
+ },
+ {
+  "id": "MyZ",
+  "tier": "core",
+  "group": "parents' siblings",
+  "path_en": "mother's younger sister",
+  "ego_sex": "m/f",
+  "referent_sex": "f",
+  "steps": [
+   {
+    "rel": "M",
+    "age": null
+   },
+   {
+    "rel": "Z",
+    "age": "y"
+   }
+  ]
+ },
+ {
+  "id": "FeBW",
+  "tier": "core",
+  "group": "parents' siblings' spouses",
+  "path_en": "father's elder brother's wife",
+  "ego_sex": "m/f",
+  "referent_sex": "f",
+  "steps": [
+   {
+    "rel": "F",
+    "age": null
+   },
+   {
+    "rel": "B",
+    "age": "e"
+   },
+   {
+    "rel": "W",
+    "age": null
+   }
+  ]
+ },
+ {
+  "id": "FyBW",
+  "tier": "core",
+  "group": "parents' siblings' spouses",
+  "path_en": "father's younger brother's wife",
+  "ego_sex": "m/f",
+  "referent_sex": "f",
+  "steps": [
+   {
+    "rel": "F",
+    "age": null
+   },
+   {
+    "rel": "B",
+    "age": "y"
+   },
+   {
+    "rel": "W",
+    "age": null
+   }
+  ]
+ },
+ {
+  "id": "FeZH",
+  "tier": "core",
+  "group": "parents' siblings' spouses",
+  "path_en": "father's elder sister's husband",
+  "ego_sex": "m/f",
+  "referent_sex": "m",
+  "steps": [
+   {
+    "rel": "F",
+    "age": null
+   },
+   {
+    "rel": "Z",
+    "age": "e"
+   },
+   {
+    "rel": "H",
+    "age": null
+   }
+  ]
+ },
+ {
+  "id": "FyZH",
+  "tier": "core",
+  "group": "parents' siblings' spouses",
+  "path_en": "father's younger sister's husband",
+  "ego_sex": "m/f",
+  "referent_sex": "m",
+  "steps": [
+   {
+    "rel": "F",
+    "age": null
+   },
+   {
+    "rel": "Z",
+    "age": "y"
+   },
+   {
+    "rel": "H",
+    "age": null
+   }
+  ]
+ },
+ {
+  "id": "MeBW",
+  "tier": "core",
+  "group": "parents' siblings' spouses",
+  "path_en": "mother's elder brother's wife",
+  "ego_sex": "m/f",
+  "referent_sex": "f",
+  "steps": [
+   {
+    "rel": "M",
+    "age": null
+   },
+   {
+    "rel": "B",
+    "age": "e"
+   },
+   {
+    "rel": "W",
+    "age": null
+   }
+  ]
+ },
+ {
+  "id": "MyBW",
+  "tier": "core",
+  "group": "parents' siblings' spouses",
+  "path_en": "mother's younger brother's wife",
+  "ego_sex": "m/f",
+  "referent_sex": "f",
+  "steps": [
+   {
+    "rel": "M",
+    "age": null
+   },
+   {
+    "rel": "B",
+    "age": "y"
+   },
+   {
+    "rel": "W",
+    "age": null
+   }
+  ]
+ },
+ {
+  "id": "MeZH",
+  "tier": "core",
+  "group": "parents' siblings' spouses",
+  "path_en": "mother's elder sister's husband",
+  "ego_sex": "m/f",
+  "referent_sex": "m",
+  "steps": [
+   {
+    "rel": "M",
+    "age": null
+   },
+   {
+    "rel": "Z",
+    "age": "e"
+   },
+   {
+    "rel": "H",
+    "age": null
+   }
+  ]
+ },
+ {
+  "id": "MyZH",
+  "tier": "core",
+  "group": "parents' siblings' spouses",
+  "path_en": "mother's younger sister's husband",
+  "ego_sex": "m/f",
+  "referent_sex": "m",
+  "steps": [
+   {
+    "rel": "M",
+    "age": null
+   },
+   {
+    "rel": "Z",
+    "age": "y"
+   },
+   {
+    "rel": "H",
+    "age": null
+   }
+  ]
+ },
+ {
+  "id": "eB",
+  "tier": "core",
+  "group": "siblings",
+  "path_en": "elder brother",
+  "ego_sex": "m/f",
+  "referent_sex": "m",
+  "steps": [
+   {
+    "rel": "B",
+    "age": "e"
+   }
+  ]
+ },
+ {
+  "id": "yB",
+  "tier": "core",
+  "group": "siblings",
+  "path_en": "younger brother",
+  "ego_sex": "m/f",
+  "referent_sex": "m",
+  "steps": [
+   {
+    "rel": "B",
+    "age": "y"
+   }
+  ]
+ },
+ {
+  "id": "eZ",
+  "tier": "core",
+  "group": "siblings",
+  "path_en": "elder sister",
+  "ego_sex": "m/f",
+  "referent_sex": "f",
+  "steps": [
+   {
+    "rel": "Z",
+    "age": "e"
+   }
+  ]
+ },
+ {
+  "id": "yZ",
+  "tier": "core",
+  "group": "siblings",
+  "path_en": "younger sister",
+  "ego_sex": "m/f",
+  "referent_sex": "f",
+  "steps": [
+   {
+    "rel": "Z",
+    "age": "y"
+   }
+  ]
+ },
+ {
+  "id": "eBW",
+  "tier": "core",
+  "group": "siblings' spouses",
+  "path_en": "elder brother's wife",
+  "ego_sex": "m/f",
+  "referent_sex": "f",
+  "steps": [
+   {
+    "rel": "B",
+    "age": "e"
+   },
+   {
+    "rel": "W",
+    "age": null
+   }
+  ]
+ },
+ {
+  "id": "yBW",
+  "tier": "core",
+  "group": "siblings' spouses",
+  "path_en": "younger brother's wife",
+  "ego_sex": "m/f",
+  "referent_sex": "f",
+  "steps": [
+   {
+    "rel": "B",
+    "age": "y"
+   },
+   {
+    "rel": "W",
+    "age": null
+   }
+  ]
+ },
+ {
+  "id": "eZH",
+  "tier": "core",
+  "group": "siblings' spouses",
+  "path_en": "elder sister's husband",
+  "ego_sex": "m/f",
+  "referent_sex": "m",
+  "steps": [
+   {
+    "rel": "Z",
+    "age": "e"
+   },
+   {
+    "rel": "H",
+    "age": null
+   }
+  ]
+ },
+ {
+  "id": "yZH",
+  "tier": "core",
+  "group": "siblings' spouses",
+  "path_en": "younger sister's husband",
+  "ego_sex": "m/f",
+  "referent_sex": "m",
+  "steps": [
+   {
+    "rel": "Z",
+    "age": "y"
+   },
+   {
+    "rel": "H",
+    "age": null
+   }
+  ]
+ },
+ {
+  "id": "FBS",
+  "tier": "core",
+  "group": "cousins",
+  "path_en": "father's brother's son",
+  "ego_sex": "m/f",
+  "referent_sex": "m",
+  "steps": [
+   {
+    "rel": "F",
+    "age": null
+   },
+   {
+    "rel": "B",
+    "age": null
+   },
+   {
+    "rel": "S",
+    "age": null
+   }
+  ]
+ },
+ {
+  "id": "FBD",
+  "tier": "core",
+  "group": "cousins",
+  "path_en": "father's brother's daughter",
+  "ego_sex": "m/f",
+  "referent_sex": "f",
+  "steps": [
+   {
+    "rel": "F",
+    "age": null
+   },
+   {
+    "rel": "B",
+    "age": null
+   },
+   {
+    "rel": "D",
+    "age": null
+   }
+  ]
+ },
+ {
+  "id": "FZS",
+  "tier": "core",
+  "group": "cousins",
+  "path_en": "father's sister's son",
+  "ego_sex": "m/f",
+  "referent_sex": "m",
+  "steps": [
+   {
+    "rel": "F",
+    "age": null
+   },
+   {
+    "rel": "Z",
+    "age": null
+   },
+   {
+    "rel": "S",
+    "age": null
+   }
+  ]
+ },
+ {
+  "id": "FZD",
+  "tier": "core",
+  "group": "cousins",
+  "path_en": "father's sister's daughter",
+  "ego_sex": "m/f",
+  "referent_sex": "f",
+  "steps": [
+   {
+    "rel": "F",
+    "age": null
+   },
+   {
+    "rel": "Z",
+    "age": null
+   },
+   {
+    "rel": "D",
+    "age": null
+   }
+  ]
+ },
+ {
+  "id": "MBS",
+  "tier": "core",
+  "group": "cousins",
+  "path_en": "mother's brother's son",
+  "ego_sex": "m/f",
+  "referent_sex": "m",
+  "steps": [
+   {
+    "rel": "M",
+    "age": null
+   },
+   {
+    "rel": "B",
+    "age": null
+   },
+   {
+    "rel": "S",
+    "age": null
+   }
+  ]
+ },
+ {
+  "id": "MBD",
+  "tier": "core",
+  "group": "cousins",
+  "path_en": "mother's brother's daughter",
+  "ego_sex": "m/f",
+  "referent_sex": "f",
+  "steps": [
+   {
+    "rel": "M",
+    "age": null
+   },
+   {
+    "rel": "B",
+    "age": null
+   },
+   {
+    "rel": "D",
+    "age": null
+   }
+  ]
+ },
+ {
+  "id": "MZS",
+  "tier": "core",
+  "group": "cousins",
+  "path_en": "mother's sister's son",
+  "ego_sex": "m/f",
+  "referent_sex": "m",
+  "steps": [
+   {
+    "rel": "M",
+    "age": null
+   },
+   {
+    "rel": "Z",
+    "age": null
+   },
+   {
+    "rel": "S",
+    "age": null
+   }
+  ]
+ },
+ {
+  "id": "MZD",
+  "tier": "core",
+  "group": "cousins",
+  "path_en": "mother's sister's daughter",
+  "ego_sex": "m/f",
+  "referent_sex": "f",
+  "steps": [
+   {
+    "rel": "M",
+    "age": null
+   },
+   {
+    "rel": "Z",
+    "age": null
+   },
+   {
+    "rel": "D",
+    "age": null
+   }
+  ]
+ },
+ {
+  "id": "H",
+  "tier": "core",
+  "group": "spouse",
+  "path_en": "husband",
+  "ego_sex": "f",
+  "referent_sex": "m",
+  "steps": [
+   {
+    "rel": "H",
+    "age": null
+   }
+  ]
+ },
+ {
+  "id": "W",
+  "tier": "core",
+  "group": "spouse",
+  "path_en": "wife",
+  "ego_sex": "m",
+  "referent_sex": "f",
+  "steps": [
+   {
+    "rel": "W",
+    "age": null
+   }
+  ]
+ },
+ {
+  "id": "HF",
+  "tier": "core",
+  "group": "spouse's parents",
+  "path_en": "husband's father",
+  "ego_sex": "f",
+  "referent_sex": "m",
+  "steps": [
+   {
+    "rel": "H",
+    "age": null
+   },
+   {
+    "rel": "F",
+    "age": null
+   }
+  ]
+ },
+ {
+  "id": "HM",
+  "tier": "core",
+  "group": "spouse's parents",
+  "path_en": "husband's mother",
+  "ego_sex": "f",
+  "referent_sex": "f",
+  "steps": [
+   {
+    "rel": "H",
+    "age": null
+   },
+   {
+    "rel": "M",
+    "age": null
+   }
+  ]
+ },
+ {
+  "id": "WF",
+  "tier": "core",
+  "group": "spouse's parents",
+  "path_en": "wife's father",
+  "ego_sex": "m",
+  "referent_sex": "m",
+  "steps": [
+   {
+    "rel": "W",
+    "age": null
+   },
+   {
+    "rel": "F",
+    "age": null
+   }
+  ]
+ },
+ {
+  "id": "WM",
+  "tier": "core",
+  "group": "spouse's parents",
+  "path_en": "wife's mother",
+  "ego_sex": "m",
+  "referent_sex": "f",
+  "steps": [
+   {
+    "rel": "W",
+    "age": null
+   },
+   {
+    "rel": "M",
+    "age": null
+   }
+  ]
+ },
+ {
+  "id": "HeB",
+  "tier": "core",
+  "group": "spouse's siblings",
+  "path_en": "husband's elder brother",
+  "ego_sex": "f",
+  "referent_sex": "m",
+  "steps": [
+   {
+    "rel": "H",
+    "age": null
+   },
+   {
+    "rel": "B",
+    "age": "e"
+   }
+  ]
+ },
+ {
+  "id": "HyB",
+  "tier": "core",
+  "group": "spouse's siblings",
+  "path_en": "husband's younger brother",
+  "ego_sex": "f",
+  "referent_sex": "m",
+  "steps": [
+   {
+    "rel": "H",
+    "age": null
+   },
+   {
+    "rel": "B",
+    "age": "y"
+   }
+  ]
+ },
+ {
+  "id": "HeZ",
+  "tier": "core",
+  "group": "spouse's siblings",
+  "path_en": "husband's elder sister",
+  "ego_sex": "f",
+  "referent_sex": "f",
+  "steps": [
+   {
+    "rel": "H",
+    "age": null
+   },
+   {
+    "rel": "Z",
+    "age": "e"
+   }
+  ]
+ },
+ {
+  "id": "HyZ",
+  "tier": "core",
+  "group": "spouse's siblings",
+  "path_en": "husband's younger sister",
+  "ego_sex": "f",
+  "referent_sex": "f",
+  "steps": [
+   {
+    "rel": "H",
+    "age": null
+   },
+   {
+    "rel": "Z",
+    "age": "y"
+   }
+  ]
+ },
+ {
+  "id": "WeB",
+  "tier": "core",
+  "group": "spouse's siblings",
+  "path_en": "wife's elder brother",
+  "ego_sex": "m",
+  "referent_sex": "m",
+  "steps": [
+   {
+    "rel": "W",
+    "age": null
+   },
+   {
+    "rel": "B",
+    "age": "e"
+   }
+  ]
+ },
+ {
+  "id": "WyB",
+  "tier": "core",
+  "group": "spouse's siblings",
+  "path_en": "wife's younger brother",
+  "ego_sex": "m",
+  "referent_sex": "m",
+  "steps": [
+   {
+    "rel": "W",
+    "age": null
+   },
+   {
+    "rel": "B",
+    "age": "y"
+   }
+  ]
+ },
+ {
+  "id": "WeZ",
+  "tier": "core",
+  "group": "spouse's siblings",
+  "path_en": "wife's elder sister",
+  "ego_sex": "m",
+  "referent_sex": "f",
+  "steps": [
+   {
+    "rel": "W",
+    "age": null
+   },
+   {
+    "rel": "Z",
+    "age": "e"
+   }
+  ]
+ },
+ {
+  "id": "WyZ",
+  "tier": "core",
+  "group": "spouse's siblings",
+  "path_en": "wife's younger sister",
+  "ego_sex": "m",
+  "referent_sex": "f",
+  "steps": [
+   {
+    "rel": "W",
+    "age": null
+   },
+   {
+    "rel": "Z",
+    "age": "y"
+   }
+  ]
+ },
+ {
+  "id": "HeBW",
+  "tier": "core",
+  "group": "spouse's siblings' spouses",
+  "path_en": "husband's elder brother's wife",
+  "ego_sex": "f",
+  "referent_sex": "f",
+  "steps": [
+   {
+    "rel": "H",
+    "age": null
+   },
+   {
+    "rel": "B",
+    "age": "e"
+   },
+   {
+    "rel": "W",
+    "age": null
+   }
+  ]
+ },
+ {
+  "id": "HyBW",
+  "tier": "core",
+  "group": "spouse's siblings' spouses",
+  "path_en": "husband's younger brother's wife",
+  "ego_sex": "f",
+  "referent_sex": "f",
+  "steps": [
+   {
+    "rel": "H",
+    "age": null
+   },
+   {
+    "rel": "B",
+    "age": "y"
+   },
+   {
+    "rel": "W",
+    "age": null
+   }
+  ]
+ },
+ {
+  "id": "HeZH",
+  "tier": "core",
+  "group": "spouse's siblings' spouses",
+  "path_en": "husband's elder sister's husband",
+  "ego_sex": "f",
+  "referent_sex": "m",
+  "steps": [
+   {
+    "rel": "H",
+    "age": null
+   },
+   {
+    "rel": "Z",
+    "age": "e"
+   },
+   {
+    "rel": "H",
+    "age": null
+   }
+  ]
+ },
+ {
+  "id": "HyZH",
+  "tier": "core",
+  "group": "spouse's siblings' spouses",
+  "path_en": "husband's younger sister's husband",
+  "ego_sex": "f",
+  "referent_sex": "m",
+  "steps": [
+   {
+    "rel": "H",
+    "age": null
+   },
+   {
+    "rel": "Z",
+    "age": "y"
+   },
+   {
+    "rel": "H",
+    "age": null
+   }
+  ]
+ },
+ {
+  "id": "WeBW",
+  "tier": "core",
+  "group": "spouse's siblings' spouses",
+  "path_en": "wife's elder brother's wife",
+  "ego_sex": "m",
+  "referent_sex": "f",
+  "steps": [
+   {
+    "rel": "W",
+    "age": null
+   },
+   {
+    "rel": "B",
+    "age": "e"
+   },
+   {
+    "rel": "W",
+    "age": null
+   }
+  ]
+ },
+ {
+  "id": "WyBW",
+  "tier": "core",
+  "group": "spouse's siblings' spouses",
+  "path_en": "wife's younger brother's wife",
+  "ego_sex": "m",
+  "referent_sex": "f",
+  "steps": [
+   {
+    "rel": "W",
+    "age": null
+   },
+   {
+    "rel": "B",
+    "age": "y"
+   },
+   {
+    "rel": "W",
+    "age": null
+   }
+  ]
+ },
+ {
+  "id": "WeZH",
+  "tier": "core",
+  "group": "spouse's siblings' spouses",
+  "path_en": "wife's elder sister's husband",
+  "ego_sex": "m",
+  "referent_sex": "m",
+  "steps": [
+   {
+    "rel": "W",
+    "age": null
+   },
+   {
+    "rel": "Z",
+    "age": "e"
+   },
+   {
+    "rel": "H",
+    "age": null
+   }
+  ]
+ },
+ {
+  "id": "WyZH",
+  "tier": "core",
+  "group": "spouse's siblings' spouses",
+  "path_en": "wife's younger sister's husband",
+  "ego_sex": "m",
+  "referent_sex": "m",
+  "steps": [
+   {
+    "rel": "W",
+    "age": null
+   },
+   {
+    "rel": "Z",
+    "age": "y"
+   },
+   {
+    "rel": "H",
+    "age": null
+   }
+  ]
+ },
+ {
+  "id": "S",
+  "tier": "core",
+  "group": "children",
+  "path_en": "son",
+  "ego_sex": "m/f",
+  "referent_sex": "m",
+  "steps": [
+   {
+    "rel": "S",
+    "age": null
+   }
+  ]
+ },
+ {
+  "id": "D",
+  "tier": "core",
+  "group": "children",
+  "path_en": "daughter",
+  "ego_sex": "m/f",
+  "referent_sex": "f",
+  "steps": [
+   {
+    "rel": "D",
+    "age": null
+   }
+  ]
+ },
+ {
+  "id": "SW",
+  "tier": "core",
+  "group": "children's spouses",
+  "path_en": "son's wife",
+  "ego_sex": "m/f",
+  "referent_sex": "f",
+  "steps": [
+   {
+    "rel": "S",
+    "age": null
+   },
+   {
+    "rel": "W",
+    "age": null
+   }
+  ]
+ },
+ {
+  "id": "DH",
+  "tier": "core",
+  "group": "children's spouses",
+  "path_en": "daughter's husband",
+  "ego_sex": "m/f",
+  "referent_sex": "m",
+  "steps": [
+   {
+    "rel": "D",
+    "age": null
+   },
+   {
+    "rel": "H",
+    "age": null
+   }
+  ]
+ },
+ {
+  "id": "SWF",
+  "tier": "core",
+  "group": "children's spouses' parents",
+  "path_en": "son's wife's father",
+  "ego_sex": "m/f",
+  "referent_sex": "m",
+  "steps": [
+   {
+    "rel": "S",
+    "age": null
+   },
+   {
+    "rel": "W",
+    "age": null
+   },
+   {
+    "rel": "F",
+    "age": null
+   }
+  ]
+ },
+ {
+  "id": "SWM",
+  "tier": "core",
+  "group": "children's spouses' parents",
+  "path_en": "son's wife's mother",
+  "ego_sex": "m/f",
+  "referent_sex": "f",
+  "steps": [
+   {
+    "rel": "S",
+    "age": null
+   },
+   {
+    "rel": "W",
+    "age": null
+   },
+   {
+    "rel": "M",
+    "age": null
+   }
+  ]
+ },
+ {
+  "id": "DHF",
+  "tier": "core",
+  "group": "children's spouses' parents",
+  "path_en": "daughter's husband's father",
+  "ego_sex": "m/f",
+  "referent_sex": "m",
+  "steps": [
+   {
+    "rel": "D",
+    "age": null
+   },
+   {
+    "rel": "H",
+    "age": null
+   },
+   {
+    "rel": "F",
+    "age": null
+   }
+  ]
+ },
+ {
+  "id": "DHM",
+  "tier": "core",
+  "group": "children's spouses' parents",
+  "path_en": "daughter's husband's mother",
+  "ego_sex": "m/f",
+  "referent_sex": "f",
+  "steps": [
+   {
+    "rel": "D",
+    "age": null
+   },
+   {
+    "rel": "H",
+    "age": null
+   },
+   {
+    "rel": "M",
+    "age": null
+   }
+  ]
+ },
+ {
+  "id": "BS",
+  "tier": "core",
+  "group": "siblings' children",
+  "path_en": "brother's son",
+  "ego_sex": "m/f",
+  "referent_sex": "m",
+  "steps": [
+   {
+    "rel": "B",
+    "age": null
+   },
+   {
+    "rel": "S",
+    "age": null
+   }
+  ]
+ },
+ {
+  "id": "BD",
+  "tier": "core",
+  "group": "siblings' children",
+  "path_en": "brother's daughter",
+  "ego_sex": "m/f",
+  "referent_sex": "f",
+  "steps": [
+   {
+    "rel": "B",
+    "age": null
+   },
+   {
+    "rel": "D",
+    "age": null
+   }
+  ]
+ },
+ {
+  "id": "ZS",
+  "tier": "core",
+  "group": "siblings' children",
+  "path_en": "sister's son",
+  "ego_sex": "m/f",
+  "referent_sex": "m",
+  "steps": [
+   {
+    "rel": "Z",
+    "age": null
+   },
+   {
+    "rel": "S",
+    "age": null
+   }
+  ]
+ },
+ {
+  "id": "ZD",
+  "tier": "core",
+  "group": "siblings' children",
+  "path_en": "sister's daughter",
+  "ego_sex": "m/f",
+  "referent_sex": "f",
+  "steps": [
+   {
+    "rel": "Z",
+    "age": null
+   },
+   {
+    "rel": "D",
+    "age": null
+   }
+  ]
+ },
+ {
+  "id": "SS",
+  "tier": "core",
+  "group": "grandchildren",
+  "path_en": "son's son",
+  "ego_sex": "m/f",
+  "referent_sex": "m",
+  "steps": [
+   {
+    "rel": "S",
+    "age": null
+   },
+   {
+    "rel": "S",
+    "age": null
+   }
+  ]
+ },
+ {
+  "id": "SD",
+  "tier": "core",
+  "group": "grandchildren",
+  "path_en": "son's daughter",
+  "ego_sex": "m/f",
+  "referent_sex": "f",
+  "steps": [
+   {
+    "rel": "S",
+    "age": null
+   },
+   {
+    "rel": "D",
+    "age": null
+   }
+  ]
+ },
+ {
+  "id": "DS",
+  "tier": "core",
+  "group": "grandchildren",
+  "path_en": "daughter's son",
+  "ego_sex": "m/f",
+  "referent_sex": "m",
+  "steps": [
+   {
+    "rel": "D",
+    "age": null
+   },
+   {
+    "rel": "S",
+    "age": null
+   }
+  ]
+ },
+ {
+  "id": "DD",
+  "tier": "core",
+  "group": "grandchildren",
+  "path_en": "daughter's daughter",
+  "ego_sex": "m/f",
+  "referent_sex": "f",
+  "steps": [
+   {
+    "rel": "D",
+    "age": null
+   },
+   {
+    "rel": "D",
+    "age": null
+   }
+  ]
+ },
+ {
+  "id": "HBS",
+  "tier": "far",
+  "group": "spouse's siblings' children",
+  "path_en": "husband's brother's son",
+  "ego_sex": "f",
+  "referent_sex": "m",
+  "steps": [
+   {
+    "rel": "H",
+    "age": null
+   },
+   {
+    "rel": "B",
+    "age": null
+   },
+   {
+    "rel": "S",
+    "age": null
+   }
+  ]
+ },
+ {
+  "id": "HBD",
+  "tier": "far",
+  "group": "spouse's siblings' children",
+  "path_en": "husband's brother's daughter",
+  "ego_sex": "f",
+  "referent_sex": "f",
+  "steps": [
+   {
+    "rel": "H",
+    "age": null
+   },
+   {
+    "rel": "B",
+    "age": null
+   },
+   {
+    "rel": "D",
+    "age": null
+   }
+  ]
+ },
+ {
+  "id": "HZS",
+  "tier": "far",
+  "group": "spouse's siblings' children",
+  "path_en": "husband's sister's son",
+  "ego_sex": "f",
+  "referent_sex": "m",
+  "steps": [
+   {
+    "rel": "H",
+    "age": null
+   },
+   {
+    "rel": "Z",
+    "age": null
+   },
+   {
+    "rel": "S",
+    "age": null
+   }
+  ]
+ },
+ {
+  "id": "HZD",
+  "tier": "far",
+  "group": "spouse's siblings' children",
+  "path_en": "husband's sister's daughter",
+  "ego_sex": "f",
+  "referent_sex": "f",
+  "steps": [
+   {
+    "rel": "H",
+    "age": null
+   },
+   {
+    "rel": "Z",
+    "age": null
+   },
+   {
+    "rel": "D",
+    "age": null
+   }
+  ]
+ },
+ {
+  "id": "WBS",
+  "tier": "far",
+  "group": "spouse's siblings' children",
+  "path_en": "wife's brother's son",
+  "ego_sex": "m",
+  "referent_sex": "m",
+  "steps": [
+   {
+    "rel": "W",
+    "age": null
+   },
+   {
+    "rel": "B",
+    "age": null
+   },
+   {
+    "rel": "S",
+    "age": null
+   }
+  ]
+ },
+ {
+  "id": "WBD",
+  "tier": "far",
+  "group": "spouse's siblings' children",
+  "path_en": "wife's brother's daughter",
+  "ego_sex": "m",
+  "referent_sex": "f",
+  "steps": [
+   {
+    "rel": "W",
+    "age": null
+   },
+   {
+    "rel": "B",
+    "age": null
+   },
+   {
+    "rel": "D",
+    "age": null
+   }
+  ]
+ },
+ {
+  "id": "WZS",
+  "tier": "far",
+  "group": "spouse's siblings' children",
+  "path_en": "wife's sister's son",
+  "ego_sex": "m",
+  "referent_sex": "m",
+  "steps": [
+   {
+    "rel": "W",
+    "age": null
+   },
+   {
+    "rel": "Z",
+    "age": null
+   },
+   {
+    "rel": "S",
+    "age": null
+   }
+  ]
+ },
+ {
+  "id": "WZD",
+  "tier": "far",
+  "group": "spouse's siblings' children",
+  "path_en": "wife's sister's daughter",
+  "ego_sex": "m",
+  "referent_sex": "f",
+  "steps": [
+   {
+    "rel": "W",
+    "age": null
+   },
+   {
+    "rel": "Z",
+    "age": null
+   },
+   {
+    "rel": "D",
+    "age": null
+   }
+  ]
+ },
+ {
+  "id": "FFF",
+  "tier": "far",
+  "group": "great-grandparents",
+  "path_en": "father's father's father",
+  "ego_sex": "m/f",
+  "referent_sex": "m",
+  "steps": [
+   {
+    "rel": "F",
+    "age": null
+   },
+   {
+    "rel": "F",
+    "age": null
+   },
+   {
+    "rel": "F",
+    "age": null
+   }
+  ]
+ },
+ {
+  "id": "FFM",
+  "tier": "far",
+  "group": "great-grandparents",
+  "path_en": "father's father's mother",
+  "ego_sex": "m/f",
+  "referent_sex": "f",
+  "steps": [
+   {
+    "rel": "F",
+    "age": null
+   },
+   {
+    "rel": "F",
+    "age": null
+   },
+   {
+    "rel": "M",
+    "age": null
+   }
+  ]
+ },
+ {
+  "id": "FMF",
+  "tier": "far",
+  "group": "great-grandparents",
+  "path_en": "father's mother's father",
+  "ego_sex": "m/f",
+  "referent_sex": "m",
+  "steps": [
+   {
+    "rel": "F",
+    "age": null
+   },
+   {
+    "rel": "M",
+    "age": null
+   },
+   {
+    "rel": "F",
+    "age": null
+   }
+  ]
+ },
+ {
+  "id": "FMM",
+  "tier": "far",
+  "group": "great-grandparents",
+  "path_en": "father's mother's mother",
+  "ego_sex": "m/f",
+  "referent_sex": "f",
+  "steps": [
+   {
+    "rel": "F",
+    "age": null
+   },
+   {
+    "rel": "M",
+    "age": null
+   },
+   {
+    "rel": "M",
+    "age": null
+   }
+  ]
+ },
+ {
+  "id": "MFF",
+  "tier": "far",
+  "group": "great-grandparents",
+  "path_en": "mother's father's father",
+  "ego_sex": "m/f",
+  "referent_sex": "m",
+  "steps": [
+   {
+    "rel": "M",
+    "age": null
+   },
+   {
+    "rel": "F",
+    "age": null
+   },
+   {
+    "rel": "F",
+    "age": null
+   }
+  ]
+ },
+ {
+  "id": "MFM",
+  "tier": "far",
+  "group": "great-grandparents",
+  "path_en": "mother's father's mother",
+  "ego_sex": "m/f",
+  "referent_sex": "f",
+  "steps": [
+   {
+    "rel": "M",
+    "age": null
+   },
+   {
+    "rel": "F",
+    "age": null
+   },
+   {
+    "rel": "M",
+    "age": null
+   }
+  ]
+ },
+ {
+  "id": "MMF",
+  "tier": "far",
+  "group": "great-grandparents",
+  "path_en": "mother's mother's father",
+  "ego_sex": "m/f",
+  "referent_sex": "m",
+  "steps": [
+   {
+    "rel": "M",
+    "age": null
+   },
+   {
+    "rel": "M",
+    "age": null
+   },
+   {
+    "rel": "F",
+    "age": null
+   }
+  ]
+ },
+ {
+  "id": "MMM",
+  "tier": "far",
+  "group": "great-grandparents",
+  "path_en": "mother's mother's mother",
+  "ego_sex": "m/f",
+  "referent_sex": "f",
+  "steps": [
+   {
+    "rel": "M",
+    "age": null
+   },
+   {
+    "rel": "M",
+    "age": null
+   },
+   {
+    "rel": "M",
+    "age": null
+   }
+  ]
+ },
+ {
+  "id": "FFeB",
+  "tier": "far",
+  "group": "grandparents' siblings",
+  "path_en": "father's father's elder brother",
+  "ego_sex": "m/f",
+  "referent_sex": "m",
+  "steps": [
+   {
+    "rel": "F",
+    "age": null
+   },
+   {
+    "rel": "F",
+    "age": null
+   },
+   {
+    "rel": "B",
+    "age": "e"
+   }
+  ]
+ },
+ {
+  "id": "FFyB",
+  "tier": "far",
+  "group": "grandparents' siblings",
+  "path_en": "father's father's younger brother",
+  "ego_sex": "m/f",
+  "referent_sex": "m",
+  "steps": [
+   {
+    "rel": "F",
+    "age": null
+   },
+   {
+    "rel": "F",
+    "age": null
+   },
+   {
+    "rel": "B",
+    "age": "y"
+   }
+  ]
+ },
+ {
+  "id": "FFZ",
+  "tier": "far",
+  "group": "grandparents' siblings",
+  "path_en": "father's father's sister",
+  "ego_sex": "m/f",
+  "referent_sex": "f",
+  "steps": [
+   {
+    "rel": "F",
+    "age": null
+   },
+   {
+    "rel": "F",
+    "age": null
+   },
+   {
+    "rel": "Z",
+    "age": null
+   }
+  ]
+ },
+ {
+  "id": "FMB",
+  "tier": "far",
+  "group": "grandparents' siblings",
+  "path_en": "father's mother's brother",
+  "ego_sex": "m/f",
+  "referent_sex": "m",
+  "steps": [
+   {
+    "rel": "F",
+    "age": null
+   },
+   {
+    "rel": "M",
+    "age": null
+   },
+   {
+    "rel": "B",
+    "age": null
+   }
+  ]
+ },
+ {
+  "id": "FMZ",
+  "tier": "far",
+  "group": "grandparents' siblings",
+  "path_en": "father's mother's sister",
+  "ego_sex": "m/f",
+  "referent_sex": "f",
+  "steps": [
+   {
+    "rel": "F",
+    "age": null
+   },
+   {
+    "rel": "M",
+    "age": null
+   },
+   {
+    "rel": "Z",
+    "age": null
+   }
+  ]
+ },
+ {
+  "id": "MFeB",
+  "tier": "far",
+  "group": "grandparents' siblings",
+  "path_en": "mother's father's elder brother",
+  "ego_sex": "m/f",
+  "referent_sex": "m",
+  "steps": [
+   {
+    "rel": "M",
+    "age": null
+   },
+   {
+    "rel": "F",
+    "age": null
+   },
+   {
+    "rel": "B",
+    "age": "e"
+   }
+  ]
+ },
+ {
+  "id": "MFyB",
+  "tier": "far",
+  "group": "grandparents' siblings",
+  "path_en": "mother's father's younger brother",
+  "ego_sex": "m/f",
+  "referent_sex": "m",
+  "steps": [
+   {
+    "rel": "M",
+    "age": null
+   },
+   {
+    "rel": "F",
+    "age": null
+   },
+   {
+    "rel": "B",
+    "age": "y"
+   }
+  ]
+ },
+ {
+  "id": "MFZ",
+  "tier": "far",
+  "group": "grandparents' siblings",
+  "path_en": "mother's father's sister",
+  "ego_sex": "m/f",
+  "referent_sex": "f",
+  "steps": [
+   {
+    "rel": "M",
+    "age": null
+   },
+   {
+    "rel": "F",
+    "age": null
+   },
+   {
+    "rel": "Z",
+    "age": null
+   }
+  ]
+ },
+ {
+  "id": "MMB",
+  "tier": "far",
+  "group": "grandparents' siblings",
+  "path_en": "mother's mother's brother",
+  "ego_sex": "m/f",
+  "referent_sex": "m",
+  "steps": [
+   {
+    "rel": "M",
+    "age": null
+   },
+   {
+    "rel": "M",
+    "age": null
+   },
+   {
+    "rel": "B",
+    "age": null
+   }
+  ]
+ },
+ {
+  "id": "MMZ",
+  "tier": "far",
+  "group": "grandparents' siblings",
+  "path_en": "mother's mother's sister",
+  "ego_sex": "m/f",
+  "referent_sex": "f",
+  "steps": [
+   {
+    "rel": "M",
+    "age": null
+   },
+   {
+    "rel": "M",
+    "age": null
+   },
+   {
+    "rel": "Z",
+    "age": null
+   }
+  ]
+ },
+ {
+  "id": "FFBS",
+  "tier": "far",
+  "group": "parents' cousins",
+  "path_en": "father's father's brother's son",
+  "ego_sex": "m/f",
+  "referent_sex": "m",
+  "steps": [
+   {
+    "rel": "F",
+    "age": null
+   },
+   {
+    "rel": "F",
+    "age": null
+   },
+   {
+    "rel": "B",
+    "age": null
+   },
+   {
+    "rel": "S",
+    "age": null
+   }
+  ]
+ },
+ {
+  "id": "FFBD",
+  "tier": "far",
+  "group": "parents' cousins",
+  "path_en": "father's father's brother's daughter",
+  "ego_sex": "m/f",
+  "referent_sex": "f",
+  "steps": [
+   {
+    "rel": "F",
+    "age": null
+   },
+   {
+    "rel": "F",
+    "age": null
+   },
+   {
+    "rel": "B",
+    "age": null
+   },
+   {
+    "rel": "D",
+    "age": null
+   }
+  ]
+ },
+ {
+  "id": "FFZS",
+  "tier": "far",
+  "group": "parents' cousins",
+  "path_en": "father's father's sister's son",
+  "ego_sex": "m/f",
+  "referent_sex": "m",
+  "steps": [
+   {
+    "rel": "F",
+    "age": null
+   },
+   {
+    "rel": "F",
+    "age": null
+   },
+   {
+    "rel": "Z",
+    "age": null
+   },
+   {
+    "rel": "S",
+    "age": null
+   }
+  ]
+ },
+ {
+  "id": "FFZD",
+  "tier": "far",
+  "group": "parents' cousins",
+  "path_en": "father's father's sister's daughter",
+  "ego_sex": "m/f",
+  "referent_sex": "f",
+  "steps": [
+   {
+    "rel": "F",
+    "age": null
+   },
+   {
+    "rel": "F",
+    "age": null
+   },
+   {
+    "rel": "Z",
+    "age": null
+   },
+   {
+    "rel": "D",
+    "age": null
+   }
+  ]
+ },
+ {
+  "id": "FMBS",
+  "tier": "far",
+  "group": "parents' cousins",
+  "path_en": "father's mother's brother's son",
+  "ego_sex": "m/f",
+  "referent_sex": "m",
+  "steps": [
+   {
+    "rel": "F",
+    "age": null
+   },
+   {
+    "rel": "M",
+    "age": null
+   },
+   {
+    "rel": "B",
+    "age": null
+   },
+   {
+    "rel": "S",
+    "age": null
+   }
+  ]
+ },
+ {
+  "id": "FMBD",
+  "tier": "far",
+  "group": "parents' cousins",
+  "path_en": "father's mother's brother's daughter",
+  "ego_sex": "m/f",
+  "referent_sex": "f",
+  "steps": [
+   {
+    "rel": "F",
+    "age": null
+   },
+   {
+    "rel": "M",
+    "age": null
+   },
+   {
+    "rel": "B",
+    "age": null
+   },
+   {
+    "rel": "D",
+    "age": null
+   }
+  ]
+ },
+ {
+  "id": "FMZS",
+  "tier": "far",
+  "group": "parents' cousins",
+  "path_en": "father's mother's sister's son",
+  "ego_sex": "m/f",
+  "referent_sex": "m",
+  "steps": [
+   {
+    "rel": "F",
+    "age": null
+   },
+   {
+    "rel": "M",
+    "age": null
+   },
+   {
+    "rel": "Z",
+    "age": null
+   },
+   {
+    "rel": "S",
+    "age": null
+   }
+  ]
+ },
+ {
+  "id": "FMZD",
+  "tier": "far",
+  "group": "parents' cousins",
+  "path_en": "father's mother's sister's daughter",
+  "ego_sex": "m/f",
+  "referent_sex": "f",
+  "steps": [
+   {
+    "rel": "F",
+    "age": null
+   },
+   {
+    "rel": "M",
+    "age": null
+   },
+   {
+    "rel": "Z",
+    "age": null
+   },
+   {
+    "rel": "D",
+    "age": null
+   }
+  ]
+ },
+ {
+  "id": "MFBS",
+  "tier": "far",
+  "group": "parents' cousins",
+  "path_en": "mother's father's brother's son",
+  "ego_sex": "m/f",
+  "referent_sex": "m",
+  "steps": [
+   {
+    "rel": "M",
+    "age": null
+   },
+   {
+    "rel": "F",
+    "age": null
+   },
+   {
+    "rel": "B",
+    "age": null
+   },
+   {
+    "rel": "S",
+    "age": null
+   }
+  ]
+ },
+ {
+  "id": "MFBD",
+  "tier": "far",
+  "group": "parents' cousins",
+  "path_en": "mother's father's brother's daughter",
+  "ego_sex": "m/f",
+  "referent_sex": "f",
+  "steps": [
+   {
+    "rel": "M",
+    "age": null
+   },
+   {
+    "rel": "F",
+    "age": null
+   },
+   {
+    "rel": "B",
+    "age": null
+   },
+   {
+    "rel": "D",
+    "age": null
+   }
+  ]
+ },
+ {
+  "id": "MFZS",
+  "tier": "far",
+  "group": "parents' cousins",
+  "path_en": "mother's father's sister's son",
+  "ego_sex": "m/f",
+  "referent_sex": "m",
+  "steps": [
+   {
+    "rel": "M",
+    "age": null
+   },
+   {
+    "rel": "F",
+    "age": null
+   },
+   {
+    "rel": "Z",
+    "age": null
+   },
+   {
+    "rel": "S",
+    "age": null
+   }
+  ]
+ },
+ {
+  "id": "MFZD",
+  "tier": "far",
+  "group": "parents' cousins",
+  "path_en": "mother's father's sister's daughter",
+  "ego_sex": "m/f",
+  "referent_sex": "f",
+  "steps": [
+   {
+    "rel": "M",
+    "age": null
+   },
+   {
+    "rel": "F",
+    "age": null
+   },
+   {
+    "rel": "Z",
+    "age": null
+   },
+   {
+    "rel": "D",
+    "age": null
+   }
+  ]
+ },
+ {
+  "id": "MMBS",
+  "tier": "far",
+  "group": "parents' cousins",
+  "path_en": "mother's mother's brother's son",
+  "ego_sex": "m/f",
+  "referent_sex": "m",
+  "steps": [
+   {
+    "rel": "M",
+    "age": null
+   },
+   {
+    "rel": "M",
+    "age": null
+   },
+   {
+    "rel": "B",
+    "age": null
+   },
+   {
+    "rel": "S",
+    "age": null
+   }
+  ]
+ },
+ {
+  "id": "MMBD",
+  "tier": "far",
+  "group": "parents' cousins",
+  "path_en": "mother's mother's brother's daughter",
+  "ego_sex": "m/f",
+  "referent_sex": "f",
+  "steps": [
+   {
+    "rel": "M",
+    "age": null
+   },
+   {
+    "rel": "M",
+    "age": null
+   },
+   {
+    "rel": "B",
+    "age": null
+   },
+   {
+    "rel": "D",
+    "age": null
+   }
+  ]
+ },
+ {
+  "id": "MMZS",
+  "tier": "far",
+  "group": "parents' cousins",
+  "path_en": "mother's mother's sister's son",
+  "ego_sex": "m/f",
+  "referent_sex": "m",
+  "steps": [
+   {
+    "rel": "M",
+    "age": null
+   },
+   {
+    "rel": "M",
+    "age": null
+   },
+   {
+    "rel": "Z",
+    "age": null
+   },
+   {
+    "rel": "S",
+    "age": null
+   }
+  ]
+ },
+ {
+  "id": "MMZD",
+  "tier": "far",
+  "group": "parents' cousins",
+  "path_en": "mother's mother's sister's daughter",
+  "ego_sex": "m/f",
+  "referent_sex": "f",
+  "steps": [
+   {
+    "rel": "M",
+    "age": null
+   },
+   {
+    "rel": "M",
+    "age": null
+   },
+   {
+    "rel": "Z",
+    "age": null
+   },
+   {
+    "rel": "D",
+    "age": null
+   }
+  ]
+ },
+ {
+  "id": "FBSS",
+  "tier": "far",
+  "group": "cousins' children",
+  "path_en": "father's brother's son's son",
+  "ego_sex": "m/f",
+  "referent_sex": "m",
+  "steps": [
+   {
+    "rel": "F",
+    "age": null
+   },
+   {
+    "rel": "B",
+    "age": null
+   },
+   {
+    "rel": "S",
+    "age": null
+   },
+   {
+    "rel": "S",
+    "age": null
+   }
+  ]
+ },
+ {
+  "id": "FBSD",
+  "tier": "far",
+  "group": "cousins' children",
+  "path_en": "father's brother's son's daughter",
+  "ego_sex": "m/f",
+  "referent_sex": "f",
+  "steps": [
+   {
+    "rel": "F",
+    "age": null
+   },
+   {
+    "rel": "B",
+    "age": null
+   },
+   {
+    "rel": "S",
+    "age": null
+   },
+   {
+    "rel": "D",
+    "age": null
+   }
+  ]
+ },
+ {
+  "id": "FBDS",
+  "tier": "far",
+  "group": "cousins' children",
+  "path_en": "father's brother's daughter's son",
+  "ego_sex": "m/f",
+  "referent_sex": "m",
+  "steps": [
+   {
+    "rel": "F",
+    "age": null
+   },
+   {
+    "rel": "B",
+    "age": null
+   },
+   {
+    "rel": "D",
+    "age": null
+   },
+   {
+    "rel": "S",
+    "age": null
+   }
+  ]
+ },
+ {
+  "id": "FBDD",
+  "tier": "far",
+  "group": "cousins' children",
+  "path_en": "father's brother's daughter's daughter",
+  "ego_sex": "m/f",
+  "referent_sex": "f",
+  "steps": [
+   {
+    "rel": "F",
+    "age": null
+   },
+   {
+    "rel": "B",
+    "age": null
+   },
+   {
+    "rel": "D",
+    "age": null
+   },
+   {
+    "rel": "D",
+    "age": null
+   }
+  ]
+ },
+ {
+  "id": "FZSS",
+  "tier": "far",
+  "group": "cousins' children",
+  "path_en": "father's sister's son's son",
+  "ego_sex": "m/f",
+  "referent_sex": "m",
+  "steps": [
+   {
+    "rel": "F",
+    "age": null
+   },
+   {
+    "rel": "Z",
+    "age": null
+   },
+   {
+    "rel": "S",
+    "age": null
+   },
+   {
+    "rel": "S",
+    "age": null
+   }
+  ]
+ },
+ {
+  "id": "FZSD",
+  "tier": "far",
+  "group": "cousins' children",
+  "path_en": "father's sister's son's daughter",
+  "ego_sex": "m/f",
+  "referent_sex": "f",
+  "steps": [
+   {
+    "rel": "F",
+    "age": null
+   },
+   {
+    "rel": "Z",
+    "age": null
+   },
+   {
+    "rel": "S",
+    "age": null
+   },
+   {
+    "rel": "D",
+    "age": null
+   }
+  ]
+ },
+ {
+  "id": "FZDS",
+  "tier": "far",
+  "group": "cousins' children",
+  "path_en": "father's sister's daughter's son",
+  "ego_sex": "m/f",
+  "referent_sex": "m",
+  "steps": [
+   {
+    "rel": "F",
+    "age": null
+   },
+   {
+    "rel": "Z",
+    "age": null
+   },
+   {
+    "rel": "D",
+    "age": null
+   },
+   {
+    "rel": "S",
+    "age": null
+   }
+  ]
+ },
+ {
+  "id": "FZDD",
+  "tier": "far",
+  "group": "cousins' children",
+  "path_en": "father's sister's daughter's daughter",
+  "ego_sex": "m/f",
+  "referent_sex": "f",
+  "steps": [
+   {
+    "rel": "F",
+    "age": null
+   },
+   {
+    "rel": "Z",
+    "age": null
+   },
+   {
+    "rel": "D",
+    "age": null
+   },
+   {
+    "rel": "D",
+    "age": null
+   }
+  ]
+ },
+ {
+  "id": "MBSS",
+  "tier": "far",
+  "group": "cousins' children",
+  "path_en": "mother's brother's son's son",
+  "ego_sex": "m/f",
+  "referent_sex": "m",
+  "steps": [
+   {
+    "rel": "M",
+    "age": null
+   },
+   {
+    "rel": "B",
+    "age": null
+   },
+   {
+    "rel": "S",
+    "age": null
+   },
+   {
+    "rel": "S",
+    "age": null
+   }
+  ]
+ },
+ {
+  "id": "MBSD",
+  "tier": "far",
+  "group": "cousins' children",
+  "path_en": "mother's brother's son's daughter",
+  "ego_sex": "m/f",
+  "referent_sex": "f",
+  "steps": [
+   {
+    "rel": "M",
+    "age": null
+   },
+   {
+    "rel": "B",
+    "age": null
+   },
+   {
+    "rel": "S",
+    "age": null
+   },
+   {
+    "rel": "D",
+    "age": null
+   }
+  ]
+ },
+ {
+  "id": "MBDS",
+  "tier": "far",
+  "group": "cousins' children",
+  "path_en": "mother's brother's daughter's son",
+  "ego_sex": "m/f",
+  "referent_sex": "m",
+  "steps": [
+   {
+    "rel": "M",
+    "age": null
+   },
+   {
+    "rel": "B",
+    "age": null
+   },
+   {
+    "rel": "D",
+    "age": null
+   },
+   {
+    "rel": "S",
+    "age": null
+   }
+  ]
+ },
+ {
+  "id": "MBDD",
+  "tier": "far",
+  "group": "cousins' children",
+  "path_en": "mother's brother's daughter's daughter",
+  "ego_sex": "m/f",
+  "referent_sex": "f",
+  "steps": [
+   {
+    "rel": "M",
+    "age": null
+   },
+   {
+    "rel": "B",
+    "age": null
+   },
+   {
+    "rel": "D",
+    "age": null
+   },
+   {
+    "rel": "D",
+    "age": null
+   }
+  ]
+ },
+ {
+  "id": "MZSS",
+  "tier": "far",
+  "group": "cousins' children",
+  "path_en": "mother's sister's son's son",
+  "ego_sex": "m/f",
+  "referent_sex": "m",
+  "steps": [
+   {
+    "rel": "M",
+    "age": null
+   },
+   {
+    "rel": "Z",
+    "age": null
+   },
+   {
+    "rel": "S",
+    "age": null
+   },
+   {
+    "rel": "S",
+    "age": null
+   }
+  ]
+ },
+ {
+  "id": "MZSD",
+  "tier": "far",
+  "group": "cousins' children",
+  "path_en": "mother's sister's son's daughter",
+  "ego_sex": "m/f",
+  "referent_sex": "f",
+  "steps": [
+   {
+    "rel": "M",
+    "age": null
+   },
+   {
+    "rel": "Z",
+    "age": null
+   },
+   {
+    "rel": "S",
+    "age": null
+   },
+   {
+    "rel": "D",
+    "age": null
+   }
+  ]
+ },
+ {
+  "id": "MZDS",
+  "tier": "far",
+  "group": "cousins' children",
+  "path_en": "mother's sister's daughter's son",
+  "ego_sex": "m/f",
+  "referent_sex": "m",
+  "steps": [
+   {
+    "rel": "M",
+    "age": null
+   },
+   {
+    "rel": "Z",
+    "age": null
+   },
+   {
+    "rel": "D",
+    "age": null
+   },
+   {
+    "rel": "S",
+    "age": null
+   }
+  ]
+ },
+ {
+  "id": "MZDD",
+  "tier": "far",
+  "group": "cousins' children",
+  "path_en": "mother's sister's daughter's daughter",
+  "ego_sex": "m/f",
+  "referent_sex": "f",
+  "steps": [
+   {
+    "rel": "M",
+    "age": null
+   },
+   {
+    "rel": "Z",
+    "age": null
+   },
+   {
+    "rel": "D",
+    "age": null
+   },
+   {
+    "rel": "D",
+    "age": null
+   }
+  ]
+ },
+ {
+  "id": "BSS",
+  "tier": "far",
+  "group": "siblings' grandchildren",
+  "path_en": "brother's son's son",
+  "ego_sex": "m/f",
+  "referent_sex": "m",
+  "steps": [
+   {
+    "rel": "B",
+    "age": null
+   },
+   {
+    "rel": "S",
+    "age": null
+   },
+   {
+    "rel": "S",
+    "age": null
+   }
+  ]
+ },
+ {
+  "id": "BSD",
+  "tier": "far",
+  "group": "siblings' grandchildren",
+  "path_en": "brother's son's daughter",
+  "ego_sex": "m/f",
+  "referent_sex": "f",
+  "steps": [
+   {
+    "rel": "B",
+    "age": null
+   },
+   {
+    "rel": "S",
+    "age": null
+   },
+   {
+    "rel": "D",
+    "age": null
+   }
+  ]
+ },
+ {
+  "id": "BDS",
+  "tier": "far",
+  "group": "siblings' grandchildren",
+  "path_en": "brother's daughter's son",
+  "ego_sex": "m/f",
+  "referent_sex": "m",
+  "steps": [
+   {
+    "rel": "B",
+    "age": null
+   },
+   {
+    "rel": "D",
+    "age": null
+   },
+   {
+    "rel": "S",
+    "age": null
+   }
+  ]
+ },
+ {
+  "id": "BDD",
+  "tier": "far",
+  "group": "siblings' grandchildren",
+  "path_en": "brother's daughter's daughter",
+  "ego_sex": "m/f",
+  "referent_sex": "f",
+  "steps": [
+   {
+    "rel": "B",
+    "age": null
+   },
+   {
+    "rel": "D",
+    "age": null
+   },
+   {
+    "rel": "D",
+    "age": null
+   }
+  ]
+ },
+ {
+  "id": "ZSS",
+  "tier": "far",
+  "group": "siblings' grandchildren",
+  "path_en": "sister's son's son",
+  "ego_sex": "m/f",
+  "referent_sex": "m",
+  "steps": [
+   {
+    "rel": "Z",
+    "age": null
+   },
+   {
+    "rel": "S",
+    "age": null
+   },
+   {
+    "rel": "S",
+    "age": null
+   }
+  ]
+ },
+ {
+  "id": "ZSD",
+  "tier": "far",
+  "group": "siblings' grandchildren",
+  "path_en": "sister's son's daughter",
+  "ego_sex": "m/f",
+  "referent_sex": "f",
+  "steps": [
+   {
+    "rel": "Z",
+    "age": null
+   },
+   {
+    "rel": "S",
+    "age": null
+   },
+   {
+    "rel": "D",
+    "age": null
+   }
+  ]
+ },
+ {
+  "id": "ZDS",
+  "tier": "far",
+  "group": "siblings' grandchildren",
+  "path_en": "sister's daughter's son",
+  "ego_sex": "m/f",
+  "referent_sex": "m",
+  "steps": [
+   {
+    "rel": "Z",
+    "age": null
+   },
+   {
+    "rel": "D",
+    "age": null
+   },
+   {
+    "rel": "S",
+    "age": null
+   }
+  ]
+ },
+ {
+  "id": "ZDD",
+  "tier": "far",
+  "group": "siblings' grandchildren",
+  "path_en": "sister's daughter's daughter",
+  "ego_sex": "m/f",
+  "referent_sex": "f",
+  "steps": [
+   {
+    "rel": "Z",
+    "age": null
+   },
+   {
+    "rel": "D",
+    "age": null
+   },
+   {
+    "rel": "D",
+    "age": null
+   }
+  ]
+ },
+ {
+  "id": "SSS",
+  "tier": "far",
+  "group": "great-grandchildren",
+  "path_en": "son's son's son",
+  "ego_sex": "m/f",
+  "referent_sex": "m",
+  "steps": [
+   {
+    "rel": "S",
+    "age": null
+   },
+   {
+    "rel": "S",
+    "age": null
+   },
+   {
+    "rel": "S",
+    "age": null
+   }
+  ]
+ },
+ {
+  "id": "SSD",
+  "tier": "far",
+  "group": "great-grandchildren",
+  "path_en": "son's son's daughter",
+  "ego_sex": "m/f",
+  "referent_sex": "f",
+  "steps": [
+   {
+    "rel": "S",
+    "age": null
+   },
+   {
+    "rel": "S",
+    "age": null
+   },
+   {
+    "rel": "D",
+    "age": null
+   }
+  ]
+ },
+ {
+  "id": "SDS",
+  "tier": "far",
+  "group": "great-grandchildren",
+  "path_en": "son's daughter's son",
+  "ego_sex": "m/f",
+  "referent_sex": "m",
+  "steps": [
+   {
+    "rel": "S",
+    "age": null
+   },
+   {
+    "rel": "D",
+    "age": null
+   },
+   {
+    "rel": "S",
+    "age": null
+   }
+  ]
+ },
+ {
+  "id": "SDD",
+  "tier": "far",
+  "group": "great-grandchildren",
+  "path_en": "son's daughter's daughter",
+  "ego_sex": "m/f",
+  "referent_sex": "f",
+  "steps": [
+   {
+    "rel": "S",
+    "age": null
+   },
+   {
+    "rel": "D",
+    "age": null
+   },
+   {
+    "rel": "D",
+    "age": null
+   }
+  ]
+ },
+ {
+  "id": "DSS",
+  "tier": "far",
+  "group": "great-grandchildren",
+  "path_en": "daughter's son's son",
+  "ego_sex": "m/f",
+  "referent_sex": "m",
+  "steps": [
+   {
+    "rel": "D",
+    "age": null
+   },
+   {
+    "rel": "S",
+    "age": null
+   },
+   {
+    "rel": "S",
+    "age": null
+   }
+  ]
+ },
+ {
+  "id": "DSD",
+  "tier": "far",
+  "group": "great-grandchildren",
+  "path_en": "daughter's son's daughter",
+  "ego_sex": "m/f",
+  "referent_sex": "f",
+  "steps": [
+   {
+    "rel": "D",
+    "age": null
+   },
+   {
+    "rel": "S",
+    "age": null
+   },
+   {
+    "rel": "D",
+    "age": null
+   }
+  ]
+ },
+ {
+  "id": "DDS",
+  "tier": "far",
+  "group": "great-grandchildren",
+  "path_en": "daughter's daughter's son",
+  "ego_sex": "m/f",
+  "referent_sex": "m",
+  "steps": [
+   {
+    "rel": "D",
+    "age": null
+   },
+   {
+    "rel": "D",
+    "age": null
+   },
+   {
+    "rel": "S",
+    "age": null
+   }
+  ]
+ },
+ {
+  "id": "DDD",
+  "tier": "far",
+  "group": "great-grandchildren",
+  "path_en": "daughter's daughter's daughter",
+  "ego_sex": "m/f",
+  "referent_sex": "f",
+  "steps": [
+   {
+    "rel": "D",
+    "age": null
+   },
+   {
+    "rel": "D",
+    "age": null
+   },
+   {
+    "rel": "D",
+    "age": null
+   }
+  ]
+ }
+]

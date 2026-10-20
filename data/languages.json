@@ -1,0 +1,38 @@
+{
+ "ur": {
+  "name": "Urdu",
+  "native": "اردو",
+  "font": "nastaliq",
+  "palette": "ٹ ڈ ڑ ں ھ ہ ۂ ے ی ء"
+ },
+ "pnb": {
+  "name": "Punjabi (Shahmukhi)",
+  "native": "پنجابی",
+  "font": "nastaliq",
+  "palette": "ٹ ڈ ڑ ں ݨ ھ ہ ے ی ء"
+ },
+ "skr": {
+  "name": "Saraiki",
+  "native": "سرائیکی",
+  "font": "nastaliq",
+  "palette": "ٻ ڄ ݙ ڳ ݨ ٹ ڈ ڑ ں ھ ہ ے ی"
+ },
+ "sd": {
+  "name": "Sindhi",
+  "native": "سنڌي",
+  "font": "naskh",
+  "palette": "ڀ ٻ ٽ ٿ ٺ ڦ ڄ ڃ ڇ ڊ ڌ ڍ ڏ ڙ ڪ ک ڳ ڱ ڻ ي"
+ },
+ "ps": {
+  "name": "Pashto",
+  "native": "پښتو",
+  "font": "naskh",
+  "palette": "ټ ډ ړ ږ ښ ګ ڼ ۍ ې ئ ي"
+ },
+ "bal": {
+  "name": "Balochi",
+  "native": "بلوچی",
+  "font": "naskh",
+  "palette": "ٹ ڈ ڑ ں ھ ے ی ۏ"
+ }
+}

@@ -1,0 +1,9 @@
+[
+ {
+  "handle": "demo",
+  "language": "ur",
+  "role": "annotator",
+  "check": "e031f850ed21b638112e742cfff5ea784e86ef63e59e081c6339a163ad2caa2d",
+  "demo": true
+ }
+]

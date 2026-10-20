@@ -1,0 +1,75 @@
+[
+ {
+  "id": "r0",
+  "title": "Onboarding",
+  "who": [
+   "annotator",
+   "adjudicator"
+  ],
+  "open": true,
+  "about": "Consent, a short background form, the guidelines and a 5-question check."
+ },
+ {
+  "id": "r1",
+  "title": "Kinship words",
+  "who": [
+   "annotator"
+  ],
+  "open": true,
+  "about": "Give the words your language uses for 150 relatives."
+ },
+ {
+  "id": "r1b",
+  "title": "Resolve disagreements",
+  "who": [
+   "adjudicator"
+  ],
+  "open": false,
+  "about": "Choose the right word where the two annotators differ."
+ },
+ {
+  "id": "r2",
+  "title": "Question wording",
+  "who": [
+   "annotator"
+  ],
+  "open": false,
+  "about": "Correct or approve question templates and name lists."
+ },
+ {
+  "id": "r3",
+  "title": "Pilot item check",
+  "who": [
+   "annotator"
+  ],
+  "open": false,
+  "about": "Check every pilot question: natural, correct, one answer."
+ },
+ {
+  "id": "r4",
+  "title": "Full-set check",
+  "who": [
+   "annotator"
+  ],
+  "open": false,
+  "about": "Check a sample of the final questions."
+ },
+ {
+  "id": "r5",
+  "title": "Answer questions",
+  "who": [
+   "adjudicator"
+  ],
+  "open": false,
+  "about": "Answer questions yourself, without seeing the answers."
+ },
+ {
+  "id": "r6",
+  "title": "Check model answers",
+  "who": [
+   "annotator"
+  ],
+  "open": false,
+  "about": "Mark model answers correct, wrong or invalid."
+ }
+]
