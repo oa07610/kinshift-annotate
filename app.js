@@ -2,7 +2,7 @@
 // KINSHIFT annotator dashboard. Static page; everything stays in this browser
 // until the annotator exports a file and sends it to the team.
 
-const APP_VERSION = "0.3.4";
+const APP_VERSION = "0.3.5";
 const SCHEMA = "kinshift-annotation/1";
 const D = {};            // loaded data files
 const BATCH = {};        // decrypted batches per round, or null when not ready
@@ -192,7 +192,7 @@ function renderLogin() {
   async function submit(e) {
     e.preventDefault();
     if (!name.value.trim()) return;
-    btn.disabled = true; msg.textContent = "";
+    btn.disabled = true; btn.textContent = "Signing in…"; msg.textContent = "";
     try {
       const { account } = await api("login", { name: name.value });
       S = account; writeKey("kinshift:session", S);
@@ -207,7 +207,7 @@ function renderLogin() {
       go("#/home");
     } catch (err) {
       msg.textContent = /not found/.test(err.message) ? "We could not find that name. Type it exactly as the team sent it to you." : err.message;
-    } finally { btn.disabled = false; }
+    } finally { btn.disabled = false; btn.textContent = "Sign in"; }
   }
   setMain(h("div", { class: "login" },
     h("div", { class: "card" }, h("h2", {}, "Sign in"),
@@ -599,7 +599,7 @@ function renderAdminLogin() {
   const key = h("input", { type: "password", id: "key", autocomplete: "current-password", placeholder: "admin key" });
   const msg = h("p", { class: "bad" });
   async function submit(e) {
-    e.preventDefault(); msg.textContent = "";
+    e.preventDefault(); msg.textContent = "Checking…";
     try {
       await api("check_key", { key: key.value.trim() }, true);
       writeKey("kinshift:adminKey", key.value.trim()); S = { admin: true }; writeKey("kinshift:session", S);
