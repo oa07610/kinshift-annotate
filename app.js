@@ -2,7 +2,7 @@
 // KINSHIFT annotator dashboard. Static page; everything stays in this browser
 // until the annotator exports a file and sends it to the team.
 
-const APP_VERSION = "0.3.5";
+const APP_VERSION = "0.4.3";
 const SCHEMA = "kinshift-annotation/1";
 const D = {};            // loaded data files
 const BATCH = {};        // decrypted batches per round, or null when not ready
@@ -47,7 +47,7 @@ function toast(msg, bad) {
 }
 const seg = (options, value, onPick) => h("div", { class: "seg" }, ...options.map(([v, label, cls]) =>
   h("button", { type: "button", class: (value === v ? "on " : "") + (cls || ""), onclick: () => onPick(v) }, label)));
-const r1Done = (r, rel) => Logic.r1Done(r, rel);
+const r1Done = (r) => Logic.r1Done(r);
 
 // ---------- storage ----------
 const K = (round) => `kinshift:${S.handle}:${round}`;
@@ -411,91 +411,97 @@ function startTimer(round, data, key) {
     row.active_ms = (row.active_ms || 0) + Math.min(Date.now() - t0, 600000); saveRow(round, key, row, true); };
 }
 
+// Sentence frames shown with each relative. They hold no kin words, so they cannot
+// suggest an answer; the Urdu line helps annotators who read Urdu more easily than English.
+function frames(r) {
+  const fem = r.referent_sex === "f";
+  const about = r.elder ? (fem ? "یہ میری ___ ہیں۔" : "یہ میرے ___ ہیں۔") : (fem ? "یہ میری ___ ہے۔" : "یہ میرا ___ ہے۔");
+  return { about: ["This is my ___.", about], call: ["___, come and eat!", "___، آئیں کھانا کھا لیں۔"] };
+}
+function frameLine([en, ur]) {
+  return h("div", { class: "frame" }, h("span", { class: "frame-en" }, en), h("span", { class: "frame-ur", dir: "rtl" }, ur));
+}
+// One editable box bound to obj[field]; native boxes get the letter palette and a script check.
+function boundBox(obj, field, kind, placeholder, touch) {
+  const el = h("input", { type: "text", placeholder: placeholder || "", class: kind === "native" ? "native" : "",
+                          dir: kind === "native" ? "rtl" : "ltr", lang: kind === "native" ? S.language : null });
+  el.value = obj[field] || "";
+  const warn = h("div", { class: "warn" });
+  const check = () => {
+    warn.textContent = kind === "native" && LATIN.test(el.value) ? "Use your language's own script here; Roman spelling goes in the next box."
+      : kind === "roman" && ARABIC.test(el.value) ? "Roman letters only in this box." : "";
+  };
+  el.addEventListener("input", () => { obj[field] = el.value; check(); touch(); });
+  if (kind === "native") {
+    el.addEventListener("focus", () => showPalette(el));
+    el.addEventListener("blur", () => setTimeout(() => {
+      if (!document.activeElement || !document.activeElement.classList.contains("native")) $("#palette").classList.add("hidden");
+    }, 150));
+  }
+  check();
+  if (obj._focus) { delete obj._focus; setTimeout(() => el.focus(), 0); }
+  return h("div", {}, el, warn);
+}
+// A list of words, most common first: [native][Roman] per row, add, remove, make main.
+function wordList(list, { first, optional }, touch, redraw) {
+  if (!list.length) list.push({ native: "", roman: "" });
+  const rows = list.map((w, i) => h("div", { class: "word-row" + (i === 0 ? " main" : "") },
+    h("div", { class: "word-tag" }, i === 0 ? first : "also"),
+    boundBox(w, "native", "native", i === 0 && !optional ? "in your script" : "in your script (optional)", touch),
+    boundBox(w, "roman", "roman", i === 0 && !optional ? "in Roman, as on WhatsApp" : "in Roman", touch),
+    h("div", { class: "word-actions" },
+      i > 0 ? h("button", { type: "button", class: "ghost small", title: "Make this the most common word",
+        onclick: () => { list.unshift(...list.splice(i, 1)); touch(); redraw(); } }, "↑ most common") : null,
+      list.length > 1 ? h("button", { type: "button", class: "ghost small", title: "Remove",
+        onclick: () => { list.splice(i, 1); touch(); redraw(); } }, "✕") : null)));
+  return h("div", { class: "words" }, ...rows,
+    h("button", { type: "button", class: "ghost small add-word", onclick: () => { const w = { native: "", roman: "" }; list.push(w); touch(); w._focus = true; redraw(); } }, "+ another word"));
+}
+
 function renderR1Item(group, i) {
   if (!r0Done()) return go("#/r0");
   const all = groups(), gi = all.findIndex(g => g.group === group);
   if (gi < 0) return go("#/r1");
   const g = all[gi]; i = Math.min(Math.max(i, 0), g.items.length - 1);
   const r = g.items[i], data = loadRound("r1");
-  const row = data.rows[r.id] || (data.rows[r.id] = {});
+  const row = data.rows[r.id] = Logic.upgrade(data.rows[r.id]) || { words: [], call: [] };
+  row.words = row.words || []; row.call = row.call || [];
   startTimer("r1", data, r.id);
   const href = (gg, ii) => `#/r1/${encodeURIComponent(gg.group)}/${ii}`;
   const prev = i > 0 ? href(g, i - 1) : gi > 0 ? href(all[gi - 1], all[gi - 1].items.length - 1) : null;
   const next = i < g.items.length - 1 ? href(g, i + 1) : gi < all.length - 1 ? href(all[gi + 1], 0) : "#/r1";
-  const doneInGroup = () => g.items.filter(x => r1Done(data.rows[x.id], x)).length;
+  const doneInGroup = () => g.items.filter(x => r1Done(data.rows[x.id])).length;
   const chrome = () => focusChrome({ back: "#/r1", name: g.group, pos: i + 1, total: g.items.length, done: doneInGroup() });
   const touch = () => {
     const now = new Date().toISOString(); row.first_edit = row.first_edit || now; row.last_edit = now;
     saveRow("r1", r.id, row); data.rows = loadRound("r1").rows; data.rows[r.id] = row; dots.replaceChildren(...dotLinks()); chrome();
   };
   chrome();
-
-  function box(key, kind, placeholder) {
-    const el = h(kind === "area" ? "textarea" : "input", { type: "text", placeholder: placeholder || "",
-      class: kind === "native" ? "native" : "", dir: kind === "native" ? "rtl" : "ltr", lang: kind === "native" ? S.language : null });
-    el.value = row[key] || "";
-    const warn = h("div", { class: "warn" });
-    const check = () => {
-      warn.textContent = kind === "native" && LATIN.test(el.value) ? "Use your language's own script here; Roman spelling goes in the Roman box."
-        : kind === "roman" && ARABIC.test(el.value) ? "Roman letters only in this box." : "";
-    };
-    el.addEventListener("input", () => { row[key] = el.value; check(); touch(); });
-    if (kind === "native") {
-      el.addEventListener("focus", () => showPalette(el));
-      el.addEventListener("blur", () => setTimeout(() => {
-        if (!document.activeElement || !document.activeElement.classList.contains("native")) $("#palette").classList.add("hidden");
-      }, 150));
-    }
-    check();
-    return h("div", {}, el, warn);
-  }
-  const pair = (nk, rk) => h("div", { class: "grid2" },
-    h("div", {}, h("label", { class: "lbl" }, "In your script"), box(nk, "native")),
-    h("div", {}, h("label", { class: "lbl" }, "In Roman letters"), box(rk, "roman", "as you would type it on WhatsApp")));
-
-  const far = r.tier === "far";
+  const f = frames(r);
   const body = h("div");
   function draw() {
-    const m = row.mode || (row.same_word_as ? "same" : row.no_single_word ? "phrase" : "word");
-    const parts = [h("div", { class: "alt" },
-      ...[["word", "It has its own word"], ["same", "Same word as another relative"], ["phrase", "No single word"]].map(([v, label]) =>
-        h("button", { type: "button", class: "small" + (m === v ? " on" : ""), onclick: () => {
-          row.mode = v; if (v !== "same") row.same_word_as = ""; row.no_single_word = v === "phrase"; touch(); draw();
-        } }, label)))];
-    if (m === "word") {
-      parts.push(h("div", { class: "q" }, h("h3", {}, "What do you call this relative when talking ABOUT them?"), pair("reference_native", "reference_roman")));
-      if (!far) parts.push(h("div", { class: "q" }, h("h3", {}, "Do you use the same word when talking TO them?"),
-        seg([["yes", "Yes"], ["no", "No, a different word"]], row.address_same, v => { row.address_same = v; touch(); draw(); }),
-        row.address_same === "no" ? h("div", { style: "margin-top:12px" }, pair("address_native", "address_roman")) : null));
-    } else if (m === "same") {
-      const sel = h("select", {}, h("option", { value: "" }, "choose the relative with the same word"),
-        ...D.relations.filter(x => x.id !== r.id).map(x => h("option", { value: x.id }, x.path_en)));
-      sel.value = row.same_word_as || "";
-      sel.addEventListener("change", () => { row.same_word_as = sel.value; touch(); });
-      parts.push(h("div", { class: "q" }, h("h3", {}, "Which relative has the same word?"),
-        h("p", { class: "hint" }, "Pick a relative you have already given the word for."), sel));
-    } else {
-      parts.push(h("div", { class: "q" }, h("h3", {}, "What phrase do people use instead?"), pair("phrase_native", "phrase_roman")));
-    }
-    parts.push(h("div", { class: "q" }, h("h3", {}, "How sure are you?"),
-      seg([["sure", "Sure"], ["not sure", "Not sure", "warnish"]], row.confidence, v => { row.confidence = v; touch(); draw(); })));
-    const female = h("input", { type: "checkbox" }); female.checked = !!row.female_differs;
-    const femBox = h("div", { class: row.female_differs ? "" : "hidden" }, pair("female_native", "female_roman"));
-    female.addEventListener("change", () => { row.female_differs = female.checked; femBox.classList.toggle("hidden", !female.checked); touch(); });
-    parts.push(h("details", { class: "more", open: !!(row.roman_variants || row.female_differs || row.notes) },
-      h("summary", {}, "More (optional)"),
-      h("label", { class: "lbl" }, "Other common Roman spellings, separated by commas"), box("roman_variants", "roman"),
-      r.ego_sex === "m/f" ? h("label", { class: "check" }, female, "A woman would use a different word") : null, femBox,
-      h("label", { class: "lbl", style: "margin-top:10px" }, "Notes: other regions, formal words, anything unclear"), box("notes", "area")));
-    body.replaceChildren(...parts.filter(Boolean));
+    const unsure = h("input", { type: "checkbox" }); unsure.checked = !!row.unsure;
+    unsure.addEventListener("change", () => { row.unsure = unsure.checked; touch(); });
+    const notes = h("textarea", { rows: 2, placeholder: "Optional: words used in other places, a formal word, if women say it differently, anything unclear" });
+    notes.value = row.notes || "";
+    notes.addEventListener("input", () => { row.notes = notes.value; touch(); });
+    body.replaceChildren(...[
+      h("div", { class: "q" }, h("h3", {}, "What do you call this relative?"), frameLine(f.about),
+        h("p", { class: "hint" }, "Write every word people use for this relative where you grew up, the most common first."),
+        wordList(row.words, { first: "most common" }, touch, draw)),
+      r.elder ? h("div", { class: "q" }, h("h3", {}, "When you call them"), frameLine(f.call),
+        h("p", { class: "hint" }, "Only if you would call them something different. Leave empty if it is the same word."),
+        wordList(row.call, { first: "you call them", optional: true }, touch, draw)) : null,
+      h("div", { class: "q" }, h("label", { class: "check" }, unsure, "I'm not sure about this one"), notes),
+    ].filter(Boolean));
   }
   draw();
   const dotLinks = () => g.items.map((x, j) => h("a", { href: href(g, j), title: x.path_en,
-    class: (r1Done(data.rows[x.id], x) ? "done" : "") + (j === i ? " cur" : "") }));
+    class: (r1Done(data.rows[x.id]) ? "done" : "") + (j === i ? " cur" : "") }));
   const dots = h("div", { class: "dots" }, ...dotLinks());
   const note = speakerNote(r);
   const card = h("div", { class: "card item" },
-    h("div", { class: "item-top" }, h("span", { class: "tag accent" }, g.group), far ? h("span", { class: "tag" }, "distant relative") : null),
+    h("div", { class: "item-top" }, h("span", { class: "tag accent" }, g.group), r.tier === "far" ? h("span", { class: "tag" }, "distant relative") : null),
     h("div", { class: "item-title" }, r.path_en), note ? h("div", { class: "speaker" }, note) : null,
     treeSVG(r.steps), body);
   card.addEventListener("paste", () => { row.pastes = (row.pastes || 0) + 1; touch(); });
@@ -505,7 +511,7 @@ function renderR1Item(group, i) {
 
 // ---------- R1b and R2: batch rounds ----------
 const BATCH_DONE = {
-  r1b: (d) => !!(d && d.choice && (d.choice === "both" || (d.choice === "neither" ? d.native : d.other))),
+  r1b: (d, it) => reviewDone(it, d),
   r2: (d) => !!(d && d.natural && d.correct && (d.natural === "yes" || d.fixed) && (d.correct === "yes" || d.right_answer)),
 };
 async function renderBatchRound(round, i) {
@@ -516,10 +522,10 @@ async function renderBatchRound(round, i) {
   const it = items[i], data = loadRound(round), title = D.rounds.find(r => r.id === round).title;
   const row = data.rows[it.id] || (data.rows[it.id] = {});
   startTimer(round, data, it.id);
-  const done = () => items.filter(x => BATCH_DONE[round](data.rows[x.id])).length;
+  const done = () => items.filter(x => BATCH_DONE[round](data.rows[x.id], x)).length;
   const chrome = () => focusChrome({ back: "#/home", name: title, pos: i + 1, total: items.length, done: done() });
   const dotLinks = () => items.map((x, j) => h("a", { href: `#/${round}/${j}`,
-    class: (BATCH_DONE[round](data.rows[x.id]) ? "done" : "") + (j === i ? " cur" : "") }));
+    class: (BATCH_DONE[round](data.rows[x.id], x) ? "done" : "") + (j === i ? " cur" : "") }));
   const dots = h("div", { class: "dots" }, ...dotLinks());
   const touch = () => { const now = new Date().toISOString(); row.first_edit = row.first_edit || now; row.last_edit = now;
                         saveRow(round, it.id, row); data.rows = loadRound(round).rows; data.rows[it.id] = row;
@@ -545,35 +551,60 @@ function textBox(row, key, kind, touch) {
   }
   return el;
 }
-function answerBox(label, a) {
-  const word = a.no_single_word ? a.phrase_native : a.reference_native;
-  const roman = a.no_single_word ? a.phrase_roman : a.reference_roman;
-  return h("div", { class: "answer" }, h("div", { class: "who" }, label),
-    h("div", { class: "big" }, word || "—"), h("div", { class: "muted" }, roman || ""),
-    a.address_same === "no" ? h("div", { style: "margin-top:6px" }, "To their face: ", h("b", {}, a.address_native || "—"), ` ${a.address_roman || ""}`) : null,
-    a.no_single_word ? h("div", { class: "muted" }, "(no single word; this is a phrase)") : null,
-    a.confidence === "not sure" ? h("span", { class: "tag warn" }, "not sure") : null,
-    a.notes ? h("div", { class: "muted", style: "margin-top:6px" }, `Note: ${a.notes}`) : null);
+// Reviewer: rate every word the two annotators gave, and pick the most common one.
+function reviewSection(title, frame, words, ratings, mainKey, row, touch, draw) {
+  const rated = row[ratings] = row[ratings] || {};
+  const extra = row[mainKey + "_extra"] = row[mainKey + "_extra"] || { native: "", roman: "" };
+  const rows = words.map(w => h("div", { class: "rate-row" },
+    h("div", { class: "rate-word" }, h("div", { class: "big" }, w.native || "—"), h("div", { class: "muted" }, w.roman || ""),
+      h("div", { class: "who" }, w.count === 2 ? "both annotators" : "one annotator")),
+    seg([["yes", "Used here"], ["region", "Other region"], ["no", "Wrong", "warnish"]], rated[w.id], v => {
+      rated[w.id] = v; if (v !== "yes" && row[mainKey] === w.id) row[mainKey] = ""; touch(); draw(); }),
+    h("label", { class: "check main-pick" + (rated[w.id] === "yes" ? "" : " off") },
+      h("input", { type: "radio", name: mainKey, checked: row[mainKey] === w.id, disabled: rated[w.id] !== "yes",
+        onchange: () => { row[mainKey] = w.id; touch(); draw(); } }), "most common")));
+  return h("div", { class: "q" }, h("h3", {}, title), frameLine(frame), ...rows,
+    h("details", { class: "more", open: !!(extra.native || extra.roman) }, h("summary", {}, "They both missed the right word"),
+      h("div", { class: "grid2" }, boundBox(extra, "native", "native", "in your script", touch), boundBox(extra, "roman", "roman", "in Roman", touch)),
+      h("label", { class: "check" }, h("input", { type: "radio", name: mainKey, checked: row[mainKey] === "extra",
+        onchange: () => { row[mainKey] = "extra"; touch(); draw(); } }), "this is the most common word")));
 }
 function adjudicateParts(it, row, touch, draw) {
-  const rel = D.relations.find(x => x.id === it.id);
-  const parts = [h("div", { class: "item-top" }, h("span", { class: "tag accent" }, rel ? rel.group : ""),
-                   h("span", { class: "tag warn" }, it.on.includes("word") ? "different words" : "different word to their face")),
-    h("div", { class: "item-title" }, it.path_en), rel && speakerNote(rel) ? h("div", { class: "speaker" }, speakerNote(rel)) : null,
-    rel ? treeSVG(rel.steps) : null,
-    h("div", { class: "answers" }, answerBox("Answer A", it.a_resolved || it.a), answerBox("Answer B", it.b_resolved || it.b)),
-    h("div", { class: "q" }, h("h3", {}, "Which is right in your language?"),
-      seg([["A", "A"], ["B", "B"], ["both", "Both are fine"], ["neither", "Neither"]], row.choice, v => { row.choice = v; touch(); draw(); }))];
-  if (row.choice === "A" || row.choice === "B")
-    parts.push(h("div", { class: "q" }, h("h3", {}, `And answer ${row.choice === "A" ? "B" : "A"} is…`),
-      seg([["wrong", "Wrong"], ["region", "Used in another region or community"]], row.other, v => { row.other = v; touch(); draw(); })));
-  if (row.choice === "neither")
-    parts.push(h("div", { class: "q" }, h("h3", {}, "What is the right word?"), h("div", { class: "grid2" },
-      h("div", {}, h("label", { class: "lbl" }, "In your script"), textBox(row, "native", "native", touch)),
-      h("div", {}, h("label", { class: "lbl" }, "In Roman letters"), textBox(row, "roman", "roman", touch)))));
-  parts.push(h("div", { class: "q" }, h("label", { class: "lbl" }, "Notes (optional)"), textBox(row, "notes", "area", touch)));
+  const rel = D.relations.find(x => x.id === it.id) || { steps: [], referent_sex: "m", elder: false };
+  const f = frames(rel);
+  const parts = [h("div", { class: "item-top" }, h("span", { class: "tag accent" }, rel.group || ""),
+                   h("span", { class: "tag warn" }, it.on.includes("word") ? "different words" : "different words for calling them")),
+    h("div", { class: "item-title" }, it.path_en), speakerNote(rel) ? h("div", { class: "speaker" }, speakerNote(rel)) : null,
+    treeSVG(rel.steps)];
+  const notes = [it.a && it.a.notes, it.b && it.b.notes].filter(Boolean);
+  if (notes.length) parts.push(h("div", { class: "muted", style: "margin-top:8px" }, "Annotators' notes: ", notes.join(" · ")));
+  if (!it.on.includes("word")) {
+    const agreed = (Logic.upgrade(it.a).words || []).filter(Logic.filled)[0] || {};
+    parts.push(h("div", { class: "q" }, h("h3", {}, "Both annotators gave this word"),
+      h("div", { class: "rate-word" }, h("div", { class: "big" }, agreed.native || "—"), h("div", { class: "muted" }, agreed.roman || "")),
+      h("p", { class: "hint", style: "margin-top:8px" }, "They differ only on what you call this relative to their face.")));
+  }
+  if (it.on.includes("word"))
+    parts.push(reviewSection("Words for this relative", f.about, Logic.union(it.a.words, it.b.words, S.language), "ratings", "main", row, touch, draw));
+  if (it.on.includes("call"))
+    parts.push(reviewSection("Calling them", f.call, Logic.union(Logic.callList(it.a), Logic.callList(it.b), S.language), "call_ratings", "call_main", row, touch, draw));
+  const n = h("textarea", { rows: 2, placeholder: "Notes (optional)" }); n.value = row.notes || "";
+  n.addEventListener("input", () => { row.notes = n.value; touch(); });
+  parts.push(h("div", { class: "q" }, n));
   return parts;
 }
+function reviewDone(it, d) {
+  if (!it || !d) return false;
+  const sectionDone = (words, ratings, mainKey) => {
+    const rated = d[ratings] || {}, main = d[mainKey], extra = d[mainKey + "_extra"] || {};
+    if (!words.every(w => rated[w.id])) return false;
+    return main === "extra" ? !!(extra.native && extra.roman) : !!main && rated[main] === "yes";
+  };
+  const lang = S.language;
+  return (!it.on.includes("word") || sectionDone(Logic.union(it.a.words, it.b.words, lang), "ratings", "main")) &&
+    (!it.on.includes("call") || sectionDone(Logic.union(Logic.callList(it.a), Logic.callList(it.b), lang), "call_ratings", "call_main"));
+}
+
 function reviewParts(it, row, touch, draw) {
   const native = it.script !== "roman";
   return [h("div", { class: "item-top" }, h("span", { class: "tag accent" }, it.kind || "question"), h("span", { class: "tag" }, native ? "own script" : "Roman")),
@@ -679,12 +710,13 @@ function adminProgress(accounts, latest) {
         h("i", { style: `width:${(100 * p.r1_done / p.r1_total).toFixed(0)}%` })), `${p.r1_done}/${p.r1_total}`);
     return h("tr", { class: a.active === "no" ? "inactive" : "" }, h("td", {}, h("b", {}, a.name)), h("td", {}, a.language),
       h("td", {}, ago(l && l.saved_at)), h("td", {}, !p ? "—" : p.onboarded ? "✓" : h("span", { class: "flag" }, "not yet")), h("td", {}, work),
+      h("td", {}, p && p.r1_done ? (p.words / p.r1_done).toFixed(1) : "—"),
       h("td", {}, p && p.median_seconds != null ? `${p.median_seconds} s` : "—"), h("td", {}, p ? p.not_sure : "—"),
       h("td", {}, p ? flag(p.pastes) : "—"), h("td", {}, p ? flag(p.fast_rows) : "—"),
       h("td", { class: "muted" }, p && p.background ? [p.background.region, p.background.dialect, p.background.sex].filter(Boolean).join(" · ") : ""));
   });
   return [h("div", { class: "card" }, h("h2", {}, "Progress"),
-    table(["Name", "Lang", "Last submitted", "Onboarded", "Work", "Median / word", "Not sure", "Pastes", "Under 5 s", "Background"], rows),
+    table(["Name", "Lang", "Last submitted", "Onboarded", "Work", "Words / relative", "Median time", "Not sure", "Pastes", "Under 5 s", "Background"], rows),
     h("p", { class: "muted", style: "margin-bottom:0;font-size:13px" }, "Orange numbers need a look: pasted text may come from a translator or ChatGPT, and very fast answers may be guesses."))];
 }
 function adminAgreement(accounts, latest) {
@@ -693,7 +725,7 @@ function adminAgreement(accounts, latest) {
   for (const lang of langs) {
     const ann = accounts.filter(a => a.language === lang && a.role === "annotator" && a.active !== "no" && latest[a.handle]).sort((x, y) => x.handle.localeCompare(y.handle));
     const reviewers = accounts.filter(a => a.language === lang && a.role === "adjudicator" && a.active !== "no");
-    if (ann.length < 2) { rows.push(h("tr", {}, h("td", {}, h("b", {}, D.languages[lang].name)), h("td", { colspan: 6, class: "muted" }, "Waiting for two annotators to submit."))); continue; }
+    if (ann.length < 2) { rows.push(h("tr", {}, h("td", {}, h("b", {}, D.languages[lang].name)), h("td", { colspan: 7, class: "muted" }, "Waiting for two annotators to submit."))); continue; }
     const rowsOf = (a) => ((latest[a.handle].payload.rounds || {}).r1 || {}).rows || {};
     const res = Logic.agreement(D.relations, rowsOf(ann[0]), rowsOf(ann[1]), lang);
     const pct = (x) => x == null ? "—" : `${Math.round(100 * x)}%`;
@@ -704,7 +736,7 @@ function adminAgreement(accounts, latest) {
       } catch (err) { toast(err.message, true); }
     } }, `Send ${res.disagreements.length} to reviewer`);
     rows.push(h("tr", {}, h("td", {}, h("b", {}, D.languages[lang].name)), h("td", {}, ann.slice(0, 2).map(a => a.name).join(", ")),
-      h("td", {}, res.compared), h("td", {}, pct(res.agreement)), h("td", {}, pct(res.core_agreement)), h("td", {}, res.disagreements.length),
+      h("td", {}, res.compared), h("td", {}, pct(res.main_agreement)), h("td", {}, pct(res.shared_agreement)), h("td", {}, pct(res.core_main_agreement)), h("td", {}, res.disagreements.length),
       h("td", {}, reviewers.length ? send : h("span", { class: "muted" }, "add a reviewer"))));
   }
   const download = () => {
@@ -713,8 +745,8 @@ function adminAgreement(accounts, latest) {
     document.body.append(a); a.click(); a.remove();
   };
   return [h("div", { class: "card" }, h("h2", {}, "Agreement on kinship words"),
-    h("p", { class: "muted", style: "margin-top:0" }, "Compares the two annotators of each language before the reviewer steps in. Sending puts the disagreements in the reviewer's \"Resolve disagreements\" round."),
-    langs.length ? table(["Language", "Annotators", "Compared", "Agreement", "Core", "Disagreements", ""], rows) : h("p", { class: "muted" }, "No accounts yet."),
+    h("p", { class: "muted", style: "margin-top:0" }, "Compares the two annotators of each language. Only relatives where they share no word, or call an elder differently, go to the reviewer; when they share a word but list it in a different order, the word list settles it automatically."),
+    langs.length ? table(["Language", "Annotators", "Compared", "Same main word", "Share a word", "Same main (core)", "For reviewer", ""], rows) : h("p", { class: "muted" }, "No accounts yet."),
     h("div", { class: "alt", style: "margin-top:14px" }, h("button", { onclick: download }, "Download all submissions"),
       h("span", { class: "muted", style: "font-size:13px;align-self:center" }, "For the final word list: python -m kinshift.annotation.merge FILE")))];
 }

@@ -6,6 +6,7 @@
   "path_en": "father",
   "ego_sex": "m/f",
   "referent_sex": "m",
+  "elder": true,
   "steps": [
    {
     "rel": "F",
@@ -20,6 +21,7 @@
   "path_en": "mother",
   "ego_sex": "m/f",
   "referent_sex": "f",
+  "elder": true,
   "steps": [
    {
     "rel": "M",
@@ -34,6 +36,7 @@
   "path_en": "father's father",
   "ego_sex": "m/f",
   "referent_sex": "m",
+  "elder": true,
   "steps": [
    {
     "rel": "F",
@@ -52,6 +55,7 @@
   "path_en": "father's mother",
   "ego_sex": "m/f",
   "referent_sex": "f",
+  "elder": true,
   "steps": [
    {
     "rel": "F",
@@ -70,6 +74,7 @@
   "path_en": "mother's father",
   "ego_sex": "m/f",
   "referent_sex": "m",
+  "elder": true,
   "steps": [
    {
     "rel": "M",
@@ -88,6 +93,7 @@
   "path_en": "mother's mother",
   "ego_sex": "m/f",
   "referent_sex": "f",
+  "elder": true,
   "steps": [
    {
     "rel": "M",
@@ -106,6 +112,7 @@
   "path_en": "father's elder brother",
   "ego_sex": "m/f",
   "referent_sex": "m",
+  "elder": true,
   "steps": [
    {
     "rel": "F",
@@ -124,6 +131,7 @@
   "path_en": "father's younger brother",
   "ego_sex": "m/f",
   "referent_sex": "m",
+  "elder": true,
   "steps": [
    {
     "rel": "F",
@@ -142,6 +150,7 @@
   "path_en": "father's elder sister",
   "ego_sex": "m/f",
   "referent_sex": "f",
+  "elder": true,
   "steps": [
    {
     "rel": "F",
@@ -160,6 +169,7 @@
   "path_en": "father's younger sister",
   "ego_sex": "m/f",
   "referent_sex": "f",
+  "elder": true,
   "steps": [
    {
     "rel": "F",
@@ -178,6 +188,7 @@
   "path_en": "mother's elder brother",
   "ego_sex": "m/f",
   "referent_sex": "m",
+  "elder": true,
   "steps": [
    {
     "rel": "M",
@@ -196,6 +207,7 @@
   "path_en": "mother's younger brother",
   "ego_sex": "m/f",
   "referent_sex": "m",
+  "elder": true,
   "steps": [
    {
     "rel": "M",
@@ -214,6 +226,7 @@
   "path_en": "mother's elder sister",
   "ego_sex": "m/f",
   "referent_sex": "f",
+  "elder": true,
   "steps": [
    {
     "rel": "M",
@@ -232,6 +245,7 @@
   "path_en": "mother's younger sister",
   "ego_sex": "m/f",
   "referent_sex": "f",
+  "elder": true,
   "steps": [
    {
     "rel": "M",
@@ -250,6 +264,7 @@
   "path_en": "father's elder brother's wife",
   "ego_sex": "m/f",
   "referent_sex": "f",
+  "elder": true,
   "steps": [
    {
     "rel": "F",
@@ -272,6 +287,7 @@
   "path_en": "father's younger brother's wife",
   "ego_sex": "m/f",
   "referent_sex": "f",
+  "elder": true,
   "steps": [
    {
     "rel": "F",
@@ -294,6 +310,7 @@
   "path_en": "father's elder sister's husband",
   "ego_sex": "m/f",
   "referent_sex": "m",
+  "elder": true,
   "steps": [
    {
     "rel": "F",
@@ -316,6 +333,7 @@
   "path_en": "father's younger sister's husband",
   "ego_sex": "m/f",
   "referent_sex": "m",
+  "elder": true,
   "steps": [
    {
     "rel": "F",
@@ -338,6 +356,7 @@
   "path_en": "mother's elder brother's wife",
   "ego_sex": "m/f",
   "referent_sex": "f",
+  "elder": true,
   "steps": [
    {
     "rel": "M",
@@ -360,6 +379,7 @@
   "path_en": "mother's younger brother's wife",
   "ego_sex": "m/f",
   "referent_sex": "f",
+  "elder": true,
   "steps": [
    {
     "rel": "M",
@@ -382,6 +402,7 @@
   "path_en": "mother's elder sister's husband",
   "ego_sex": "m/f",
   "referent_sex": "m",
+  "elder": true,
   "steps": [
    {
     "rel": "M",
@@ -404,6 +425,7 @@
   "path_en": "mother's younger sister's husband",
   "ego_sex": "m/f",
   "referent_sex": "m",
+  "elder": true,
   "steps": [
    {
     "rel": "M",
@@ -426,6 +448,7 @@
   "path_en": "elder brother",
   "ego_sex": "m/f",
   "referent_sex": "m",
+  "elder": true,
   "steps": [
    {
     "rel": "B",
@@ -440,6 +463,7 @@
   "path_en": "younger brother",
   "ego_sex": "m/f",
   "referent_sex": "m",
+  "elder": false,
   "steps": [
    {
     "rel": "B",
@@ -454,6 +478,7 @@
   "path_en": "elder sister",
   "ego_sex": "m/f",
   "referent_sex": "f",
+  "elder": true,
   "steps": [
    {
     "rel": "Z",
@@ -468,6 +493,7 @@
   "path_en": "younger sister",
   "ego_sex": "m/f",
   "referent_sex": "f",
+  "elder": false,
   "steps": [
    {
     "rel": "Z",
@@ -482,6 +508,7 @@
   "path_en": "elder brother's wife",
   "ego_sex": "m/f",
   "referent_sex": "f",
+  "elder": true,
   "steps": [
    {
     "rel": "B",
@@ -500,6 +527,7 @@
   "path_en": "younger brother's wife",
   "ego_sex": "m/f",
   "referent_sex": "f",
+  "elder": false,
   "steps": [
    {
     "rel": "B",
@@ -518,6 +546,7 @@
   "path_en": "elder sister's husband",
   "ego_sex": "m/f",
   "referent_sex": "m",
+  "elder": true,
   "steps": [
    {
     "rel": "Z",
@@ -536,6 +565,7 @@
   "path_en": "younger sister's husband",
   "ego_sex": "m/f",
   "referent_sex": "m",
+  "elder": false,
   "steps": [
    {
     "rel": "Z",
@@ -554,6 +584,7 @@
   "path_en": "father's brother's son",
   "ego_sex": "m/f",
   "referent_sex": "m",
+  "elder": false,
   "steps": [
    {
     "rel": "F",
@@ -576,6 +607,7 @@
   "path_en": "father's brother's daughter",
   "ego_sex": "m/f",
   "referent_sex": "f",
+  "elder": false,
   "steps": [
    {
     "rel": "F",
@@ -598,6 +630,7 @@
   "path_en": "father's sister's son",
   "ego_sex": "m/f",
   "referent_sex": "m",
+  "elder": false,
   "steps": [
    {
     "rel": "F",
@@ -620,6 +653,7 @@
   "path_en": "father's sister's daughter",
   "ego_sex": "m/f",
   "referent_sex": "f",
+  "elder": false,
   "steps": [
    {
     "rel": "F",
@@ -642,6 +676,7 @@
   "path_en": "mother's brother's son",
   "ego_sex": "m/f",
   "referent_sex": "m",
+  "elder": false,
   "steps": [
    {
     "rel": "M",
@@ -664,6 +699,7 @@
   "path_en": "mother's brother's daughter",
   "ego_sex": "m/f",
   "referent_sex": "f",
+  "elder": false,
   "steps": [
    {
     "rel": "M",
@@ -686,6 +722,7 @@
   "path_en": "mother's sister's son",
   "ego_sex": "m/f",
   "referent_sex": "m",
+  "elder": false,
   "steps": [
    {
     "rel": "M",
@@ -708,6 +745,7 @@
   "path_en": "mother's sister's daughter",
   "ego_sex": "m/f",
   "referent_sex": "f",
+  "elder": false,
   "steps": [
    {
     "rel": "M",
@@ -730,6 +768,7 @@
   "path_en": "husband",
   "ego_sex": "f",
   "referent_sex": "m",
+  "elder": false,
   "steps": [
    {
     "rel": "H",
@@ -744,6 +783,7 @@
   "path_en": "wife",
   "ego_sex": "m",
   "referent_sex": "f",
+  "elder": false,
   "steps": [
    {
     "rel": "W",
@@ -758,6 +798,7 @@
   "path_en": "husband's father",
   "ego_sex": "f",
   "referent_sex": "m",
+  "elder": true,
   "steps": [
    {
     "rel": "H",
@@ -776,6 +817,7 @@
   "path_en": "husband's mother",
   "ego_sex": "f",
   "referent_sex": "f",
+  "elder": true,
   "steps": [
    {
     "rel": "H",
@@ -794,6 +836,7 @@
   "path_en": "wife's father",
   "ego_sex": "m",
   "referent_sex": "m",
+  "elder": true,
   "steps": [
    {
     "rel": "W",
@@ -812,6 +855,7 @@
   "path_en": "wife's mother",
   "ego_sex": "m",
   "referent_sex": "f",
+  "elder": true,
   "steps": [
    {
     "rel": "W",
@@ -830,6 +874,7 @@
   "path_en": "husband's elder brother",
   "ego_sex": "f",
   "referent_sex": "m",
+  "elder": true,
   "steps": [
    {
     "rel": "H",
@@ -848,6 +893,7 @@
   "path_en": "husband's younger brother",
   "ego_sex": "f",
   "referent_sex": "m",
+  "elder": false,
   "steps": [
    {
     "rel": "H",
@@ -866,6 +912,7 @@
   "path_en": "husband's elder sister",
   "ego_sex": "f",
   "referent_sex": "f",
+  "elder": true,
   "steps": [
    {
     "rel": "H",
@@ -884,6 +931,7 @@
   "path_en": "husband's younger sister",
   "ego_sex": "f",
   "referent_sex": "f",
+  "elder": false,
   "steps": [
    {
     "rel": "H",
@@ -902,6 +950,7 @@
   "path_en": "wife's elder brother",
   "ego_sex": "m",
   "referent_sex": "m",
+  "elder": true,
   "steps": [
    {
     "rel": "W",
@@ -920,6 +969,7 @@
   "path_en": "wife's younger brother",
   "ego_sex": "m",
   "referent_sex": "m",
+  "elder": false,
   "steps": [
    {
     "rel": "W",
@@ -938,6 +988,7 @@
   "path_en": "wife's elder sister",
   "ego_sex": "m",
   "referent_sex": "f",
+  "elder": true,
   "steps": [
    {
     "rel": "W",
@@ -956,6 +1007,7 @@
   "path_en": "wife's younger sister",
   "ego_sex": "m",
   "referent_sex": "f",
+  "elder": false,
   "steps": [
    {
     "rel": "W",
@@ -974,6 +1026,7 @@
   "path_en": "husband's elder brother's wife",
   "ego_sex": "f",
   "referent_sex": "f",
+  "elder": true,
   "steps": [
    {
     "rel": "H",
@@ -996,6 +1049,7 @@
   "path_en": "husband's younger brother's wife",
   "ego_sex": "f",
   "referent_sex": "f",
+  "elder": false,
   "steps": [
    {
     "rel": "H",
@@ -1018,6 +1072,7 @@
   "path_en": "husband's elder sister's husband",
   "ego_sex": "f",
   "referent_sex": "m",
+  "elder": true,
   "steps": [
    {
     "rel": "H",
@@ -1040,6 +1095,7 @@
   "path_en": "husband's younger sister's husband",
   "ego_sex": "f",
   "referent_sex": "m",
+  "elder": false,
   "steps": [
    {
     "rel": "H",
@@ -1062,6 +1118,7 @@
   "path_en": "wife's elder brother's wife",
   "ego_sex": "m",
   "referent_sex": "f",
+  "elder": true,
   "steps": [
    {
     "rel": "W",
@@ -1084,6 +1141,7 @@
   "path_en": "wife's younger brother's wife",
   "ego_sex": "m",
   "referent_sex": "f",
+  "elder": false,
   "steps": [
    {
     "rel": "W",
@@ -1106,6 +1164,7 @@
   "path_en": "wife's elder sister's husband",
   "ego_sex": "m",
   "referent_sex": "m",
+  "elder": true,
   "steps": [
    {
     "rel": "W",
@@ -1128,6 +1187,7 @@
   "path_en": "wife's younger sister's husband",
   "ego_sex": "m",
   "referent_sex": "m",
+  "elder": false,
   "steps": [
    {
     "rel": "W",
@@ -1150,6 +1210,7 @@
   "path_en": "son",
   "ego_sex": "m/f",
   "referent_sex": "m",
+  "elder": false,
   "steps": [
    {
     "rel": "S",
@@ -1164,6 +1225,7 @@
   "path_en": "daughter",
   "ego_sex": "m/f",
   "referent_sex": "f",
+  "elder": false,
   "steps": [
    {
     "rel": "D",
@@ -1178,6 +1240,7 @@
   "path_en": "son's wife",
   "ego_sex": "m/f",
   "referent_sex": "f",
+  "elder": false,
   "steps": [
    {
     "rel": "S",
@@ -1196,6 +1259,7 @@
   "path_en": "daughter's husband",
   "ego_sex": "m/f",
   "referent_sex": "m",
+  "elder": false,
   "steps": [
    {
     "rel": "D",
@@ -1214,6 +1278,7 @@
   "path_en": "son's wife's father",
   "ego_sex": "m/f",
   "referent_sex": "m",
+  "elder": false,
   "steps": [
    {
     "rel": "S",
@@ -1236,6 +1301,7 @@
   "path_en": "son's wife's mother",
   "ego_sex": "m/f",
   "referent_sex": "f",
+  "elder": false,
   "steps": [
    {
     "rel": "S",
@@ -1258,6 +1324,7 @@
   "path_en": "daughter's husband's father",
   "ego_sex": "m/f",
   "referent_sex": "m",
+  "elder": false,
   "steps": [
    {
     "rel": "D",
@@ -1280,6 +1347,7 @@
   "path_en": "daughter's husband's mother",
   "ego_sex": "m/f",
   "referent_sex": "f",
+  "elder": false,
   "steps": [
    {
     "rel": "D",
@@ -1302,6 +1370,7 @@
   "path_en": "brother's son",
   "ego_sex": "m/f",
   "referent_sex": "m",
+  "elder": false,
   "steps": [
    {
     "rel": "B",
@@ -1320,6 +1389,7 @@
   "path_en": "brother's daughter",
   "ego_sex": "m/f",
   "referent_sex": "f",
+  "elder": false,
   "steps": [
    {
     "rel": "B",
@@ -1338,6 +1408,7 @@
   "path_en": "sister's son",
   "ego_sex": "m/f",
   "referent_sex": "m",
+  "elder": false,
   "steps": [
    {
     "rel": "Z",
@@ -1356,6 +1427,7 @@
   "path_en": "sister's daughter",
   "ego_sex": "m/f",
   "referent_sex": "f",
+  "elder": false,
   "steps": [
    {
     "rel": "Z",
@@ -1374,6 +1446,7 @@
   "path_en": "son's son",
   "ego_sex": "m/f",
   "referent_sex": "m",
+  "elder": false,
   "steps": [
    {
     "rel": "S",
@@ -1392,6 +1465,7 @@
   "path_en": "son's daughter",
   "ego_sex": "m/f",
   "referent_sex": "f",
+  "elder": false,
   "steps": [
    {
     "rel": "S",
@@ -1410,6 +1484,7 @@
   "path_en": "daughter's son",
   "ego_sex": "m/f",
   "referent_sex": "m",
+  "elder": false,
   "steps": [
    {
     "rel": "D",
@@ -1428,6 +1503,7 @@
   "path_en": "daughter's daughter",
   "ego_sex": "m/f",
   "referent_sex": "f",
+  "elder": false,
   "steps": [
    {
     "rel": "D",
@@ -1446,6 +1522,7 @@
   "path_en": "husband's brother's son",
   "ego_sex": "f",
   "referent_sex": "m",
+  "elder": false,
   "steps": [
    {
     "rel": "H",
@@ -1468,6 +1545,7 @@
   "path_en": "husband's brother's daughter",
   "ego_sex": "f",
   "referent_sex": "f",
+  "elder": false,
   "steps": [
    {
     "rel": "H",
@@ -1490,6 +1568,7 @@
   "path_en": "husband's sister's son",
   "ego_sex": "f",
   "referent_sex": "m",
+  "elder": false,
   "steps": [
    {
     "rel": "H",
@@ -1512,6 +1591,7 @@
   "path_en": "husband's sister's daughter",
   "ego_sex": "f",
   "referent_sex": "f",
+  "elder": false,
   "steps": [
    {
     "rel": "H",
@@ -1534,6 +1614,7 @@
   "path_en": "wife's brother's son",
   "ego_sex": "m",
   "referent_sex": "m",
+  "elder": false,
   "steps": [
    {
     "rel": "W",
@@ -1556,6 +1637,7 @@
   "path_en": "wife's brother's daughter",
   "ego_sex": "m",
   "referent_sex": "f",
+  "elder": false,
   "steps": [
    {
     "rel": "W",
@@ -1578,6 +1660,7 @@
   "path_en": "wife's sister's son",
   "ego_sex": "m",
   "referent_sex": "m",
+  "elder": false,
   "steps": [
    {
     "rel": "W",
@@ -1600,6 +1683,7 @@
   "path_en": "wife's sister's daughter",
   "ego_sex": "m",
   "referent_sex": "f",
+  "elder": false,
   "steps": [
    {
     "rel": "W",
@@ -1622,6 +1706,7 @@
   "path_en": "father's father's father",
   "ego_sex": "m/f",
   "referent_sex": "m",
+  "elder": true,
   "steps": [
    {
     "rel": "F",
@@ -1644,6 +1729,7 @@
   "path_en": "father's father's mother",
   "ego_sex": "m/f",
   "referent_sex": "f",
+  "elder": true,
   "steps": [
    {
     "rel": "F",
@@ -1666,6 +1752,7 @@
   "path_en": "father's mother's father",
   "ego_sex": "m/f",
   "referent_sex": "m",
+  "elder": true,
   "steps": [
    {
     "rel": "F",
@@ -1688,6 +1775,7 @@
   "path_en": "father's mother's mother",
   "ego_sex": "m/f",
   "referent_sex": "f",
+  "elder": true,
   "steps": [
    {
     "rel": "F",
@@ -1710,6 +1798,7 @@
   "path_en": "mother's father's father",
   "ego_sex": "m/f",
   "referent_sex": "m",
+  "elder": true,
   "steps": [
    {
     "rel": "M",
@@ -1732,6 +1821,7 @@
   "path_en": "mother's father's mother",
   "ego_sex": "m/f",
   "referent_sex": "f",
+  "elder": true,
   "steps": [
    {
     "rel": "M",
@@ -1754,6 +1844,7 @@
   "path_en": "mother's mother's father",
   "ego_sex": "m/f",
   "referent_sex": "m",
+  "elder": true,
   "steps": [
    {
     "rel": "M",
@@ -1776,6 +1867,7 @@
   "path_en": "mother's mother's mother",
   "ego_sex": "m/f",
   "referent_sex": "f",
+  "elder": true,
   "steps": [
    {
     "rel": "M",
@@ -1798,6 +1890,7 @@
   "path_en": "father's father's elder brother",
   "ego_sex": "m/f",
   "referent_sex": "m",
+  "elder": true,
   "steps": [
    {
     "rel": "F",
@@ -1820,6 +1913,7 @@
   "path_en": "father's father's younger brother",
   "ego_sex": "m/f",
   "referent_sex": "m",
+  "elder": true,
   "steps": [
    {
     "rel": "F",
@@ -1842,6 +1936,7 @@
   "path_en": "father's father's sister",
   "ego_sex": "m/f",
   "referent_sex": "f",
+  "elder": true,
   "steps": [
    {
     "rel": "F",
@@ -1864,6 +1959,7 @@
   "path_en": "father's mother's brother",
   "ego_sex": "m/f",
   "referent_sex": "m",
+  "elder": true,
   "steps": [
    {
     "rel": "F",
@@ -1886,6 +1982,7 @@
   "path_en": "father's mother's sister",
   "ego_sex": "m/f",
   "referent_sex": "f",
+  "elder": true,
   "steps": [
    {
     "rel": "F",
@@ -1908,6 +2005,7 @@
   "path_en": "mother's father's elder brother",
   "ego_sex": "m/f",
   "referent_sex": "m",
+  "elder": true,
   "steps": [
    {
     "rel": "M",
@@ -1930,6 +2028,7 @@
   "path_en": "mother's father's younger brother",
   "ego_sex": "m/f",
   "referent_sex": "m",
+  "elder": true,
   "steps": [
    {
     "rel": "M",
@@ -1952,6 +2051,7 @@
   "path_en": "mother's father's sister",
   "ego_sex": "m/f",
   "referent_sex": "f",
+  "elder": true,
   "steps": [
    {
     "rel": "M",
@@ -1974,6 +2074,7 @@
   "path_en": "mother's mother's brother",
   "ego_sex": "m/f",
   "referent_sex": "m",
+  "elder": true,
   "steps": [
    {
     "rel": "M",
@@ -1996,6 +2097,7 @@
   "path_en": "mother's mother's sister",
   "ego_sex": "m/f",
   "referent_sex": "f",
+  "elder": true,
   "steps": [
    {
     "rel": "M",
@@ -2018,6 +2120,7 @@
   "path_en": "father's father's brother's son",
   "ego_sex": "m/f",
   "referent_sex": "m",
+  "elder": true,
   "steps": [
    {
     "rel": "F",
@@ -2044,6 +2147,7 @@
   "path_en": "father's father's brother's daughter",
   "ego_sex": "m/f",
   "referent_sex": "f",
+  "elder": true,
   "steps": [
    {
     "rel": "F",
@@ -2070,6 +2174,7 @@
   "path_en": "father's father's sister's son",
   "ego_sex": "m/f",
   "referent_sex": "m",
+  "elder": true,
   "steps": [
    {
     "rel": "F",
@@ -2096,6 +2201,7 @@
   "path_en": "father's father's sister's daughter",
   "ego_sex": "m/f",
   "referent_sex": "f",
+  "elder": true,
   "steps": [
    {
     "rel": "F",
@@ -2122,6 +2228,7 @@
   "path_en": "father's mother's brother's son",
   "ego_sex": "m/f",
   "referent_sex": "m",
+  "elder": true,
   "steps": [
    {
     "rel": "F",
@@ -2148,6 +2255,7 @@
   "path_en": "father's mother's brother's daughter",
   "ego_sex": "m/f",
   "referent_sex": "f",
+  "elder": true,
   "steps": [
    {
     "rel": "F",
@@ -2174,6 +2282,7 @@
   "path_en": "father's mother's sister's son",
   "ego_sex": "m/f",
   "referent_sex": "m",
+  "elder": true,
   "steps": [
    {
     "rel": "F",
@@ -2200,6 +2309,7 @@
   "path_en": "father's mother's sister's daughter",
   "ego_sex": "m/f",
   "referent_sex": "f",
+  "elder": true,
   "steps": [
    {
     "rel": "F",
@@ -2226,6 +2336,7 @@
   "path_en": "mother's father's brother's son",
   "ego_sex": "m/f",
   "referent_sex": "m",
+  "elder": true,
   "steps": [
    {
     "rel": "M",
@@ -2252,6 +2363,7 @@
   "path_en": "mother's father's brother's daughter",
   "ego_sex": "m/f",
   "referent_sex": "f",
+  "elder": true,
   "steps": [
    {
     "rel": "M",
@@ -2278,6 +2390,7 @@
   "path_en": "mother's father's sister's son",
   "ego_sex": "m/f",
   "referent_sex": "m",
+  "elder": true,
   "steps": [
    {
     "rel": "M",
@@ -2304,6 +2417,7 @@
   "path_en": "mother's father's sister's daughter",
   "ego_sex": "m/f",
   "referent_sex": "f",
+  "elder": true,
   "steps": [
    {
     "rel": "M",
@@ -2330,6 +2444,7 @@
   "path_en": "mother's mother's brother's son",
   "ego_sex": "m/f",
   "referent_sex": "m",
+  "elder": true,
   "steps": [
    {
     "rel": "M",
@@ -2356,6 +2471,7 @@
   "path_en": "mother's mother's brother's daughter",
   "ego_sex": "m/f",
   "referent_sex": "f",
+  "elder": true,
   "steps": [
    {
     "rel": "M",
@@ -2382,6 +2498,7 @@
   "path_en": "mother's mother's sister's son",
   "ego_sex": "m/f",
   "referent_sex": "m",
+  "elder": true,
   "steps": [
    {
     "rel": "M",
@@ -2408,6 +2525,7 @@
   "path_en": "mother's mother's sister's daughter",
   "ego_sex": "m/f",
   "referent_sex": "f",
+  "elder": true,
   "steps": [
    {
     "rel": "M",
@@ -2434,6 +2552,7 @@
   "path_en": "father's brother's son's son",
   "ego_sex": "m/f",
   "referent_sex": "m",
+  "elder": false,
   "steps": [
    {
     "rel": "F",
@@ -2460,6 +2579,7 @@
   "path_en": "father's brother's son's daughter",
   "ego_sex": "m/f",
   "referent_sex": "f",
+  "elder": false,
   "steps": [
    {
     "rel": "F",
@@ -2486,6 +2606,7 @@
   "path_en": "father's brother's daughter's son",
   "ego_sex": "m/f",
   "referent_sex": "m",
+  "elder": false,
   "steps": [
    {
     "rel": "F",
@@ -2512,6 +2633,7 @@
   "path_en": "father's brother's daughter's daughter",
   "ego_sex": "m/f",
   "referent_sex": "f",
+  "elder": false,
   "steps": [
    {
     "rel": "F",
@@ -2538,6 +2660,7 @@
   "path_en": "father's sister's son's son",
   "ego_sex": "m/f",
   "referent_sex": "m",
+  "elder": false,
   "steps": [
    {
     "rel": "F",
@@ -2564,6 +2687,7 @@
   "path_en": "father's sister's son's daughter",
   "ego_sex": "m/f",
   "referent_sex": "f",
+  "elder": false,
   "steps": [
    {
     "rel": "F",
@@ -2590,6 +2714,7 @@
   "path_en": "father's sister's daughter's son",
   "ego_sex": "m/f",
   "referent_sex": "m",
+  "elder": false,
   "steps": [
    {
     "rel": "F",
@@ -2616,6 +2741,7 @@
   "path_en": "father's sister's daughter's daughter",
   "ego_sex": "m/f",
   "referent_sex": "f",
+  "elder": false,
   "steps": [
    {
     "rel": "F",
@@ -2642,6 +2768,7 @@
   "path_en": "mother's brother's son's son",
   "ego_sex": "m/f",
   "referent_sex": "m",
+  "elder": false,
   "steps": [
    {
     "rel": "M",
@@ -2668,6 +2795,7 @@
   "path_en": "mother's brother's son's daughter",
   "ego_sex": "m/f",
   "referent_sex": "f",
+  "elder": false,
   "steps": [
    {
     "rel": "M",
@@ -2694,6 +2822,7 @@
   "path_en": "mother's brother's daughter's son",
   "ego_sex": "m/f",
   "referent_sex": "m",
+  "elder": false,
   "steps": [
    {
     "rel": "M",
@@ -2720,6 +2849,7 @@
   "path_en": "mother's brother's daughter's daughter",
   "ego_sex": "m/f",
   "referent_sex": "f",
+  "elder": false,
   "steps": [
    {
     "rel": "M",
@@ -2746,6 +2876,7 @@
   "path_en": "mother's sister's son's son",
   "ego_sex": "m/f",
   "referent_sex": "m",
+  "elder": false,
   "steps": [
    {
     "rel": "M",
@@ -2772,6 +2903,7 @@
   "path_en": "mother's sister's son's daughter",
   "ego_sex": "m/f",
   "referent_sex": "f",
+  "elder": false,
   "steps": [
    {
     "rel": "M",
@@ -2798,6 +2930,7 @@
   "path_en": "mother's sister's daughter's son",
   "ego_sex": "m/f",
   "referent_sex": "m",
+  "elder": false,
   "steps": [
    {
     "rel": "M",
@@ -2824,6 +2957,7 @@
   "path_en": "mother's sister's daughter's daughter",
   "ego_sex": "m/f",
   "referent_sex": "f",
+  "elder": false,
   "steps": [
    {
     "rel": "M",
@@ -2850,6 +2984,7 @@
   "path_en": "brother's son's son",
   "ego_sex": "m/f",
   "referent_sex": "m",
+  "elder": false,
   "steps": [
    {
     "rel": "B",
@@ -2872,6 +3007,7 @@
   "path_en": "brother's son's daughter",
   "ego_sex": "m/f",
   "referent_sex": "f",
+  "elder": false,
   "steps": [
    {
     "rel": "B",
@@ -2894,6 +3030,7 @@
   "path_en": "brother's daughter's son",
   "ego_sex": "m/f",
   "referent_sex": "m",
+  "elder": false,
   "steps": [
    {
     "rel": "B",
@@ -2916,6 +3053,7 @@
   "path_en": "brother's daughter's daughter",
   "ego_sex": "m/f",
   "referent_sex": "f",
+  "elder": false,
   "steps": [
    {
     "rel": "B",
@@ -2938,6 +3076,7 @@
   "path_en": "sister's son's son",
   "ego_sex": "m/f",
   "referent_sex": "m",
+  "elder": false,
   "steps": [
    {
     "rel": "Z",
@@ -2960,6 +3099,7 @@
   "path_en": "sister's son's daughter",
   "ego_sex": "m/f",
   "referent_sex": "f",
+  "elder": false,
   "steps": [
    {
     "rel": "Z",
@@ -2982,6 +3122,7 @@
   "path_en": "sister's daughter's son",
   "ego_sex": "m/f",
   "referent_sex": "m",
+  "elder": false,
   "steps": [
    {
     "rel": "Z",
@@ -3004,6 +3145,7 @@
   "path_en": "sister's daughter's daughter",
   "ego_sex": "m/f",
   "referent_sex": "f",
+  "elder": false,
   "steps": [
    {
     "rel": "Z",
@@ -3026,6 +3168,7 @@
   "path_en": "son's son's son",
   "ego_sex": "m/f",
   "referent_sex": "m",
+  "elder": false,
   "steps": [
    {
     "rel": "S",
@@ -3048,6 +3191,7 @@
   "path_en": "son's son's daughter",
   "ego_sex": "m/f",
   "referent_sex": "f",
+  "elder": false,
   "steps": [
    {
     "rel": "S",
@@ -3070,6 +3214,7 @@
   "path_en": "son's daughter's son",
   "ego_sex": "m/f",
   "referent_sex": "m",
+  "elder": false,
   "steps": [
    {
     "rel": "S",
@@ -3092,6 +3237,7 @@
   "path_en": "son's daughter's daughter",
   "ego_sex": "m/f",
   "referent_sex": "f",
+  "elder": false,
   "steps": [
    {
     "rel": "S",
@@ -3114,6 +3260,7 @@
   "path_en": "daughter's son's son",
   "ego_sex": "m/f",
   "referent_sex": "m",
+  "elder": false,
   "steps": [
    {
     "rel": "D",
@@ -3136,6 +3283,7 @@
   "path_en": "daughter's son's daughter",
   "ego_sex": "m/f",
   "referent_sex": "f",
+  "elder": false,
   "steps": [
    {
     "rel": "D",
@@ -3158,6 +3306,7 @@
   "path_en": "daughter's daughter's son",
   "ego_sex": "m/f",
   "referent_sex": "m",
+  "elder": false,
   "steps": [
    {
     "rel": "D",
@@ -3180,6 +3329,7 @@
   "path_en": "daughter's daughter's daughter",
   "ego_sex": "m/f",
   "referent_sex": "f",
+  "elder": false,
   "steps": [
    {
     "rel": "D",

@@ -1,7 +1,12 @@
 "use strict";
 // Pure functions shared by the dashboard and the tests. No DOM here.
-// Normalisation and agreement mirror kinshift/annotation/normalize.py and merge.py;
-// tests/test_annotation.py checks that both give the same results.
+// Mirrors kinshift/annotation/normalize.py and merge.py; tests/test_annotation.py
+// checks that both give the same results.
+//
+// An R1 answer row looks like:
+//   { words: [{native, roman}, ...],   // first = main word; Roman box may hold "abbu, abbo"
+//     call:  [{native, roman}, ...],   // only for elders, only if they are called something else
+//     unsure: bool, notes, active_ms, pastes, first_edit, last_edit }
 
 (function (root) {
   const HARAKAT = /[ً-ْٰـ]/g;
@@ -21,74 +26,99 @@
     return (field || "").split(/[,|،]/).map(romanNorm).filter(Boolean);
   }
 
-  function r1Done(r, rel) {
-    if (!r || !r.confidence) return false;
-    if (r.same_word_as) return true;
-    if (r.no_single_word) return !!r.phrase_native;
-    if (!(r.reference_native && r.reference_roman)) return false;
-    if (rel && rel.tier === "far") return true;
-    return r.address_same === "yes" || (r.address_same === "no" && !!r.address_native);
+  // Answers saved before the word-list form used reference_native / address_native fields.
+  function upgrade(row) {
+    if (!row || row.words) return row;
+    const words = [];
+    if (row.reference_native || row.reference_roman)
+      words.push({ native: row.reference_native || "", roman: [row.reference_roman, row.roman_variants].filter(Boolean).join(", ") });
+    else if (row.no_single_word && (row.phrase_native || row.phrase_roman))
+      words.push({ native: row.phrase_native || "", roman: row.phrase_roman || "" });
+    const call = row.address_same === "no" && (row.address_native || row.address_roman)
+      ? [{ native: row.address_native || "", roman: row.address_roman || "" }] : [];
+    return { ...row, words, call, unsure: row.unsure ?? row.confidence === "not sure" };
   }
 
-  function resolved(rows, id) {
-    let cur = rows[id] || {}, n = 0;
-    while (cur.same_word_as && n < 6) { cur = rows[cur.same_word_as] || {}; n++; }
-    return cur;
-  }
-  function word(rows, id, lang) {
-    const row = resolved(rows, id);
-    if (row.no_single_word) {
-      return { native: nativeNorm(row.phrase_native, lang), roman: new Set([romanNorm(row.phrase_roman)].filter(Boolean)), address: null, phrase: true };
-    }
-    const roman = new Set([romanNorm(row.reference_roman), ...variants(row.roman_variants)].filter(Boolean));
-    const address = row.address_same === "no" ? nativeNorm(row.address_native, lang) : null;
-    return { native: nativeNorm(row.reference_native, lang), roman, address, phrase: false };
-  }
-  function compare(rowsA, rowsB, id, lang) {
-    const a = rowsA[id], b = rowsB[id];
-    if (!a || !a.confidence || !b || !b.confidence) return { status: "missing" };
-    const wa = word(rowsA, id, lang), wb = word(rowsB, id, lang), on = [];
-    if (wa.native !== wb.native || wa.phrase !== wb.phrase) on.push("word");
-    if ((wa.address || wa.native) !== (wb.address || wb.native) && !on.includes("word")) on.push("address");
-    return { status: on.length ? "differ" : "agree", on, roman_overlap: [...wa.roman].some(x => wb.roman.has(x)) };
+  const filled = (w) => !!(w && ((w.native || "").trim() || (w.roman || "").trim()));
+  function r1Done(row) {
+    const r = upgrade(row);
+    const main = r && r.words && r.words[0];
+    return !!(main && (main.native || "").trim() && (main.roman || "").trim());
   }
 
-  // Agreement and disagreement items for one language, from the two annotators' R1 rows.
+  // Comparable form of one word: normalised native text and its set of Roman spellings.
+  function key(w, lang) { return { n: nativeNorm(w.native, lang), r: new Set(variants(w.roman)) }; }
+  function same(x, y) { return (x.n && x.n === y.n) || (!x.n || !y.n ? [...x.r].some(v => y.r.has(v)) : false); }
+  function words(row, lang) { const r = upgrade(row) || {}; return (r.words || []).filter(filled).map(w => key(w, lang)); }
+  const explicitCalls = (row) => ((upgrade(row) || {}).call || []).filter(filled);
+  // Words someone may call this elder: the calling words written, else any of their words.
+  function callSet(row) { const c = explicitCalls(row); return c.length ? c : ((upgrade(row) || {}).words || []).filter(filled); }
+
+  // agree: same main word. order: they share a word, but not the main one. differ: nothing shared.
+  // call_differs: for elders, the words used to call them share nothing.
+  function compare(rowA, rowB, rel, lang) {
+    if (!r1Done(rowA) || !r1Done(rowB)) return { status: "missing" };
+    const a = words(rowA, lang), b = words(rowB, lang);
+    const shared = a.some(x => b.some(y => same(x, y)));
+    const status = same(a[0], b[0]) ? "agree" : shared ? "order" : "differ";
+    // Calling only differs when someone wrote calling words; otherwise it follows the word decision.
+    const ca = callSet(rowA).map(w => key(w, lang)), cb = callSet(rowB).map(w => key(w, lang));
+    const call_differs = !!(rel && rel.elder) && !!(explicitCalls(rowA).length || explicitCalls(rowB).length)
+      && !ca.some(x => cb.some(y => same(x, y)));
+    return { status, call_differs, review: status === "differ" || call_differs };
+  }
+
   function agreement(relations, rowsA, rowsB, lang) {
-    let compared = 0, agree = 0, coreCompared = 0, coreAgree = 0;
+    let compared = 0, main = 0, shared = 0, coreCompared = 0, coreMain = 0;
     const disagreements = [];
     for (const rel of relations) {
-      const res = compare(rowsA, rowsB, rel.id, lang);
+      const res = compare(rowsA[rel.id], rowsB[rel.id], rel, lang);
       if (res.status === "missing") continue;
-      compared++; if (res.status === "agree") agree++;
-      if (rel.tier === "core") { coreCompared++; if (res.status === "agree") coreAgree++; }
-      if (res.status === "differ") disagreements.push({ id: rel.id, path_en: rel.path_en, on: res.on,
-        a: rowsA[rel.id], b: rowsB[rel.id], a_resolved: resolved(rowsA, rel.id), b_resolved: resolved(rowsB, rel.id) });
+      compared++;
+      if (res.status === "agree") main++;
+      if (res.status !== "differ") shared++;
+      if (rel.tier === "core") { coreCompared++; if (res.status === "agree") coreMain++; }
+      if (res.review) disagreements.push({ id: rel.id, path_en: rel.path_en,
+        on: [res.status === "differ" ? "word" : null, res.call_differs ? "call" : null].filter(Boolean),
+        a: upgrade(rowsA[rel.id]), b: upgrade(rowsB[rel.id]) });
     }
-    return { compared, agree, agreement: compared ? agree / compared : null,
-             core_agreement: coreCompared ? coreAgree / coreCompared : null, disagreements };
+    const pct = (x, n) => n ? x / n : null;
+    return { compared, main_agreement: pct(main, compared), shared_agreement: pct(shared, compared),
+             core_main_agreement: pct(coreMain, coreCompared), disagreements };
   }
 
-  // Per-person progress numbers for the admin view.
+  // Distinct words across both annotators, for the reviewer to rate.
+  function union(listA, listB, lang) {
+    const out = [];
+    const ka = (listA || []).filter(filled).map(w => key(w, lang)), kb = (listB || []).filter(filled).map(w => key(w, lang));
+    for (const w of [...(listA || []), ...(listB || [])].filter(filled)) {
+      const k = key(w, lang);
+      if (!out.some(o => same(o.k, k))) out.push({ native: w.native || "", roman: w.roman || "", k, id: k.n || [...k.r][0] || "" });
+    }
+    return out.map(({ native, roman, k, id }) => ({ native, roman, id,
+      count: (ka.some(x => same(x, k)) ? 1 : 0) + (kb.some(x => same(x, k)) ? 1 : 0) }));
+  }
+  // What the reviewer compares for calling an elder: the call words, or the main word if none.
+  const callList = callSet;
+
   function progress(payload, relations) {
     const rounds = (payload && payload.rounds) || {}, r0 = rounds.r0 || {}, rows = (rounds.r1 || {}).rows || {};
-    const tier = Object.fromEntries(relations.map(r => [r.id, r]));
-    const done = Object.keys(rows).filter(k => r1Done(rows[k], tier[k]));
+    const done = Object.keys(rows).filter(k => r1Done(rows[k]));
     const secs = done.map(k => (rows[k].active_ms || 0) / 1000).filter(s => s > 0).sort((x, y) => x - y);
-    const median = secs.length ? secs[Math.floor((secs.length - 1) / 2)] : null;
-    const vals = Object.values(rows);
+    const vals = Object.values(rows).map(upgrade);
     return {
       onboarded: !!(r0.consent && r0.quiz && r0.quiz.passed), background: r0.background || null,
       r1_done: done.length, r1_total: relations.length,
-      not_sure: vals.filter(v => v.confidence === "not sure").length,
-      pastes: vals.reduce((n, v) => n + (v.pastes || 0), 0),
-      median_seconds: median == null ? null : Math.round(median),
+      words: vals.reduce((n, v) => n + ((v && v.words) || []).filter(filled).length, 0),
+      not_sure: vals.filter(v => v && v.unsure).length,
+      pastes: vals.reduce((n, v) => n + ((v && v.pastes) || 0), 0),
+      median_seconds: secs.length ? Math.round(secs[Math.floor((secs.length - 1) / 2)]) : null,
       fast_rows: secs.filter(s => s < 5).length,
-      r1b_done: Object.values((rounds.r1b || {}).rows || {}).filter(v => v.choice).length,
+      r1b_done: Object.values((rounds.r1b || {}).rows || {}).filter(v => v.main || v.call_main).length,
       r2_done: Object.values((rounds.r2 || {}).rows || {}).filter(v => v.natural).length,
     };
   }
 
-  const api = { nativeNorm, romanNorm, variants, r1Done, resolved, word, compare, agreement, progress };
+  const api = { nativeNorm, romanNorm, variants, upgrade, filled, r1Done, compare, agreement, union, callList, progress };
   if (typeof module !== "undefined") module.exports = api; else root.Logic = api;
 })(typeof window !== "undefined" ? window : globalThis);

@@ -42,9 +42,10 @@ textarea { min-height: 60px; resize: vertical; }
 input[type=text] { min-height: 46px; }
 .native { direction: rtl; text-align: right; font-size: 24px; }
 .font-nastaliq .native { font-family: "Noto Nastaliq Urdu", serif; font-size: 26px; line-height: 2.1; padding: 10px 14px 12px; min-height: 66px; }
-.font-naskh .native { font-family: "Noto Naskh Arabic", serif; line-height: 1.6; min-height: 52px; }
+.font-naskh .native { font-family: "Noto Naskh Arabic", serif; font-size: 26px; line-height: 1.6; min-height: 56px; }
 .font-nastaliq .grid2 input[type=text]:not(.native) { min-height: 66px; }
-.font-naskh .grid2 input[type=text]:not(.native) { min-height: 52px; }
+.font-naskh .grid2 input[type=text]:not(.native), .font-naskh .word-row input:not(.native) { min-height: 56px; }
+.font-nastaliq .word-row input:not(.native) { min-height: 66px; }
 .warn { color: var(--warn); font-size: 13px; margin-top: 4px; }
 .bad { color: var(--bad); }
 .muted { color: var(--muted); }
@@ -169,3 +170,28 @@ tr.inactive td { opacity: .45; }
 .flag { color: var(--warn); font-weight: 600; }
 pre.out { background: #fcfbf8; border: 1px solid var(--line); border-radius: 10px; padding: 12px; white-space: pre-wrap; font-size: 13px; }
 body.admin main { max-width: 1240px; }
+
+/* word lists */
+.frame { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; flex-wrap: wrap;
+         background: #fcfbf8; border: 1px dashed var(--line); border-radius: 10px; padding: 8px 14px; margin: 0 0 10px; }
+.frame-en { font-size: 17px; font-weight: 500; }
+.frame-ur { font-family: "Noto Nastaliq Urdu", serif; font-size: 17px; color: var(--muted); line-height: 2; }
+.words { display: grid; gap: 8px; }
+.word-row { display: grid; grid-template-columns: 110px 1fr 1fr 150px; gap: 10px; align-items: start; }
+.word-tag { font-size: 12px; color: var(--muted); padding-top: 18px; text-transform: uppercase; letter-spacing: .05em; }
+.word-row.main .word-tag { color: var(--accent-deep); font-weight: 600; }
+.word-actions { display: flex; gap: 2px; padding-top: 10px; white-space: nowrap; justify-content: flex-end; }
+.add-word { justify-self: start; margin-left: 120px; color: var(--accent-deep); }
+@media (max-width: 680px) {
+  .word-row { grid-template-columns: 1fr; gap: 6px; padding-bottom: 8px; border-bottom: 1px dashed var(--line); }
+  .word-tag { padding-top: 0; }
+  .add-word { margin-left: 0; }
+}
+.rate-row { display: grid; grid-template-columns: 1fr auto auto; gap: 12px; align-items: center; padding: 10px 0; border-bottom: 1px solid var(--line); }
+.rate-word .big { font-size: 24px; direction: rtl; text-align: right; }
+.font-nastaliq .rate-word .big { font-family: "Noto Nastaliq Urdu", serif; line-height: 2.1; }
+.font-naskh .rate-word .big { font-family: "Noto Naskh Arabic", serif; }
+.rate-word .who { font-size: 12px; color: var(--muted); }
+.main-pick.off { opacity: .4; }
+@media (max-width: 680px) { .rate-row { grid-template-columns: 1fr; } }
+.native::placeholder { font-family: Inter, system-ui, sans-serif; font-size: 15px; line-height: normal; }

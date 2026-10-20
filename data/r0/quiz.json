@@ -24,18 +24,18 @@
   "answer": 1
  },
  {
-  "q": "Which word goes in the \"talking about\" box?",
+  "q": "Your family says two words for father, for example \"abbu\" and \"baba\". What do you write?",
   "options": [
-   "The word you use when telling someone else about this relative",
-   "The word you say to this relative's face"
+   "Both words, the one used most first",
+   "Only one of them"
   ],
   "answer": 0
  },
  {
-  "q": "Your language uses one word for both father's sister and mother's sister. What do you do?",
+  "q": "You know a word that is used in another city, but not where you grew up. Where does it go?",
   "options": [
-   "Give the word for the first aunt, then choose \"Same word as another relative\" for the second",
-   "Skip the second aunt"
+   "In the notes, with where it is used",
+   "As another word in the list"
   ],
   "answer": 0
  }
