@@ -2,7 +2,7 @@
 // KINSHIFT annotator dashboard. Static page; everything stays in this browser
 // until the annotator exports a file and sends it to the team.
 
-const APP_VERSION = "0.4.3";
+const APP_VERSION = "0.5.0";
 const SCHEMA = "kinshift-annotation/1";
 const D = {};            // loaded data files
 const BATCH = {};        // decrypted batches per round, or null when not ready
@@ -47,7 +47,7 @@ function toast(msg, bad) {
 }
 const seg = (options, value, onPick) => h("div", { class: "seg" }, ...options.map(([v, label, cls]) =>
   h("button", { type: "button", class: (value === v ? "on " : "") + (cls || ""), onclick: () => onPick(v) }, label)));
-const r1Done = (r) => Logic.r1Done(r);
+const r1Done = (r, rel) => Logic.r1Done(r, rel, D.config.ask_address);
 
 // ---------- storage ----------
 const K = (round) => `kinshift:${S.handle}:${round}`;
@@ -411,16 +411,6 @@ function startTimer(round, data, key) {
     row.active_ms = (row.active_ms || 0) + Math.min(Date.now() - t0, 600000); saveRow(round, key, row, true); };
 }
 
-// Sentence frames shown with each relative. They hold no kin words, so they cannot
-// suggest an answer; the Urdu line helps annotators who read Urdu more easily than English.
-function frames(r) {
-  const fem = r.referent_sex === "f";
-  const about = r.elder ? (fem ? "یہ میری ___ ہیں۔" : "یہ میرے ___ ہیں۔") : (fem ? "یہ میری ___ ہے۔" : "یہ میرا ___ ہے۔");
-  return { about: ["This is my ___.", about], call: ["___, come and eat!", "___، آئیں کھانا کھا لیں۔"] };
-}
-function frameLine([en, ur]) {
-  return h("div", { class: "frame" }, h("span", { class: "frame-en" }, en), h("span", { class: "frame-ur", dir: "rtl" }, ur));
-}
 // One editable box bound to obj[field]; native boxes get the letter palette and a script check.
 function boundBox(obj, field, kind, placeholder, touch) {
   const el = h("input", { type: "text", placeholder: placeholder || "", class: kind === "native" ? "native" : "",
@@ -470,34 +460,34 @@ function renderR1Item(group, i) {
   const href = (gg, ii) => `#/r1/${encodeURIComponent(gg.group)}/${ii}`;
   const prev = i > 0 ? href(g, i - 1) : gi > 0 ? href(all[gi - 1], all[gi - 1].items.length - 1) : null;
   const next = i < g.items.length - 1 ? href(g, i + 1) : gi < all.length - 1 ? href(all[gi + 1], 0) : "#/r1";
-  const doneInGroup = () => g.items.filter(x => r1Done(data.rows[x.id])).length;
+  const doneInGroup = () => g.items.filter(x => r1Done(data.rows[x.id], x)).length;
   const chrome = () => focusChrome({ back: "#/r1", name: g.group, pos: i + 1, total: g.items.length, done: doneInGroup() });
   const touch = () => {
     const now = new Date().toISOString(); row.first_edit = row.first_edit || now; row.last_edit = now;
     saveRow("r1", r.id, row); data.rows = loadRound("r1").rows; data.rows[r.id] = row; dots.replaceChildren(...dotLinks()); chrome();
   };
   chrome();
-  const f = frames(r);
   const body = h("div");
+  const askCall = D.config.ask_address && r.elder;
   function draw() {
-    const unsure = h("input", { type: "checkbox" }); unsure.checked = !!row.unsure;
-    unsure.addEventListener("change", () => { row.unsure = unsure.checked; touch(); });
     const notes = h("textarea", { rows: 2, placeholder: "Optional: words used in other places, a formal word, if women say it differently, anything unclear" });
     notes.value = row.notes || "";
     notes.addEventListener("input", () => { row.notes = notes.value; touch(); });
     body.replaceChildren(...[
-      h("div", { class: "q" }, h("h3", {}, "What do you call this relative?"), frameLine(f.about),
-        h("p", { class: "hint" }, "Write every word people use for this relative where you grew up, the most common first."),
+      h("div", { class: "q" }, h("h3", {}, "What do you call this relative?"),
+        h("p", { class: "hint" }, "Give the most common word first. If people also use other words, add them."),
         wordList(row.words, { first: "most common" }, touch, draw)),
-      r.elder ? h("div", { class: "q" }, h("h3", {}, "When you call them"), frameLine(f.call),
-        h("p", { class: "hint" }, "Only if you would call them something different. Leave empty if it is the same word."),
-        wordList(row.call, { first: "you call them", optional: true }, touch, draw)) : null,
-      h("div", { class: "q" }, h("label", { class: "check" }, unsure, "I'm not sure about this one"), notes),
+      askCall ? h("div", { class: "q" }, h("h3", {}, "Do you call them by a different word to their face?"),
+        seg([["no", "No"], ["yes", "Yes, a different word"]], row.call_differs, v => { row.call_differs = v; if (v === "no") row.call = []; touch(); draw(); }),
+        row.call_differs === "yes" ? h("div", { style: "margin-top:12px" }, wordList(row.call, { first: "to their face" }, touch, draw)) : null) : null,
+      h("div", { class: "q" }, h("h3", {}, "How sure are you?"),
+        seg([["sure", "Sure"], ["not sure", "Not sure", "warnish"]], row.confidence, v => { row.confidence = v; row.unsure = v === "not sure"; touch(); draw(); })),
+      h("details", { class: "more", open: !!row.notes }, h("summary", {}, "Notes (optional)"), notes),
     ].filter(Boolean));
   }
   draw();
   const dotLinks = () => g.items.map((x, j) => h("a", { href: href(g, j), title: x.path_en,
-    class: (r1Done(data.rows[x.id]) ? "done" : "") + (j === i ? " cur" : "") }));
+    class: (r1Done(data.rows[x.id], x) ? "done" : "") + (j === i ? " cur" : "") }));
   const dots = h("div", { class: "dots" }, ...dotLinks());
   const note = speakerNote(r);
   const card = h("div", { class: "card item" },
@@ -563,7 +553,7 @@ function reviewSection(title, frame, words, ratings, mainKey, row, touch, draw) 
     h("label", { class: "check main-pick" + (rated[w.id] === "yes" ? "" : " off") },
       h("input", { type: "radio", name: mainKey, checked: row[mainKey] === w.id, disabled: rated[w.id] !== "yes",
         onchange: () => { row[mainKey] = w.id; touch(); draw(); } }), "most common")));
-  return h("div", { class: "q" }, h("h3", {}, title), frameLine(frame), ...rows,
+  return h("div", { class: "q" }, h("h3", {}, title), ...rows,
     h("details", { class: "more", open: !!(extra.native || extra.roman) }, h("summary", {}, "They both missed the right word"),
       h("div", { class: "grid2" }, boundBox(extra, "native", "native", "in your script", touch), boundBox(extra, "roman", "roman", "in Roman", touch)),
       h("label", { class: "check" }, h("input", { type: "radio", name: mainKey, checked: row[mainKey] === "extra",
@@ -571,7 +561,6 @@ function reviewSection(title, frame, words, ratings, mainKey, row, touch, draw) 
 }
 function adjudicateParts(it, row, touch, draw) {
   const rel = D.relations.find(x => x.id === it.id) || { steps: [], referent_sex: "m", elder: false };
-  const f = frames(rel);
   const parts = [h("div", { class: "item-top" }, h("span", { class: "tag accent" }, rel.group || ""),
                    h("span", { class: "tag warn" }, it.on.includes("word") ? "different words" : "different words for calling them")),
     h("div", { class: "item-title" }, it.path_en), speakerNote(rel) ? h("div", { class: "speaker" }, speakerNote(rel)) : null,
@@ -585,9 +574,9 @@ function adjudicateParts(it, row, touch, draw) {
       h("p", { class: "hint", style: "margin-top:8px" }, "They differ only on what you call this relative to their face.")));
   }
   if (it.on.includes("word"))
-    parts.push(reviewSection("Words for this relative", f.about, Logic.union(it.a.words, it.b.words, S.language), "ratings", "main", row, touch, draw));
+    parts.push(reviewSection("Words for this relative", null, Logic.union(it.a.words, it.b.words, S.language), "ratings", "main", row, touch, draw));
   if (it.on.includes("call"))
-    parts.push(reviewSection("Calling them", f.call, Logic.union(Logic.callList(it.a), Logic.callList(it.b), S.language), "call_ratings", "call_main", row, touch, draw));
+    parts.push(reviewSection("Words used to their face", null, Logic.union(Logic.callList(it.a), Logic.callList(it.b), S.language), "call_ratings", "call_main", row, touch, draw));
   const n = h("textarea", { rows: 2, placeholder: "Notes (optional)" }); n.value = row.notes || "";
   n.addEventListener("input", () => { row.notes = n.value; touch(); });
   parts.push(h("div", { class: "q" }, n));
@@ -704,7 +693,7 @@ function adminAccounts(accounts, latest) {
 function adminProgress(accounts, latest) {
   const flag = (n) => n ? h("span", { class: "flag" }, n) : (n ?? "—");
   const rows = accounts.map(a => {
-    const l = latest[a.handle], p = l ? Logic.progress(l.payload, D.relations) : null;
+    const l = latest[a.handle], p = l ? Logic.progress(l.payload, D.relations, D.config.ask_address) : null;
     const work = !p ? "—" : a.role === "adjudicator" ? `resolved ${p.r1b_done}` :
       h("div", { style: "display:flex;gap:8px;align-items:center" }, h("div", { class: "bar", style: "width:90px;min-width:90px" },
         h("i", { style: `width:${(100 * p.r1_done / p.r1_total).toFixed(0)}%` })), `${p.r1_done}/${p.r1_total}`);

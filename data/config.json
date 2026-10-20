@@ -1,3 +1,4 @@
 {
- "endpoint": "https://script.google.com/macros/s/AKfycbwH7cksyG_Hi043geytsDOkktrLXAu_QZHJocUPDWYteTJi39F7yF_GfxBEkoHRV_AY/exec"
+ "endpoint": "https://script.google.com/macros/s/AKfycbwH7cksyG_Hi043geytsDOkktrLXAu_QZHJocUPDWYteTJi39F7yF_GfxBEkoHRV_AY/exec",
+ "ask_address": true
 }

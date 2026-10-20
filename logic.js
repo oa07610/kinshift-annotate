@@ -36,28 +36,34 @@
       words.push({ native: row.phrase_native || "", roman: row.phrase_roman || "" });
     const call = row.address_same === "no" && (row.address_native || row.address_roman)
       ? [{ native: row.address_native || "", roman: row.address_roman || "" }] : [];
-    return { ...row, words, call, unsure: row.unsure ?? row.confidence === "not sure" };
+    const call_differs = row.address_same === "no" ? "yes" : row.address_same === "yes" ? "no" : undefined;
+    return { ...row, words, call, call_differs, unsure: row.unsure ?? row.confidence === "not sure" };
   }
 
   const filled = (w) => !!(w && ((w.native || "").trim() || (w.roman || "").trim()));
-  function r1Done(row) {
+  const full = (w) => !!(w && (w.native || "").trim() && (w.roman || "").trim());
+  // Has a main word in both scripts: enough to compare two annotators.
+  function answered(row) { const r = upgrade(row); return full(r && r.words && r.words[0]); }
+  // Finished on screen: main word, sure / not sure, and (when asked, for elders) the face-to-face answer.
+  function r1Done(row, rel, askAddress) {
     const r = upgrade(row);
-    const main = r && r.words && r.words[0];
-    return !!(main && (main.native || "").trim() && (main.roman || "").trim());
+    if (!answered(r) || !r.confidence) return false;
+    if (!askAddress || !(rel && rel.elder)) return true;
+    return r.call_differs === "no" || (r.call_differs === "yes" && full((r.call || [])[0]));
   }
 
   // Comparable form of one word: normalised native text and its set of Roman spellings.
   function key(w, lang) { return { n: nativeNorm(w.native, lang), r: new Set(variants(w.roman)) }; }
   function same(x, y) { return (x.n && x.n === y.n) || (!x.n || !y.n ? [...x.r].some(v => y.r.has(v)) : false); }
   function words(row, lang) { const r = upgrade(row) || {}; return (r.words || []).filter(filled).map(w => key(w, lang)); }
-  const explicitCalls = (row) => ((upgrade(row) || {}).call || []).filter(filled);
+  const explicitCalls = (row) => { const r = upgrade(row) || {}; return r.call_differs === "no" ? [] : (r.call || []).filter(filled); };
   // Words someone may call this elder: the calling words written, else any of their words.
   function callSet(row) { const c = explicitCalls(row); return c.length ? c : ((upgrade(row) || {}).words || []).filter(filled); }
 
   // agree: same main word. order: they share a word, but not the main one. differ: nothing shared.
   // call_differs: for elders, the words used to call them share nothing.
   function compare(rowA, rowB, rel, lang) {
-    if (!r1Done(rowA) || !r1Done(rowB)) return { status: "missing" };
+    if (!answered(rowA) || !answered(rowB)) return { status: "missing" };
     const a = words(rowA, lang), b = words(rowB, lang);
     const shared = a.some(x => b.some(y => same(x, y)));
     const status = same(a[0], b[0]) ? "agree" : shared ? "order" : "differ";
@@ -101,9 +107,10 @@
   // What the reviewer compares for calling an elder: the call words, or the main word if none.
   const callList = callSet;
 
-  function progress(payload, relations) {
+  function progress(payload, relations, askAddress) {
     const rounds = (payload && payload.rounds) || {}, r0 = rounds.r0 || {}, rows = (rounds.r1 || {}).rows || {};
-    const done = Object.keys(rows).filter(k => r1Done(rows[k]));
+    const rel = Object.fromEntries(relations.map(r => [r.id, r]));
+    const done = Object.keys(rows).filter(k => r1Done(rows[k], rel[k], askAddress));
     const secs = done.map(k => (rows[k].active_ms || 0) / 1000).filter(s => s > 0).sort((x, y) => x - y);
     const vals = Object.values(rows).map(upgrade);
     return {
@@ -119,6 +126,6 @@
     };
   }
 
-  const api = { nativeNorm, romanNorm, variants, upgrade, filled, r1Done, compare, agreement, union, callList, progress };
+  const api = { nativeNorm, romanNorm, variants, upgrade, filled, answered, r1Done, compare, agreement, union, callList, progress };
   if (typeof module !== "undefined") module.exports = api; else root.Logic = api;
 })(typeof window !== "undefined" ? window : globalThis);
