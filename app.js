@@ -2,11 +2,11 @@
 // KINSHIFT annotator dashboard. Static page; everything stays in this browser
 // until the annotator exports a file and sends it to the team.
 
-const APP_VERSION = "0.2.6";
+const APP_VERSION = "0.3.4";
 const SCHEMA = "kinshift-annotation/1";
 const D = {};            // loaded data files
 const BATCH = {};        // decrypted batches per round, or null when not ready
-let S = null;            // session: {handle, language, role, demo, code}
+let S = null;            // session: {handle, name, language, role} or {admin: true}
 let leaving = null;      // called before leaving an item, to bank time spent
 
 // ---------- helpers ----------
@@ -23,26 +23,23 @@ function h(tag, attrs = {}, ...kids) {
     el.append(kid instanceof Node ? kid : document.createTextNode(String(kid)));
   return el;
 }
-async function getJSON(path, optional) {
+async function getJSON(path) {
   const r = await fetch(`${path}?v=${APP_VERSION}`, { cache: "no-store" });
-  if (!r.ok) { if (optional && r.status === 404) return null; throw new Error(`${path}: ${r.status}`); }
+  if (!r.ok) throw new Error(`${path}: ${r.status}`);
   return r.json();
 }
-async function sha256hex(s) {
-  const b = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(s));
-  return [...new Uint8Array(b)].map(x => x.toString(16).padStart(2, "0")).join("");
+// The backend (Google Apps Script, or the local mock). GET for reads, POST as text/plain
+// for writes, so the browser sends no CORS preflight.
+async function api(action, params = {}, write = false) {
+  if (!D.config.endpoint) throw new Error("The dashboard is not connected to a server yet.");
+  const url = new URL(D.config.endpoint);
+  let r;
+  if (write) r = await fetch(url, { method: "POST", body: JSON.stringify({ action, ...params }) });
+  else { url.search = new URLSearchParams({ action, ...params }); r = await fetch(url); }
+  const j = await r.json();
+  if (!j.ok) throw new Error(j.error || "server error");
+  return j;
 }
-// Must match kinshift/annotation/crypto.py
-async function decryptBatch(blob, code) {
-  const d = s => Uint8Array.from(atob(s), c => c.charCodeAt(0));
-  const base = await crypto.subtle.importKey("raw", new TextEncoder().encode(code), "PBKDF2", false, ["deriveKey"]);
-  const key = await crypto.subtle.deriveKey(
-    { name: "PBKDF2", hash: "SHA-256", salt: d(blob.salt), iterations: blob.iter },
-    base, { name: "AES-GCM", length: 256 }, false, ["decrypt"]);
-  const pt = await crypto.subtle.decrypt({ name: "AES-GCM", iv: d(blob.iv) }, key, d(blob.ct));
-  return JSON.parse(new TextDecoder().decode(pt));
-}
-window.decryptBatch = decryptBatch;
 let toastTimer = null;
 function toast(msg, bad) {
   const t = $("#toast"); t.textContent = msg; t.className = bad ? "bad" : "";
@@ -50,6 +47,7 @@ function toast(msg, bad) {
 }
 const seg = (options, value, onPick) => h("div", { class: "seg" }, ...options.map(([v, label, cls]) =>
   h("button", { type: "button", class: (value === v ? "on " : "") + (cls || ""), onclick: () => onPick(v) }, label)));
+const r1Done = (r, rel) => Logic.r1Done(r, rel);
 
 // ---------- storage ----------
 const K = (round) => `kinshift:${S.handle}:${round}`;
@@ -63,37 +61,52 @@ function writeKey(k, v) {
 function loadRound(round) { return readKey(K(round), { rows: {}, updated: null }); }
 function saveRound(round, data) { data.updated = new Date().toISOString(); writeKey(K(round), data); updateBanner(); }
 // Save one row into whatever is stored now, so another tab or a restore is never overwritten by a stale copy.
-function saveRow(round, id, row) {
-  const cur = loadRound(round); cur.rows[id] = row; saveRound(round, cur);
+function saveRow(round, id, row, timeOnly) {
+  const cur = loadRound(round); cur.rows[id] = row;
+  if (timeOnly) writeKey(K(round), cur);   // time spent alone does not count as unsubmitted work
+  else saveRound(round, cur);
 }
 
 // ---------- session ----------
 function loadSession() { return readKey("kinshift:session", null); }
 function signOut() {
-  try { localStorage.removeItem("kinshift:session"); } catch {}
+  if (leaving) { leaving(); leaving = null; }   // bank time on the open item while we still know who is signed in
+  try { localStorage.removeItem("kinshift:session"); localStorage.removeItem("kinshift:adminKey"); } catch {}
   S = null; for (const k of Object.keys(BATCH)) delete BATCH[k]; go("#/login");
 }
 
 // ---------- export / import ----------
 function roundIds() { return D.rounds.map(r => r.id); }
-function exportAll() {
+function buildPayload() {
   const rounds = {};
   for (const id of roundIds()) { const r = readKey(K(id), null); if (r) rounds[id] = r; }
-  const payload = { schema: SCHEMA, app_version: APP_VERSION, handle: S.handle, language: S.language,
-                    role: S.role, demo: !!S.demo, exported_at: new Date().toISOString(), rounds };
-  const stamp = payload.exported_at.slice(0, 16).replace(/[-:T]/g, "");
-  const blob = new Blob([JSON.stringify(payload, null, 1)], { type: "application/json" });
-  const a = h("a", { href: URL.createObjectURL(blob), download: `kinshift_${S.handle}_${stamp}.json` });
-  document.body.append(a); a.click(); a.remove();
-  writeKey(`kinshift:${S.handle}:lastExport`, payload.exported_at);
-  updateBanner();
-  toast("Exported. Send the downloaded file to the KINSHIFT team.");
+  return { schema: SCHEMA, app_version: APP_VERSION, handle: S.handle, language: S.language,
+           role: S.role, exported_at: new Date().toISOString(), rounds };
 }
-async function importFile(file) {
-  let p;
-  try { p = JSON.parse(await file.text()); } catch { return toast("That file is not a KINSHIFT export.", true); }
-  if (p.schema !== SCHEMA) return toast("That file is not a KINSHIFT export.", true);
-  if (p.handle !== S.handle) return toast(`That file belongs to ${p.handle}, not ${S.handle}.`, true);
+let submitting = null;
+// Send everything to the team's server. Quiet = automatic, no toast on success.
+async function submitAll(quiet) {
+  if (!S || S.admin) return;
+  if (submitting) return submitting;
+  const payload = buildPayload();
+  submitting = api("submit", { handle: S.handle, payload }, true).then(() => {
+    writeKey(`kinshift:${S.handle}:lastSubmit`, payload.exported_at);
+    writeKey(`kinshift:${S.handle}:submitError`, "");
+    if (!quiet) toast("Submitted. Your work is saved with the KINSHIFT team.");
+  }).catch(err => {
+    writeKey(`kinshift:${S.handle}:submitError`, String(err.message || err));
+    if (!quiet) toast("Could not reach the server. Your work is safe in this browser; try again later.", true);
+  }).finally(() => { submitting = null; updateBanner(); });
+  return submitting;
+}
+function downloadCopy() {
+  const payload = buildPayload();
+  const blob = new Blob([JSON.stringify(payload, null, 1)], { type: "application/json" });
+  const a = h("a", { href: URL.createObjectURL(blob), download: `kinshift_${S.handle}_${payload.exported_at.slice(0, 16).replace(/[-:T]/g, "")}.json` });
+  document.body.append(a); a.click(); a.remove();
+}
+// Merge another copy of this person's work into the browser: newest row wins.
+function mergeIn(p) {
   let restored = 0;
   for (const [id, incoming] of Object.entries(p.rounds || {})) {
     const cur = loadRound(id);
@@ -104,19 +117,33 @@ async function importFile(file) {
     for (const [k, v] of Object.entries(incoming)) if (k !== "rows" && k !== "updated" && cur[k] == null) cur[k] = v;
     saveRound(id, cur);
   }
-  toast(`Restored ${restored} answers from your file.`);
+  return restored;
+}
+async function importFile(file) {
+  let p;
+  try { p = JSON.parse(await file.text()); } catch { return toast("That file is not a KINSHIFT file.", true); }
+  if (p.schema !== SCHEMA) return toast("That file is not a KINSHIFT file.", true);
+  if (p.handle !== S.handle) return toast(`That file belongs to ${p.handle}, not you.`, true);
+  toast(`Restored ${mergeIn(p)} answers from your file.`);
   route();
 }
+setInterval(() => { if (S && !S.admin && unsubmitted()) submitAll(true); }, 180000);
 
 // ---------- banner ----------
+function unsubmitted() {
+  const last = readKey(`kinshift:${S.handle}:lastSubmit`, "");
+  const newest = roundIds().map(id => loadRound(id).updated || "").sort().pop() || "";
+  return newest && newest > last;
+}
 function updateBanner() {
   const b = $("#banner");
-  if (!S) return b.classList.add("hidden");
-  const last = readKey(`kinshift:${S.handle}:lastExport`, "");
-  const newest = roundIds().map(id => loadRound(id).updated || "").sort().pop() || "";
-  if (newest && newest > last) {
-    b.replaceChildren(h("span", {}, innerWidth < 680 ? "Not exported yet." : "You have work that is not exported yet. Export at the end of every sitting and send the file to the team."),
-                      h("button", { class: "small primary", onclick: exportAll }, "Export now"));
+  if (!S || S.admin) return b.classList.add("hidden");
+  if (unsubmitted()) {
+    const failed = readKey(`kinshift:${S.handle}:submitError`, "");
+    const narrow = innerWidth < 680;
+    const msg = failed ? (narrow ? "Not saved to the server yet." : "Could not reach the server yet. Your work is safe in this browser.")
+                       : (narrow ? "Not submitted yet." : "You have answers that are not submitted yet. They are sent automatically every few minutes.");
+    b.replaceChildren(h("span", {}, msg), h("button", { class: "small primary", onclick: () => submitAll(false) }, "Submit now"));
     b.classList.remove("hidden");
   } else b.classList.add("hidden");
 }
@@ -138,10 +165,12 @@ async function route() {
   setFocusbar();
   if (!S) S = loadSession();
   renderWho();
+  const [page, a, b] = (location.hash || "#/home").slice(2).split("/").map(decodeURIComponent);
+  if (page === "admin") return renderAdmin(a || "accounts");
+  if (S && S.admin) return go("#/admin");
   if (!S) return renderLogin();
   document.body.className = `font-${lang().font}`;
   updateBanner();
-  const [page, a, b] = (location.hash || "#/home").slice(2).split("/").map(decodeURIComponent);
   if (page === "r0") return renderR0();
   if (page === "r1") return a ? renderR1Item(a, +(b || 0)) : renderR1List();
   if (page === "r1b" || page === "r2") return renderBatchRound(page, +(a || 0));
@@ -150,43 +179,52 @@ async function route() {
 function renderWho() {
   const w = $("#who");
   if (!S) return w.replaceChildren();
-  w.replaceChildren(h("span", {}, `${S.handle} · ${D.languages[S.language].name}${S.demo ? " · demo" : ""}`),
+  w.replaceChildren(h("span", {}, S.admin ? "Admin" : `${S.name} · ${D.languages[S.language].name}`),
                     h("button", { class: "ghost small", onclick: signOut }, "Sign out"));
 }
 
 // ---------- login ----------
 function renderLogin() {
   document.body.className = "";
-  const handle = h("input", { type: "text", id: "handle", autocomplete: "username", placeholder: "e.g. sd-a1" });
-  const code = h("input", { type: "password", id: "code", autocomplete: "current-password", placeholder: "xxxx-xxxx-xxxx-xxxx" });
+  const name = h("input", { type: "text", id: "name", autocomplete: "name", placeholder: "your full name" });
   const msg = h("p", { class: "bad" });
+  const btn = h("button", { class: "primary", type: "submit" }, "Sign in");
   async function submit(e) {
     e.preventDefault();
-    const hd = handle.value.trim().toLowerCase(), cd = code.value.trim().toLowerCase();
-    const acc = D.assignments.find(x => x.handle === hd);
-    if (!acc || acc.check !== await sha256hex(`kinshift:${hd}:${cd}`)) {
-      msg.textContent = "Handle or access code not recognised. Check both and try again."; return;
-    }
-    S = { handle: acc.handle, language: acc.language, role: acc.role, demo: acc.demo, code: cd };
-    writeKey("kinshift:session", S); go("#/home");
+    if (!name.value.trim()) return;
+    btn.disabled = true; msg.textContent = "";
+    try {
+      const { account } = await api("login", { name: name.value });
+      S = account; writeKey("kinshift:session", S);
+      try {   // bring back work saved on the server (new device or cleared browser)
+        const { payload } = await api("latest", { handle: S.handle });
+        if (payload) {
+          const n = mergeIn(payload);
+          writeKey(`kinshift:${S.handle}:lastSubmit`, new Date().toISOString());   // what came from the server is already saved there
+          if (n) toast(`Welcome back. Restored ${n} saved answers.`);
+        }
+      } catch {}
+      go("#/home");
+    } catch (err) {
+      msg.textContent = /not found/.test(err.message) ? "We could not find that name. Type it exactly as the team sent it to you." : err.message;
+    } finally { btn.disabled = false; }
   }
   setMain(h("div", { class: "login" },
     h("div", { class: "card" }, h("h2", {}, "Sign in"),
       h("form", { onsubmit: submit },
-        h("label", { class: "lbl", for: "handle" }, "Handle"), handle,
-        h("label", { class: "lbl", for: "code", style: "margin-top:12px" }, "Access code"), code,
-        h("div", { style: "margin-top:16px" }, h("button", { class: "primary", type: "submit" }, "Sign in")), msg)),
+        h("label", { class: "lbl", for: "name" }, "Your name"), name,
+        h("div", { style: "margin-top:16px" }, btn), msg)),
     h("p", { class: "muted", style: "font-size:13px" },
-      "Use the handle and access code the KINSHIFT team sent you. Your answers are kept in this browser, so use the same browser and device each time.")));
+      "Type your name exactly as the KINSHIFT team sent it to you. Your answers are saved in this browser and sent to the team automatically."),
+    h("p", { style: "font-size:13px" }, h("a", { href: "#/admin" }, "Team admin"))));
 }
 
 // ---------- home ----------
 function r0Done() { const r = loadRound("r0"); return !!(r.consent && r.background && r.quiz && r.quiz.passed); }
 async function loadBatch(round) {
   if (round in BATCH) return BATCH[round];
-  const blob = await getJSON(`data/${round}/${S.handle}.json`, true);
-  try { BATCH[round] = blob ? (await decryptBatch(blob, S.code)).items : null; }
-  catch { BATCH[round] = null; toast("Could not open your batch. Sign out and sign in again with your code.", true); }
+  try { BATCH[round] = (await api("batch", { handle: S.handle, round })).items || null; }
+  catch { return null; }   // offline: try again next time
   return BATCH[round];
 }
 function progressOf(round, items, isDone) {
@@ -214,13 +252,14 @@ async function renderHome() {
   }
   const fileIn = h("input", { type: "file", accept: "application/json", class: "hidden",
                               onchange: e => e.target.files[0] && importFile(e.target.files[0]) });
-  setMain(h("h1", {}, `Welcome, ${S.handle}`),
+  setMain(h("h1", {}, `Welcome, ${S.name}`),
     h("p", { class: "lead" }, `${lang().name} · ${S.role === "adjudicator" ? "reviewer" : "annotator"}. Work through the rounds in order; your answers save automatically.`),
     h("div", { class: "card" }, h("h2", {}, "Your rounds"), rowsEl),
-    h("div", { class: "card" }, h("h2", {}, "Your files"),
-      h("p", { class: "muted", style: "margin-top:0" }, "Export at the end of every sitting and send the file to the team. If you change browser or device, restore your last file there first."),
-      h("div", { class: "alt" }, h("button", { class: "primary", onclick: exportAll }, "Export my work"),
-        h("button", { onclick: () => fileIn.click() }, "Restore from a file"), fileIn)));
+    h("div", { class: "card" }, h("h2", {}, "Saving"),
+      h("p", { class: "muted", style: "margin-top:0" }, "Your answers are sent to the team automatically after each batch and every few minutes. You can also submit now. Signing in on another device brings your saved work back."),
+      h("div", { class: "alt" }, h("button", { class: "primary", onclick: () => submitAll(false) }, "Submit now"),
+        h("button", { class: "ghost", onclick: downloadCopy }, "Download a copy"),
+        h("button", { class: "ghost", onclick: () => fileIn.click() }, "Restore from a file"), fileIn)));
 }
 
 // ---------- R0: onboarding ----------
@@ -283,14 +322,6 @@ const WORD = { F: "father", M: "mother", B: "brother", Z: "sister", S: "son", D:
 const AGE = { e: "elder ", y: "younger " };
 const LATIN = /[A-Za-z]/, ARABIC = /[؀-ۿݐ-ݿࢠ-ࣿﭐ-﷿ﹰ-﻿]/;
 
-function r1Done(r, rel) {
-  if (!r || !r.confidence) return false;
-  if (r.same_word_as) return true;
-  if (r.no_single_word) return !!r.phrase_native;
-  if (!(r.reference_native && r.reference_roman)) return false;
-  if (rel && rel.tier === "far") return true;
-  return r.address_same === "yes" || (r.address_same === "no" && !!r.address_native);
-}
 function groups() {
   const out = [];
   for (const r of D.relations) {
@@ -355,7 +386,7 @@ function renderR1List() {
   setMain(h("h1", {}, "Kinship words"),
     h("p", { class: "lead" }, `${total} of ${D.relations.length} relatives done. Go in order; you can stop and come back any time.`),
     h("div", { class: "card" }, h("div", { class: "rows" }, ...list)),
-    h("div", { class: "alt" }, h("a", { class: "btn ghost", href: "#/home" }, "← Home"), h("button", { onclick: exportAll }, "Export my work")));
+    h("div", { class: "alt" }, h("a", { class: "btn ghost", href: "#/home" }, "← Home"), h("button", { onclick: () => submitAll(false) }, "Submit now")));
 }
 
 function focusChrome({ back, name, pos, total, done }) {
@@ -363,21 +394,21 @@ function focusChrome({ back, name, pos, total, done }) {
     h("div", { class: "left" }, h("a", { class: "btn ghost", href: back, title: "Back" }, "←"), h("span", { class: "name" }, name),
       h("span", { class: "sep" }, "·"), h("span", { class: "muted" }, `${pos} of ${total}`)),
     h("div", { class: "right" }, h("div", { class: "bar", style: "width:160px" }, h("i", { style: `width:${(100 * done / total).toFixed(0)}%` })),
-      h("button", { class: "primary small", onclick: exportAll }, "Export")));
+      h("button", { class: "primary small", onclick: () => submitAll(false) }, "Submit")));
 }
-function footer(prevHref, nextHref, nextLabel) {
+function footer(prevHref, nextHref, nextLabel, submitOnNext) {
   return h("div", { class: "focusfoot" },
     prevHref ? h("a", { class: "btn ghost", href: prevHref }, "← Previous") : h("span"),
     h("span", { class: "kbd-hint" }, h("kbd", {}, "Ctrl"), " + ", h("kbd", {}, "Enter"), " next"),
-    h("a", { class: "btn primary", href: nextHref, id: "next" }, nextLabel || "Next →"));
+    h("a", { class: "btn primary", href: nextHref, id: "next", onclick: () => { if (submitOnNext) submitAll(true); } }, nextLabel || "Next →"));
 }
 document.addEventListener("keydown", (e) => {
   if ((e.ctrlKey || e.metaKey) && e.key === "Enter") { const n = $("#next"); if (n) { e.preventDefault(); n.click(); } }
 });
 function startTimer(round, data, key) {
   const t0 = Date.now();
-  leaving = () => { const row = data.rows[key]; if (!row || !row.last_edit) return;
-    row.active_ms = (row.active_ms || 0) + Math.min(Date.now() - t0, 600000); saveRow(round, key, row); };
+  leaving = () => { const row = data.rows[key]; if (!S || !row || !row.last_edit) return;
+    row.active_ms = (row.active_ms || 0) + Math.min(Date.now() - t0, 600000); saveRow(round, key, row, true); };
 }
 
 function renderR1Item(group, i) {
@@ -468,7 +499,8 @@ function renderR1Item(group, i) {
     h("div", { class: "item-title" }, r.path_en), note ? h("div", { class: "speaker" }, note) : null,
     treeSVG(r.steps), body);
   card.addEventListener("paste", () => { row.pastes = (row.pastes || 0) + 1; touch(); });
-  setMain(card, footer(prev, next, next === "#/r1" ? "Finish ✓" : "Next →"), dots);
+  const lastInGroup = i === g.items.length - 1;
+  setMain(card, footer(prev, next, next === "#/r1" ? "Finish ✓" : lastInGroup ? "Next batch →" : "Next →", lastInGroup), dots);
 }
 
 // ---------- R1b and R2: batch rounds ----------
@@ -499,7 +531,7 @@ async function renderBatchRound(round, i) {
   const card = h("div", { class: "card item" }, body);
   card.addEventListener("paste", () => { row.pastes = (row.pastes || 0) + 1; touch(); });
   const prev = i > 0 ? `#/${round}/${i - 1}` : null, next = i < items.length - 1 ? `#/${round}/${i + 1}` : "#/home";
-  setMain(card, footer(prev, next, next === "#/home" ? "Finish ✓" : "Next →"), dots);
+  setMain(card, footer(prev, next, next === "#/home" ? "Finish ✓" : "Next →", next === "#/home"), dots);
 }
 function textBox(row, key, kind, touch) {
   const el = h(kind === "area" ? "textarea" : "input", { type: "text", class: kind === "native" ? "native" : "", dir: kind === "native" ? "rtl" : "ltr" });
@@ -557,6 +589,136 @@ function reviewParts(it, row, touch, draw) {
     h("div", { class: "q" }, h("label", { class: "lbl" }, "Notes (optional)"), textBox(row, "notes", "area", touch))];
 }
 
+// ---------- admin ----------
+// The team's view, inside the same page: accounts, progress, agreement. Needs the
+// admin key set in the backend's script properties; annotators never see it.
+const adminKey = () => readKey("kinshift:adminKey", "");
+const adminCall = (action, params = {}) => api(action, { key: adminKey(), ...params }, true);
+const roleName = (r) => r === "adjudicator" ? "reviewer" : "annotator";
+function renderAdminLogin() {
+  const key = h("input", { type: "password", id: "key", autocomplete: "current-password", placeholder: "admin key" });
+  const msg = h("p", { class: "bad" });
+  async function submit(e) {
+    e.preventDefault(); msg.textContent = "";
+    try {
+      await api("check_key", { key: key.value.trim() }, true);
+      writeKey("kinshift:adminKey", key.value.trim()); S = { admin: true }; writeKey("kinshift:session", S);
+      go("#/admin/accounts");
+    } catch (err) { msg.textContent = /admin key/.test(err.message) ? "That key is not right." : err.message; }
+  }
+  setMain(h("div", { class: "login" }, h("div", { class: "card" }, h("h2", {}, "Team admin"),
+    h("form", { onsubmit: submit }, h("label", { class: "lbl", for: "key" }, "Admin key"), key,
+      h("div", { style: "margin-top:16px" }, h("button", { class: "primary", type: "submit" }, "Open admin")), msg)),
+    h("p", { style: "font-size:13px" }, h("a", { href: "#/login" }, "← Annotator sign in"))));
+}
+async function renderAdmin(tab) {
+  document.body.className = "admin";
+  if (!S || !S.admin || !adminKey()) return renderAdminLogin();
+  const tabs = h("div", { class: "alt", style: "margin-bottom:18px" }, ...[["accounts", "Accounts"], ["progress", "Progress"], ["agreement", "Agreement"]]
+    .map(([id, label]) => h("a", { class: "btn" + (tab === id ? " primary" : ""), href: `#/admin/${id}` }, label)));
+  const body = h("div", {}, h("p", { class: "muted" }, "Loading…"));
+  setMain(h("h1", {}, "Team admin"), h("p", { class: "lead" }, "Accounts, progress and agreement for every language."), tabs, body);
+  try {
+    const [{ accounts }, { latest }] = await Promise.all([adminCall("accounts"), adminCall("all_latest")]);
+    const parts = tab === "progress" ? adminProgress(accounts, latest) : tab === "agreement" ? adminAgreement(accounts, latest) : adminAccounts(accounts, latest);
+    body.replaceChildren(...parts.filter(Boolean));
+  } catch (err) {
+    body.replaceChildren(h("p", { class: "bad" }, err.message));
+    if (/admin key/.test(err.message)) { writeKey("kinshift:adminKey", ""); }
+  }
+}
+const ago = (iso) => { if (!iso) return "never"; const m = Math.round((Date.now() - Date.parse(iso)) / 60000);
+  return m < 60 ? `${m} min ago` : m < 2880 ? `${Math.round(m / 60)} h ago` : `${Math.round(m / 1440)} days ago`; };
+function table(head, rows) {
+  return h("div", { style: "overflow-x:auto" }, h("table", { class: "grid-table" },
+    h("tr", {}, ...head.map(x => h("th", {}, x))), ...rows));
+}
+function welcomeText(a) {
+  const url = location.origin + location.pathname;
+  return `Assalam o alaikum ${a.name}! Thank you for joining KINSHIFT as a ${D.languages[a.language].name} ${roleName(a.role)}.\n\n` +
+    `Open: ${url}\nSign in with your name exactly as: ${a.name}\n\n` +
+    "Please read the guidelines on the page first. Your answers are saved and sent to us automatically; use Submit now before closing if you like.";
+}
+function adminAccounts(accounts, latest) {
+  const name = h("input", { type: "text", placeholder: "full name, unique" });
+  const langSel = h("select", {}, ...Object.entries(D.languages).map(([k, v]) => h("option", { value: k }, v.name)));
+  const roleSel = h("select", {}, h("option", { value: "annotator" }, "annotator (A1, A2)"), h("option", { value: "adjudicator" }, "reviewer (A3)"));
+  const out = h("pre", { class: "out hidden" });
+  async function create(e) {
+    e.preventDefault();
+    try {
+      const { account } = await adminCall("create", { name: name.value, language: langSel.value, role: roleSel.value });
+      toast(`Created ${account.name} (${account.handle}).`); renderAdmin("accounts");
+    } catch (err) { toast(err.message, true); }
+  }
+  const rows = accounts.map(a => h("tr", { class: a.active === "no" ? "inactive" : "" },
+    h("td", {}, h("b", {}, a.name)), h("td", { class: "muted" }, a.handle), h("td", {}, D.languages[a.language] ? D.languages[a.language].name : a.language),
+    h("td", {}, roleName(a.role)), h("td", {}, ago(latest[a.handle] && latest[a.handle].saved_at)),
+    h("td", {}, h("button", { class: "small", onclick: async () => {
+      const t = welcomeText(a);
+      try { await navigator.clipboard.writeText(t); toast("Welcome message copied."); } catch { out.textContent = t; out.classList.remove("hidden"); }
+    } }, "Copy welcome message")),
+    h("td", {}, h("button", { class: "ghost small", onclick: async () => {
+      try { await adminCall("set_active", { handle: a.handle, active: a.active === "no" }); renderAdmin("accounts"); } catch (err) { toast(err.message, true); }
+    } }, a.active === "no" ? "Reactivate" : "Deactivate"))));
+  return [
+    h("div", { class: "card" }, h("h2", {}, "Add a person"),
+      h("form", { onsubmit: create, class: "grid3" }, h("div", {}, h("label", { class: "lbl" }, "Name"), name),
+        h("div", {}, h("label", { class: "lbl" }, "Language"), langSel), h("div", {}, h("label", { class: "lbl" }, "Role"), roleSel),
+        h("div", { style: "align-self:end" }, h("button", { class: "primary", type: "submit" }, "Add"))),
+      h("p", { class: "muted", style: "margin-bottom:0;font-size:13px" }, "Names must be unique; people sign in by typing their name. Each language needs two annotators and one reviewer.")),
+    h("div", { class: "card" }, h("h2", {}, `People (${accounts.length})`),
+      accounts.length ? table(["Name", "Handle", "Language", "Role", "Last submitted", "", ""], rows) : h("p", { class: "muted" }, "Nobody yet."), out)];
+}
+function adminProgress(accounts, latest) {
+  const flag = (n) => n ? h("span", { class: "flag" }, n) : (n ?? "—");
+  const rows = accounts.map(a => {
+    const l = latest[a.handle], p = l ? Logic.progress(l.payload, D.relations) : null;
+    const work = !p ? "—" : a.role === "adjudicator" ? `resolved ${p.r1b_done}` :
+      h("div", { style: "display:flex;gap:8px;align-items:center" }, h("div", { class: "bar", style: "width:90px;min-width:90px" },
+        h("i", { style: `width:${(100 * p.r1_done / p.r1_total).toFixed(0)}%` })), `${p.r1_done}/${p.r1_total}`);
+    return h("tr", { class: a.active === "no" ? "inactive" : "" }, h("td", {}, h("b", {}, a.name)), h("td", {}, a.language),
+      h("td", {}, ago(l && l.saved_at)), h("td", {}, !p ? "—" : p.onboarded ? "✓" : h("span", { class: "flag" }, "not yet")), h("td", {}, work),
+      h("td", {}, p && p.median_seconds != null ? `${p.median_seconds} s` : "—"), h("td", {}, p ? p.not_sure : "—"),
+      h("td", {}, p ? flag(p.pastes) : "—"), h("td", {}, p ? flag(p.fast_rows) : "—"),
+      h("td", { class: "muted" }, p && p.background ? [p.background.region, p.background.dialect, p.background.sex].filter(Boolean).join(" · ") : ""));
+  });
+  return [h("div", { class: "card" }, h("h2", {}, "Progress"),
+    table(["Name", "Lang", "Last submitted", "Onboarded", "Work", "Median / word", "Not sure", "Pastes", "Under 5 s", "Background"], rows),
+    h("p", { class: "muted", style: "margin-bottom:0;font-size:13px" }, "Orange numbers need a look: pasted text may come from a translator or ChatGPT, and very fast answers may be guesses."))];
+}
+function adminAgreement(accounts, latest) {
+  const langs = [...new Set(accounts.map(a => a.language))];
+  const rows = [];
+  for (const lang of langs) {
+    const ann = accounts.filter(a => a.language === lang && a.role === "annotator" && a.active !== "no" && latest[a.handle]).sort((x, y) => x.handle.localeCompare(y.handle));
+    const reviewers = accounts.filter(a => a.language === lang && a.role === "adjudicator" && a.active !== "no");
+    if (ann.length < 2) { rows.push(h("tr", {}, h("td", {}, h("b", {}, D.languages[lang].name)), h("td", { colspan: 6, class: "muted" }, "Waiting for two annotators to submit."))); continue; }
+    const rowsOf = (a) => ((latest[a.handle].payload.rounds || {}).r1 || {}).rows || {};
+    const res = Logic.agreement(D.relations, rowsOf(ann[0]), rowsOf(ann[1]), lang);
+    const pct = (x) => x == null ? "—" : `${Math.round(100 * x)}%`;
+    const send = h("button", { class: "small primary", disabled: !reviewers.length || !res.disagreements.length, onclick: async () => {
+      try {
+        for (const r of reviewers) await adminCall("set_batch", { handle: r.handle, round: "r1b", items: res.disagreements });
+        toast(`Sent ${res.disagreements.length} disagreements to ${reviewers.map(r => r.name).join(", ")}.`);
+      } catch (err) { toast(err.message, true); }
+    } }, `Send ${res.disagreements.length} to reviewer`);
+    rows.push(h("tr", {}, h("td", {}, h("b", {}, D.languages[lang].name)), h("td", {}, ann.slice(0, 2).map(a => a.name).join(", ")),
+      h("td", {}, res.compared), h("td", {}, pct(res.agreement)), h("td", {}, pct(res.core_agreement)), h("td", {}, res.disagreements.length),
+      h("td", {}, reviewers.length ? send : h("span", { class: "muted" }, "add a reviewer"))));
+  }
+  const download = () => {
+    const blob = new Blob([JSON.stringify({ schema: "kinshift-bundle/1", saved_at: new Date().toISOString(), latest })], { type: "application/json" });
+    const a = h("a", { href: URL.createObjectURL(blob), download: `kinshift_all_${new Date().toISOString().slice(0, 10)}.json` });
+    document.body.append(a); a.click(); a.remove();
+  };
+  return [h("div", { class: "card" }, h("h2", {}, "Agreement on kinship words"),
+    h("p", { class: "muted", style: "margin-top:0" }, "Compares the two annotators of each language before the reviewer steps in. Sending puts the disagreements in the reviewer's \"Resolve disagreements\" round."),
+    langs.length ? table(["Language", "Annotators", "Compared", "Agreement", "Core", "Disagreements", ""], rows) : h("p", { class: "muted" }, "No accounts yet."),
+    h("div", { class: "alt", style: "margin-top:14px" }, h("button", { onclick: download }, "Download all submissions"),
+      h("span", { class: "muted", style: "font-size:13px;align-self:center" }, "For the final word list: python -m kinshift.annotation.merge FILE")))];
+}
+
 // ---------- letter palette ----------
 let paletteTarget = null;
 function showPalette(target) {
@@ -577,9 +739,9 @@ function showPalette(target) {
 // ---------- start ----------
 (async function start() {
   try {
-    const [assignments, languages, rounds, quiz, relations] = await Promise.all(
-      ["data/assignments.json", "data/languages.json", "data/rounds.json", "data/r0/quiz.json", "data/r1/relations.json"].map(p => getJSON(p)));
-    Object.assign(D, { assignments, languages, rounds, quiz, relations });
+    const [languages, rounds, quiz, relations, config] = await Promise.all(
+      ["data/languages.json", "data/rounds.json", "data/r0/quiz.json", "data/r1/relations.json", "data/config.json"].map(p => getJSON(p)));
+    Object.assign(D, { languages, rounds, quiz, relations, config });
     route();
   } catch (e) {
     setMain(h("p", { class: "bad" }, "The page could not load. Refresh, and tell the team if it keeps happening."), h("pre", {}, String(e)));

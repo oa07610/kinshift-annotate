@@ -158,3 +158,14 @@ kbd { font: 11px ui-monospace, Menlo, monospace; padding: 1px 6px; border: 1px s
   .item-title { font-size: 21px; }
   .focusfoot { padding: 8px 12px; }
 }
+
+/* admin */
+.grid3 { display: grid; grid-template-columns: 2fr 1fr 1fr auto; gap: 12px; }
+@media (max-width: 680px) { .grid3 { grid-template-columns: 1fr; } }
+table.grid-table { width: 100%; border-collapse: collapse; font-size: 14px; }
+table.grid-table th { text-align: left; font-size: 12px; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); font-weight: 600; padding: 8px; border-bottom: 1px solid var(--line); white-space: nowrap; }
+table.grid-table td { padding: 9px 8px; border-bottom: 1px solid var(--line); vertical-align: middle; }
+tr.inactive td { opacity: .45; }
+.flag { color: var(--warn); font-weight: 600; }
+pre.out { background: #fcfbf8; border: 1px solid var(--line); border-radius: 10px; padding: 12px; white-space: pre-wrap; font-size: 13px; }
+body.admin main { max-width: 1240px; }
