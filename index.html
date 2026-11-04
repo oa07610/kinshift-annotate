@@ -7,13 +7,15 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Nastaliq+Urdu:wght@400;600&family=Noto+Naskh+Arabic:wght@400;600&display=swap" media="print" onload="this.media='all'">
-<link rel="stylesheet" href="style.css?v=0.5.1">
+<link rel="stylesheet" href="style.css?v=0.6.0">
+<script>try{var l=localStorage.getItem("kinshift:ui")||(/^ur\b/i.test(navigator.language)?"ur":"en");if(l==="ur"){document.documentElement.lang="ur";document.documentElement.dir="rtl";document.documentElement.className="ui-rtl ui-ur"}}catch(e){}</script>
 </head>
 <body>
 <header class="top">
   <a href="#/home" class="brand"><span class="dot"></span>KINSHIFT <small>· Annotation</small></a>
   <div class="user-area">
-    <a href="guidelines.html" target="_blank" rel="noopener" class="btn ghost">Guidelines</a>
+    <span id="langsw"></span>
+    <a href="guidelines.html" target="_blank" rel="noopener" class="btn ghost" id="guide-link">Guidelines</a>
     <span id="who"></span>
   </div>
 </header>
@@ -22,7 +24,9 @@
 <main id="app"><p class="muted">Loading…</p></main>
 <div id="palette" class="hidden"></div>
 <div id="toast" class="hidden"></div>
-<script src="logic.js?v=0.5.1"></script>
-<script src="app.js?v=0.5.1"></script>
+<script src="logic.js?v=0.6.0"></script>
+<script src="i18n.js?v=0.6.0"></script>
+<script src="guide.js?v=0.6.0"></script>
+<script src="app.js?v=0.6.0"></script>
 </body>
 </html>

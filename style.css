@@ -77,7 +77,7 @@ a.list-row:hover { background: #faf8f1; border-color: #cfcab7; }
 
 /* focus mode */
 .focusbar { display: flex; justify-content: space-between; align-items: center; gap: 14px; flex-wrap: wrap;
-  padding: 10px 24px; background: var(--surface); border-bottom: 1px solid var(--line); position: sticky; top: 53px; z-index: 15; }
+  padding: 10px 24px; background: var(--surface); border-bottom: 1px solid var(--line); position: sticky; top: var(--top-h, 53px); z-index: 15; }
 .focusbar .left { display: flex; align-items: center; gap: 10px; font-size: 14px; }
 .focusbar .right { display: flex; align-items: center; gap: 12px; }
 .focusbar .name { font-weight: 600; }
@@ -107,7 +107,7 @@ details.more { margin-top: 14px; border-top: 1px solid var(--line); padding-top:
 details.more summary { cursor: pointer; color: var(--muted); font-size: 14px; font-weight: 500; }
 details.more[open] summary { margin-bottom: 12px; }
 .check { display: flex; gap: 8px; align-items: center; font-size: 14px; margin: 8px 0; cursor: pointer; }
-.choices label { display: flex; gap: 10px; align-items: flex-start; padding: 8px 12px; border: 1px solid var(--line);
+.choices label, .choices .choice { display: flex; width: 100%; text-align: start; font-weight: 400; gap: 10px; align-items: flex-start; padding: 8px 12px; border: 1px solid var(--line);
   border-radius: 10px; margin: 6px 0; cursor: pointer; }
 .choices label:hover { background: #faf8f1; }
 .focusfoot { display: flex; justify-content: space-between; align-items: center; gap: 10px; position: fixed; left: 0; right: 0; bottom: 0;
@@ -149,7 +149,9 @@ kbd { font: 11px ui-monospace, Menlo, monospace; padding: 1px 6px; border: 1px s
 /* phones */
 @media (max-width: 680px) {
   .top { position: static; flex-wrap: nowrap; }
-  .brand small, .kbd-hint, .user-area .btn.ghost { display: none; }
+  .brand small, .kbd-hint { display: none; }
+  .user-area { gap: 4px; }
+  .user-area .btn.ghost { padding: 6px 8px; font-size: 13px; }
   #who span { display: none; }
   #banner { padding: 6px 12px; font-size: 13px; justify-content: space-between; flex-wrap: nowrap; }
   #banner span { flex: 1; }
@@ -163,7 +165,7 @@ kbd { font: 11px ui-monospace, Menlo, monospace; padding: 1px 6px; border: 1px s
 .grid3 { display: grid; grid-template-columns: 2fr 1fr 1fr auto; gap: 12px; }
 @media (max-width: 680px) { .grid3 { grid-template-columns: 1fr; } }
 table.grid-table { width: 100%; border-collapse: collapse; font-size: 14px; }
-table.grid-table th { text-align: left; font-size: 12px; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); font-weight: 600; padding: 8px; border-bottom: 1px solid var(--line); white-space: nowrap; }
+table.grid-table th { text-align: start; font-size: 12px; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); font-weight: 600; padding: 8px; border-bottom: 1px solid var(--line); white-space: nowrap; }
 table.grid-table td { padding: 9px 8px; border-bottom: 1px solid var(--line); vertical-align: middle; }
 tr.inactive td { opacity: .45; }
 .flag { color: var(--warn); font-weight: 600; }
@@ -180,11 +182,11 @@ body.admin main { max-width: 1240px; }
 .word-tag { font-size: 12px; color: var(--muted); padding-top: 18px; text-transform: uppercase; letter-spacing: .05em; }
 .word-row.main .word-tag { color: var(--accent-deep); font-weight: 600; }
 .word-actions { display: flex; gap: 2px; padding-top: 10px; white-space: nowrap; justify-content: flex-end; }
-.add-word { justify-self: start; margin-left: 120px; color: var(--accent-deep); }
+.add-word { justify-self: start; margin-inline-start: 120px; color: var(--accent-deep); }
 @media (max-width: 680px) {
   .word-row { grid-template-columns: 1fr; gap: 6px; padding-bottom: 8px; border-bottom: 1px dashed var(--line); }
   .word-tag { padding-top: 0; }
-  .add-word { margin-left: 0; }
+  .add-word { margin-inline-start: 0; }
 }
 .rate-row { display: grid; grid-template-columns: 1fr auto auto; gap: 12px; align-items: center; padding: 10px 0; border-bottom: 1px solid var(--line); }
 .rate-word .big { font-size: 24px; direction: rtl; text-align: right; }
@@ -194,3 +196,72 @@ body.admin main { max-width: 1240px; }
 .main-pick.off { opacity: .4; }
 @media (max-width: 680px) { .rate-row { grid-template-columns: 1fr; } }
 .native::placeholder { font-family: Inter, system-ui, sans-serif; font-size: 15px; line-height: normal; }
+
+/* language switch */
+.lang-switch { display: inline-flex; border: 1px solid var(--line); border-radius: 999px; overflow: hidden; background: var(--surface); }
+.lang-switch button { border: 0; border-radius: 0; padding: 5px 12px; font-size: 13px; background: transparent; color: var(--muted); }
+.lang-switch button[lang=ur] { font-family: "Noto Nastaliq Urdu", serif; font-size: 14px; line-height: 1.6; padding: 2px 12px 6px; }
+.lang-switch button.on { background: var(--accent); color: #fff; }
+.lang-card .lang-switch button { padding: 8px 22px; font-size: 15px; }
+.lang-card .lang-switch button[lang=ur] { font-size: 17px; padding: 4px 22px 8px; }
+
+/* onboarding */
+.steps { display: flex; align-items: center; gap: 12px; margin: 0 0 18px; font-size: 13px; }
+.steps .bar { flex: 1; max-width: 320px; }
+.note { background: var(--accent-soft); border-radius: 10px; padding: 10px 14px; color: var(--accent-deep); margin: 0 0 14px; }
+.guide-part p, .guide-part li { line-height: 1.65; }
+.guide-part ul { padding-inline-start: 22px; margin: 8px 0; }
+.guide-part li { margin: 7px 0; }
+.check-q h3 { font-weight: 600; }
+.choices .choice { margin: 6px 0; padding: 10px 14px; border: 1px solid var(--line); border-radius: 10px; background: var(--surface); cursor: pointer; justify-content: flex-start; }
+.choices .choice:disabled { opacity: 1; cursor: default; }
+.choices .choice:disabled:not(.right) { color: var(--muted); }
+.choices .choice.right { background: var(--good-soft); border-color: #9cc8ad; color: #1f5135; font-weight: 500; }
+.choices .choice.wrong { background: var(--warn-soft); border-color: #e4bf86; }
+.good-note { color: #2c6444; font-size: 14px; margin-top: 6px; }
+.guide .card h2, .guide-part h2 { font-size: 17px; text-transform: none; letter-spacing: 0; color: var(--ink); }
+.toc ol { margin: 0; padding-inline-start: 22px; } .toc li { margin: 4px 0; }
+
+/* worked example and reference table */
+.example { border: 2px dashed #c9d5ec; border-radius: 12px; padding: 16px 18px; margin: 14px 0; background: #fbfcff; }
+.example-label { font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: .08em; color: var(--accent-deep); }
+.fake-input { border: 1px solid var(--line); border-radius: 10px; padding: 8px 12px; background: var(--surface); min-height: 46px; display: flex; align-items: center; }
+.fake-input.native { justify-content: flex-start; font-family: "Noto Nastaliq Urdu", serif; font-size: 22px; line-height: 2; }
+.font-naskh .fake-input.native { font-family: "Noto Naskh Arabic", serif; }
+.seg .segbtn { padding: 8px 18px; background: var(--surface); display: inline-block; }
+.seg .segbtn + .segbtn { border-inline-start: 1px solid var(--line); }
+.seg .segbtn.on { background: var(--accent); color: #fff; }
+.ref { margin-top: 18px; } .ref h3 { font-size: 16px; margin: 0 0 8px; }
+.ref td { vertical-align: top; }
+.item-path-en { font-size: 16px; color: var(--muted); font-weight: 500; margin: 0 0 4px; }
+.example .word-row { grid-template-columns: 110px 1fr 1fr; }
+.example .word-row > div:last-child:empty { display: none; }
+
+/* Urdu interface: Inter stays first so Latin text keeps it; Urdu letters fall back to Nastaliq */
+.ui-ur body, .ui-ur button, .ui-ur .btn, .ui-ur input, .ui-ur select, .ui-ur textarea { font-family: Inter, "Noto Nastaliq Urdu", serif; }
+.ui-ur body { line-height: 2.05; }
+.ui-ur h1 { font-size: 24px; line-height: 2.1; }
+.ui-ur button, .ui-ur .btn { line-height: 1.9; padding-top: 4px; padding-bottom: 8px; }
+.ui-ur .card h2 { text-transform: none; letter-spacing: 0; font-size: 15px; }
+.ui-ur .tag { line-height: 1.9; padding: 1px 10px 4px; }
+.ui-ur label.lbl { font-size: 14px; }
+.ui-ur .q h3 { font-size: 16px; line-height: 2.1; }
+.ui-ur .q .hint { margin-top: -2px; }
+.ui-ur .item-title.ur-gloss { font-size: 26px; line-height: 2.2; }
+.ui-ur .item-path-en { font-family: Inter, sans-serif; line-height: 1.5; text-align: right; }
+.ui-ur .tree text { font-family: "Noto Nastaliq Urdu", serif; font-size: 13px; }
+.ui-ur .word-tag { padding-top: 12px; font-size: 13px; letter-spacing: 0; }
+.ui-ur .guide-part p, .ui-ur .guide-part li { line-height: 2.2; }
+.ui-ur #banner, .ui-ur #toast { line-height: 2; }
+.ui-ur .example-label, .ui-ur .answer .who { letter-spacing: 0; }
+.ui-ur .roman, .ui-ur input[dir=ltr] { font-family: Inter, system-ui, sans-serif; }
+.ui-ur .kbd-hint kbd { font-family: ui-monospace, Menlo, monospace; }
+.ui-rtl .word-actions { justify-content: flex-start; }
+.ui-rtl .seg button + button { border-left: 0; border-right: 1px solid var(--line); }
+.ui-rtl .focusfoot .btn, .ui-rtl .focusbar .btn { unicode-bidi: plaintext; }
+.ui-rtl .choices .choice { text-align: right; }
+@media (max-width: 680px) {
+  .example { padding: 12px; }
+  .example .word-row { grid-template-columns: 1fr 1fr; gap: 6px; }
+  .example .word-tag { grid-column: 1 / -1; }
+}

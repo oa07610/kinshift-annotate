@@ -7,66 +7,37 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Nastaliq+Urdu:wght@400;600&family=Noto+Naskh+Arabic:wght@400;600&display=swap" media="print" onload="this.media='all'">
-<link rel="stylesheet" href="style.css?v=0.5.1">
-<style>
-  .guide h3 { font-size: 16px; margin: 0 0 8px; }
-  .guide ul, .guide ol { padding-left: 20px; margin: 6px 0; }
-  .guide li { margin: 5px 0; }
-</style>
+<link rel="stylesheet" href="style.css?v=0.6.0">
+<script>try{var l=localStorage.getItem("kinshift:ui")||(/^ur\b/i.test(navigator.language)?"ur":"en");if(l==="ur"){document.documentElement.lang="ur";document.documentElement.dir="rtl";document.documentElement.className="ui-rtl ui-ur"}}catch(e){}</script>
 </head>
-<body>
-<header class="top"><a href="./" class="brand"><span class="dot"></span>KINSHIFT <small>· Guidelines</small></a></header>
-<main class="guide">
-<h1>Annotation guidelines</h1>
-<p class="lead">Version 0.3, October 2026. About 10 minutes to read. Please read all of it before you start.</p>
-
-<div class="card"><h3>What this is</h3>
-<p>KINSHIFT tests whether AI models know the family words of Pakistani languages: what you call your father's elder brother, your mother's sister's husband, your husband's younger brother, and so on. You are the expert. The words you give become the correct answers the AI is checked against, so they must be the words real speakers use.</p></div>
-
-<div class="card"><h3>What you will do</h3>
-<ol>
-<li><b>Onboarding</b>, about 20 minutes: consent, four questions about you, and a short check.</li>
-<li><b>Kinship words</b>, about 3 hours in total: one relative per screen, 150 relatives in 23 small batches. Stop and continue whenever you like.</li>
-<li><b>Later</b>, about 1 to 2 hours, only if we need you: resolving disagreements (reviewers only) or checking that a sample of questions reads naturally. The team will tell you when.</li>
-</ol></div>
-
-<div class="card"><h3>Four rules</h3>
-<ul>
-<li><b>Give the word you use at home,</b> not a dictionary, textbook or news word, and not the Urdu or English word unless that is what people really say. If a formal word also exists, add it under Notes.</li>
-<li><b>Use only your own knowledge.</b> Do not use ChatGPT, Google or dictionaries, and do not ask others while answering. The page records time and pasted text.</li>
-<li><b>Work on your own.</b> Do not discuss answers with other annotators. Differences between you are useful, not mistakes.</li>
-<li><b>If you are not sure, say so.</b> Choose "Not sure" and explain in Notes. An honest "not sure" is far more useful than a guess.</li>
-</ul></div>
-
-<div class="card"><h3>Reading each relative</h3>
-<p>Each relative is a path from <b>you</b>, shown as words and as a small chart. In the chart the diamond is you, squares are men, circles are women, the blue shape is the relative being asked about, and a dashed line is a marriage.</p>
-<ul>
-<li><b>"father's elder brother"</b> is your father's brother who is <i>older than your father</i>. Elder and younger always compare with the person just before them in the path.</li>
-<li><b>"elder sister"</b> on its own is your sister who is older than <i>you</i>.</li>
-<li><b>"mother's sister's husband"</b> is married into the family; he is not your mother's blood relative.</li>
-<li>A path starting with <b>husband</b> means the speaker is a married woman; one starting with <b>wife</b> means a married man.</li>
-<li>Assume ordinary families: no step-relatives, no adoption, no marriages between relatives.</li>
-</ul></div>
-
-<div class="card"><h3>Answering</h3>
-<ul>
-<li><b>Give the most common word first.</b> If people where you grew up also use other words for this relative, add them with <b>+ another word</b> (for example, two words for father). Use <b>↑ most common</b> to move a word to the top.</li>
-<li><b>Each word in your script and in Roman letters.</b> Type the Roman spelling the way you would on WhatsApp; if people spell it several ways, separate them with commas (abbu, abbo). Your script is required for the first word only.</li>
-<li><b>To their face.</b> For elders you are asked whether you call them by a different word when speaking to them. In English, you might talk about "my father-in-law" but call him "Dad". Answer No if it is the same word, or only "ji" or "jaan" is added.</li>
-<li><b>Words from other places</b> (another city, another community) and formal or textbook words go in the notes, not in the list. If women say it differently from men, write that in the notes.</li>
-<li>Leave out "ji" or "jaan" unless it is really part of the word. If people describe this relative with a few words instead of one, write that phrase as the word.</li>
-<li><b>How sure are you?</b> Choose Not sure when you are unsure, and say why in the notes.</li>
-</ul></div>
-
-<div class="card"><h3>Signing in and saving</h3>
-<ul>
-<li>Sign in by typing your name exactly as the team sent it to you.</li>
-<li>Your answers save in this browser as you type, and are sent to the team automatically after each batch and every few minutes. You can also press <b>Submit now</b> at any time.</li>
-<li>If you sign in on another phone or computer, your submitted work comes back automatically.</li>
-<li>If the page says it could not reach the server, keep working: nothing is lost, and it will send later.</li>
-<li>Questions or problems: contact the team, not the other annotators.</li>
-</ul></div>
-<p><a href="./" class="btn">← Back to the dashboard</a></p>
-</main>
+<body class="font-nastaliq">
+<header class="top">
+  <a href="./" class="brand"><span class="dot"></span>KINSHIFT <small>· Guidelines</small></a>
+  <div class="user-area"><span id="langsw"></span></div>
+</header>
+<main class="guide" id="app"><p class="muted">Loading…</p></main>
+<script src="i18n.js?v=0.6.0"></script>
+<script src="guide.js?v=0.6.0"></script>
+<script>
+"use strict";
+// The guidelines, drawn from guide.js in the chosen language. Same text as onboarding.
+let config = {};
+function draw() {
+  applyUiLang();
+  document.title = "KINSHIFT · " + t("nav.guidelines");
+  document.querySelector(".brand small").textContent = "· " + t("nav.guidelines");
+  document.getElementById("langsw").replaceChildren(langSwitch(draw));
+  const parts = guideParts(config);
+  document.getElementById("app").replaceChildren(
+    h("h1", {}, t("g.title")),
+    h("p", { class: "lead" }, t("g.lead", { v: `${GUIDE.version}, ${L(GUIDE.date)}` })),
+    h("div", { class: "card toc" }, h("h2", {}, t("g.toc")),
+      h("ol", {}, ...parts.map(p => h("li", {}, h("a", { href: `#${p.id}` }, L(p.title)))))),
+    ...parts.map((p, i) => h("div", { class: "card guide-part", id: p.id }, h("h2", {}, `${i + 1}. ${L(p.title)}`), ...guideBlocks(L(p.body)))),
+    h("p", {}, h("a", { href: "./", class: "btn" }, t("g.back"))));
+  if (location.hash) { const el = document.getElementById(location.hash.slice(1)); if (el) el.scrollIntoView(); }
+}
+fetch("data/config.json?v=0.6.0", { cache: "no-store" }).then(r => r.json()).then(c => { config = c; }).catch(() => {}).finally(draw);
+</script>
 </body>
 </html>

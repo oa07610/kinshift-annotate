@@ -107,14 +107,19 @@
   // What the reviewer compares for calling an elder: the call words, or the main word if none.
   const callList = callSet;
 
-  function progress(payload, relations, askAddress) {
+  // guideVersion: the current guidelines version; onboarding passed on an older one does not count.
+  function progress(payload, relations, askAddress, guideVersion) {
     const rounds = (payload && payload.rounds) || {}, r0 = rounds.r0 || {}, rows = (rounds.r1 || {}).rows || {};
+    const quiz = r0.quiz || {}, guide = r0.guide || {};
     const rel = Object.fromEntries(relations.map(r => [r.id, r]));
     const done = Object.keys(rows).filter(k => r1Done(rows[k], rel[k], askAddress));
     const secs = done.map(k => (rows[k].active_ms || 0) / 1000).filter(s => s > 0).sort((x, y) => x - y);
     const vals = Object.values(rows).map(upgrade);
     return {
-      onboarded: !!(r0.consent && r0.quiz && r0.quiz.passed), background: r0.background || null,
+      onboarded: !!(r0.consent && quiz.passed && (guideVersion == null || quiz.version === guideVersion)),
+      guide_wrong: quiz.wrong ?? null,
+      guide_minutes: Math.round(Object.values(guide.parts || {}).reduce((n, p) => n + (p.ms || 0), 0) / 60000),
+      background: r0.background || null, ui_lang: (payload && payload.ui_lang) || null,
       r1_done: done.length, r1_total: relations.length,
       words: vals.reduce((n, v) => n + ((v && v.words) || []).filter(filled).length, 0),
       not_sure: vals.filter(v => v && v.unsure).length,
