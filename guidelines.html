@@ -7,7 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Nastaliq+Urdu:wght@400;600&family=Noto+Naskh+Arabic:wght@400;600&display=swap" media="print" onload="this.media='all'">
-<link rel="stylesheet" href="style.css?v=0.6.0">
+<link rel="stylesheet" href="style.css?v=0.6.1">
 <script>try{var l=localStorage.getItem("kinshift:ui")||(/^ur\b/i.test(navigator.language)?"ur":"en");if(l==="ur"){document.documentElement.lang="ur";document.documentElement.dir="rtl";document.documentElement.className="ui-rtl ui-ur"}}catch(e){}</script>
 </head>
 <body class="font-nastaliq">
@@ -16,8 +16,8 @@
   <div class="user-area"><span id="langsw"></span></div>
 </header>
 <main class="guide" id="app"><p class="muted">Loading…</p></main>
-<script src="i18n.js?v=0.6.0"></script>
-<script src="guide.js?v=0.6.0"></script>
+<script src="i18n.js?v=0.6.1"></script>
+<script src="guide.js?v=0.6.1"></script>
 <script>
 "use strict";
 // The guidelines, drawn from guide.js in the chosen language. Same text as onboarding.
@@ -33,11 +33,11 @@ function draw() {
     h("p", { class: "lead" }, t("g.lead", { v: `${GUIDE.version}, ${L(GUIDE.date)}` })),
     h("div", { class: "card toc" }, h("h2", {}, t("g.toc")),
       h("ol", {}, ...parts.map(p => h("li", {}, h("a", { href: `#${p.id}` }, L(p.title)))))),
-    ...parts.map((p, i) => h("div", { class: "card guide-part", id: p.id }, h("h2", {}, `${i + 1}. ${L(p.title)}`), ...guideBlocks(L(p.body)))),
+    ...parts.map((p, i) => h("div", { class: "card guide-part", id: p.id }, h("h2", {}, `${i + 1}. ${L(p.title)}`), ...guideBlocks(L(p.body), config))),
     h("p", {}, h("a", { href: "./", class: "btn" }, t("g.back"))));
   if (location.hash) { const el = document.getElementById(location.hash.slice(1)); if (el) el.scrollIntoView(); }
 }
-fetch("data/config.json?v=0.6.0", { cache: "no-store" }).then(r => r.json()).then(c => { config = c; }).catch(() => {}).finally(draw);
+fetch("data/config.json?v=0.6.1", { cache: "no-store" }).then(r => r.json()).then(c => { config = c; }).catch(() => {}).finally(draw);
 </script>
 </body>
 </html>

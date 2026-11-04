@@ -3,7 +3,7 @@
 // to the team's backend automatically. Interface text comes from i18n.js (English and
 // Urdu), the guidelines and onboarding questions from guide.js.
 
-const APP_VERSION = "0.6.0";
+const APP_VERSION = "0.6.1";
 const SCHEMA = "kinshift-annotation/1";
 const D = {};            // loaded data files
 const BATCH = {};        // review batches per round, or null when not ready
@@ -328,7 +328,9 @@ async function renderHome() {
 // Step 0: consent and about you. Then one step per guidelines part: read it, answer its
 // questions about real situations, continue once every answer is right. A wrong answer
 // never shows the right one; it sends the reader back to the part. Then a done step.
-const BG_KEYS = ["region", "dialect", "age_band", "sex"];
+// Background reported in the paper: where and how the volunteer learned the language, and
+// marriage, since about a third of the relatives are in-laws.
+const BG_KEYS = ["region", "settlement", "dialect", "first_language", "use_now", "age_band", "sex", "married"];
 const optionOrder = {};   // shuffled option order per question, kept while the page is open
 function shuffled(n) { const a = [...Array(n).keys()]; for (let i = n - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; }
 function guideState(data) {
@@ -336,7 +338,7 @@ function guideState(data) {
   return data.guide;
 }
 function renderR0(step) {
-  const data = loadRound("r0"), parts = guideParts(D.config), g = guideState(data);
+  const data = loadRound("r0"), parts = guideParts(D.config, true), g = guideState(data);
   const total = parts.length + 2;
   const bgOk = data.consent && data.background && BG_KEYS.every(k => data.background[k]);
   const firstOpen = parts.findIndex(p => !(g.parts[p.id] && g.parts[p.id].passed));
@@ -363,11 +365,16 @@ function renderR0About(data, head) {
     field("dialect", t("r0.dialect"), h("input", { type: "text", dir: "auto" })),
     field("age_band", t("r0.age"), sel(["18-24", "25-34", "35-44", "45-54", "55+"].map(x => [x, x]))),
     field("sex", t("r0.sex"), sel([["woman", t("r0.sex.woman")], ["man", t("r0.sex.man")], ["prefer not to say", t("r0.sex.none")]])),
+    field("settlement", t("r0.settlement"), sel([["city", t("r0.settlement.city")], ["town", t("r0.settlement.town")], ["village", t("r0.settlement.village")]])),
+    field("first_language", t("r0.l1", { lang: langName(S.language) }), sel([["yes", t("r0.l1.yes")], ["one of", t("r0.l1.one_of")], ["no", t("r0.l1.no")]])),
+    field("use_now", t("r0.use", { lang: langName(S.language) }), sel([["daily", t("r0.use.daily")], ["weekly", t("r0.use.weekly")], ["less", t("r0.use.less")]])),
+    field("married", t("r0.married"), sel([["yes", t("r0.married.yes")], ["no", t("r0.married.no")], ["prefer not to say", t("r0.sex.none")]])),
   ];
   const status = h("p", { class: "bad" });
   function next() {
-    const b = {};
+    let b = {};
     for (const f of fields) { const el = $("input,select", f); b[el.id.slice(3)] = el.value.trim(); }
+    b = Object.fromEntries(BG_KEYS.map(k => [k, b[k]]));   // a stable order in the saved file
     Object.assign(data, { background: b, consent: consent.checked });
     saveRound("r0", data);
     if (!consent.checked) status.textContent = t("r0.need_consent");
@@ -379,7 +386,8 @@ function renderR0About(data, head) {
     h("div", { class: "card" }, h("h2", {}, t("r0.consent")),
       h("p", { style: "margin-top:0" }, t("r0.consent_text")),
       h("label", { class: "check" }, consent, t("r0.agree"))),
-    h("div", { class: "card" }, h("h2", {}, t("r0.about_you")), h("div", { class: "grid2" }, ...fields)),
+    h("div", { class: "card" }, h("h2", {}, t("r0.about_you")), h("p", { class: "muted", style: "margin-top:0;font-size:14px" }, t("r0.about_why")),
+      h("div", { class: "grid2" }, ...BG_KEYS.map(k => fields.find(f => $("input,select", f).id === `bg-${k}`)))),
     h("div", { class: "alt" }, h("button", { class: "primary", onclick: next }, t("r0.continue"))), status);
 }
 function renderR0Part(data, parts, step, head) {
@@ -394,13 +402,14 @@ function renderR0Part(data, parts, step, head) {
     writeKey(K("r0"), cur);
   };
   const reading = h("div", { class: "card guide-part", id: "part-text" }, h("h2", {}, `${step}. ${L(part.title)}`),
-    step === 1 ? h("p", { class: "note" }, t("r0.guide_intro")) : null, ...guideBlocks(L(part.body)));
+    step === 1 ? h("p", { class: "note" }, t("r0.guide_intro")) : null, ...guideBlocks(L(part.body), D.config));
   const checksBox = h("div");
   const nextBtn = h("button", { class: "primary" }, t("r0.continue"));
   const hint = h("p", { class: "muted", style: "font-size:13px" });
-  const allOk = () => part.checks.every(c => g.checks[c.id] && g.checks[c.id].ok);
+  const checks = partChecks(part, D.config);
+  const allOk = () => checks.every(c => g.checks[c.id] && g.checks[c.id].ok);
   function drawChecks() {
-    checksBox.replaceChildren(...part.checks.map((c, qi) => {
+    checksBox.replaceChildren(...checks.map((c, qi) => {
       const st = g.checks[c.id] || {};
       const order = optionOrder[c.id] = optionOrder[c.id] || shuffled(c.options.length);
       const opts = h("div", { class: "choices" }, ...order.map(j => {
@@ -802,7 +811,7 @@ function adminProgress(accounts, latest) {
       h("td", {}, p && p.r1_done ? (p.words / p.r1_done).toFixed(1) : "—"),
       h("td", {}, p && p.median_seconds != null ? `${p.median_seconds} s` : "—"), h("td", {}, p ? p.not_sure : "—"),
       h("td", {}, p ? flag(p.pastes) : "—"), h("td", {}, p ? flag(p.fast_rows) : "—"),
-      h("td", { class: "muted" }, p && p.background ? [p.background.region, p.background.dialect, p.background.sex].filter(Boolean).join(" · ") : ""),
+      h("td", { class: "muted" }, p && p.background ? [p.background.region, p.background.settlement, p.background.dialect, p.background.first_language && `first language: ${p.background.first_language}`, p.background.sex, p.background.married && `married: ${p.background.married}`].filter(Boolean).join(" · ") : ""),
       h("td", { class: "muted" }, p && p.ui_lang ? p.ui_lang : "—"));
   });
   return [h("div", { class: "card" }, h("h2", {}, "Progress"),
