@@ -12,10 +12,13 @@
   const HARAKAT = /[ً-ْٰـ]/g;
   const URDU_LIKE = new Set(["ur", "pnb", "skr"]);
   const URDU_MAP = { "ك": "ک", "ي": "ی", "ى": "ی", "ه": "ہ" };
+  // Balochi: only the Arabic-keyboard forms of keheh and yeh, and ۏ, which some write for w.
+  const BAL_MAP = { "ك": "ک", "ي": "ی", "ى": "ی", "ۏ": "و" };
 
   function nativeNorm(text, lang) {
     let t = (text || "").normalize("NFC").trim().replace(HARAKAT, "");
     if (URDU_LIKE.has(lang)) t = t.replace(/[‌‍‎‏]/g, "").replace(/[كيىه]/g, c => URDU_MAP[c]);
+    if (lang === "bal") t = t.replace(/[‌‍‎‏]/g, "").replace(/[كيىۏ]/g, c => BAL_MAP[c]);
     return t.replace(/\s+/g, " ");
   }
   function romanNorm(text) {

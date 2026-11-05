@@ -27,12 +27,12 @@
   "name": "Pashto",
   "native": "پښتو",
   "font": "naskh",
-  "palette": "ټ ډ ړ ږ ښ ګ ڼ ۍ ې ئ ي"
+  "palette": "ټ ډ ړ ږ ښ ګ ڼ ځ څ ۍ ې ئ ي"
  },
  "bal": {
   "name": "Balochi",
   "native": "بلوچی",
-  "font": "naskh",
+  "font": "nastaliq",
   "palette": "ٹ ڈ ڑ ں ھ ے ی ۏ"
  }
 }
