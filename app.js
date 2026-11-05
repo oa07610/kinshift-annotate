@@ -3,7 +3,7 @@
 // to the team's backend automatically. Interface text comes from i18n.js (English and
 // Urdu), the guidelines and onboarding questions from guide.js.
 
-const APP_VERSION = "0.6.1";
+const APP_VERSION = "0.6.2";
 const SCHEMA = "kinshift-annotation/1";
 const D = {};            // loaded data files
 const BATCH = {};        // review batches per round, or null when not ready
@@ -577,7 +577,7 @@ function renderR1Item(group, i) {
       h("div", { class: "q" }, h("h3", {}, t("r1.q_word")),
         h("p", { class: "hint" }, t("r1.q_word_hint")),
         wordList(row.words, { first: t("w.most") }, touch, draw)),
-      askCall ? h("div", { class: "q" }, h("h3", {}, t("r1.q_face")),
+      askCall ? h("div", { class: "q" }, h("h3", {}, t("r1.q_face")), h("p", { class: "hint" }, t("r1.q_face_hint")),
         seg([["no", t("r1.no")], ["yes", t("r1.yes_diff")]], row.call_differs, v => { row.call_differs = v; if (v === "no") row.call = []; touch(); draw(); }),
         row.call_differs === "yes" ? h("div", { style: "margin-top:12px" }, wordList(row.call, { first: t("w.face") }, touch, draw)) : null) : null,
       h("div", { class: "q" }, h("h3", {}, t("r1.q_sure")),

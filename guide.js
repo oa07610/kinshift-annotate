@@ -72,6 +72,7 @@ parts: [
         "<b>Notes</b> are for formal or textbook words, words from other cities or communities (say where), and anything unclear.",
         "Leave out <b>ji</b> and <b>jaan</b>. No single word? Write the words people use, like \"mamu ka beta\". Borrowed words like \"aunty\" are fine if people really say them.",
         "If women and men say it differently, list both words and write in Notes who says which.",
+        "<b>Talking about them, not to them.</b> Write the word you use when talking <i>about</i> the relative, even if you call them by name: you may call your nandoi or sala by his name, but you still write nandoi or sala. Do not leave out a real kinship word because it can also be used as an insult, like sala.",
       ] },
       { ul: [
         "<b>Elders, to their face:</b> if you call them by a different word when you speak to them (you talk about your \"susar\" but call him \"abbu\"), choose <b>Yes, a different word</b> and write it. Adding ji or jaan does not make a different word.",
@@ -85,6 +86,7 @@ parts: [
         "<b>نوٹ</b> اِن کے لیے ہے: رسمی یا نصابی الفاظ، دوسرے شہروں یا برادریوں کے الفاظ (جگہ کا نام بھی لکھیں)، اور کوئی بھی الجھن۔",
         "<b>جی</b> اور <b>جان</b> نہ لکھیں۔ کوئی ایک لفظ نہیں؟ وہ الفاظ لکھیں جو لوگ بولتے ہیں، جیسے ’ماموں کا بیٹا‘۔ <bdi>aunty</bdi> جیسے دوسری زبان کے الفاظ ٹھیک ہیں اگر لوگ واقعی بولتے ہیں۔",
         "اگر عورتیں اور مرد الگ لفظ بولتے ہیں تو دونوں الفاظ لکھیں اور نوٹ میں بتائیں کہ کون کیا بولتا ہے۔",
+        "<b>ذکر کرتے وقت کا لفظ، بلانے کا نہیں۔</b> وہ لفظ لکھیں جو آپ اس رشتہ دار کا <i>ذکر</i> کرتے وقت بولتے ہیں، چاہے آپ انہیں نام سے بلاتے ہوں: آپ اپنے نندوئی یا سالے کو نام سے بلا سکتے ہیں، مگر لکھیں گے ’نندوئی‘ یا ’سالا‘۔ کسی اصل رشتے کے لفظ کو صرف اس لیے نہ چھوڑیں کہ وہ گالی کے طور پر بھی بولا جاتا ہے، جیسے ’سالا‘۔",
       ] },
       { ul: [
         "<b>بزرگ، سامنے:</b> اگر آپ ان سے بات کرتے وقت انہیں کسی اور لفظ سے بلاتے ہیں (ذکر ’سسر‘ کہہ کر کرتے ہیں مگر سامنے ’ابو‘ کہتے ہیں) تو <b>ہاں، کوئی اور لفظ</b> چنیں اور وہ لفظ لکھیں۔ جی یا جان لگانے سے لفظ نہیں بدلتا۔",
@@ -200,6 +202,7 @@ ref: {
     ["There is no single word", "Write the phrase people use"],
     ["People add ji or jaan", "Leave them out"],
     ["The speaker is a married woman or man, and you are not", "Give the word such a person uses"],
+    ["You call them by name, not by a kinship word", "Still write the word you use when talking about them"],
     ["You are not sure", "Best answer, Not sure, and why in Notes"],
     ["You call an elder something else to their face", "Yes, and write that word"],
     ["The page cannot reach the server", "Keep working; it sends later"],
@@ -214,6 +217,7 @@ ref: {
     ["کوئی ایک لفظ نہیں ہے", "وہ الفاظ لکھیں جو لوگ بولتے ہیں"],
     ["لوگ جی یا جان لگاتے ہیں", "انہیں نہ لکھیں"],
     ["بولنے والا شادی شدہ عورت یا مرد ہے، اور آپ نہیں", "وہ لفظ لکھیں جو ایسا شخص بولتا ہے"],
+    ["آپ انہیں نام سے بلاتے ہیں، رشتے کے لفظ سے نہیں", "پھر بھی وہ لفظ لکھیں جو ذکر کرتے وقت بولتے ہیں"],
     ["آپ کو یقین نہیں", "بہترین جواب، ’یقین نہیں‘، اور نوٹ میں وجہ"],
     ["آپ کسی بزرگ کو سامنے کسی اور لفظ سے بلاتے ہیں", "’ہاں، کوئی اور لفظ‘ چنیں اور وہ لفظ لکھیں"],
     ["صفحہ سرور سے رابطہ نہیں کر پا رہا", "کام جاری رکھیں؛ بعد میں بھیج دیا جائے گا"],
