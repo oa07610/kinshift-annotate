@@ -3,7 +3,7 @@
 // to the team's backend automatically. Interface text comes from i18n.js (English and
 // Urdu), the guidelines and onboarding questions from guide.js.
 
-const APP_VERSION = "0.7.3";
+const APP_VERSION = "0.7.4";
 const SCHEMA = "kinshift-annotation/1";
 const D = {};            // loaded data files
 const BATCH = {};        // review batches per round, or null when not ready

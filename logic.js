@@ -63,12 +63,49 @@
   function compact(n, lang) {
     let t = n.split(" ").map(x => x.replace(/\u0621+$/, "")).join(" ");
     t = t.normalize("NFD").replace(/[\u0654\u0655]/g, "").normalize("NFC");
-    if (URDU_LIKE.has(lang)) t = t.replace(/ك/g, "ک").replace(/[يى]/g, "ی").replace(/ه/g, "ہ");
+    // ݨ typed as ن (most keyboards lack ݨ); a word ending in ئ with its final ی left off (تائ, تائی).
+    if (URDU_LIKE.has(lang)) t = t.replace(/[كيىه]/g, c => URDU_MAP[c]).replace(/ݨ/g, "ن").split(" ").map(x => x.replace(/ئ$/, "ئی")).join(" ");
     return t.replace(/[\s\u200c\u200d]/g, "");
   }
-  function key(w, lang) { const n = nativeNorm(w.native, lang); return { n, c: compact(n, lang), r: new Set(variants(w.roman)) }; }
-  function same(x, y) { return (x.c && x.c === y.c) || (!x.c || !y.c ? [...x.r].some(v => y.r.has(v)) : false); }
-  function words(row, lang) { const r = upgrade(row) || {}; return (r.words || []).filter(filled).map(w => key(w, lang)); }
+  // چاچا جی is چاچا: an honorific after the word is not part of it (Urdu, Punjabi, Saraiki).
+  const HON_NATIVE = / (?:جی|جان)$/, HON_ROMAN = / (?:jee|ji|jaan|jan)$/;
+  function key(w, lang) {
+    const n = nativeNorm(w.native, lang);
+    if (!URDU_LIKE.has(lang)) return { n, c: compact(n, lang), r: new Set(variants(w.roman)) };
+    return { n, c: compact(n.replace(HON_NATIVE, ""), lang), r: new Set(variants(w.roman).map(v => v.replace(HON_ROMAN, ""))) };
+  }
+  function edits(a, b) {
+    let prev = Array.from({ length: b.length + 1 }, (_, j) => j);
+    for (let i = 1; i <= a.length; i++) {
+      const cur = [i];
+      for (let j = 1; j <= b.length; j++) cur.push(Math.min(prev[j] + 1, cur[j - 1] + 1, prev[j - 1] + (a[i - 1] !== b[j - 1] ? 1 : 0)));
+      prev = cur;
+    }
+    return prev[b.length];
+  }
+  // Same word: equal comparison forms; or, when one side has no native text, a shared Roman spelling;
+  // or a shared Roman spelling and native spellings one letter apart inside the word, same first and
+  // last letter (سورا, سوہرا: sohra). The last letter often marks gender (ماسات, ماساتي).
+  function same(x, y) {
+    if (x.c && x.c === y.c) return true;
+    const romanShared = [...x.r].some(v => y.r.has(v));
+    if (x.c && y.c) return romanShared && x.c[0] === y.c[0] && x.c.at(-1) === y.c.at(-1) && edits(x.c, y.c) <= 1;
+    return romanShared;
+  }
+  // One box holding several words (ابا، پیو) is split into its words. Mirrors split_box() in merge.py.
+  const QUOTES = "\"'\u201c\u201d\u2018\u2019\u00ab\u00bb";
+  const stripQ = (t) => { let s = t.trim(); while (s && QUOTES.includes(s[0])) s = s.slice(1); while (s && QUOTES.includes(s[s.length - 1])) s = s.slice(0, -1); return s.trim(); };
+  const stripQS = (t) => { let s = t; while (s && (QUOTES + " ").includes(s[0])) s = s.slice(1); while (s && (QUOTES + " ").includes(s[s.length - 1])) s = s.slice(0, -1); return s; };
+  function splitBox(w) {
+    const native = stripQ(w.native || ""), roman = stripQ(w.roman || "");
+    const parts = native.split(/\s*[\u060c,]\s*/).map(stripQS).filter(Boolean);
+    if (parts.length <= 1) return (native || roman) ? [{ native, roman }] : [];
+    const romans = roman.split(",").map(stripQS);
+    if (romans.length === parts.length) return parts.map((n, i) => ({ native: n, roman: romans[i] }));
+    return [{ native: parts[0], roman }, ...parts.slice(1).map(n => ({ native: n, roman: "" }))];
+  }
+  const keys = (ws, lang) => (ws || []).filter(filled).flatMap(splitBox).map(w => key(w, lang));
+  function words(row, lang) { return keys((upgrade(row) || {}).words, lang); }
   const explicitCalls = (row) => { const r = upgrade(row) || {}; return r.call_differs === "no" ? [] : (r.call || []).filter(filled); };
   // Words someone may call this elder: the calling words written, else any of their words.
   function callSet(row) { const c = explicitCalls(row); return c.length ? c : ((upgrade(row) || {}).words || []).filter(filled); }
@@ -81,7 +118,7 @@
     const shared = a.some(x => b.some(y => same(x, y)));
     const status = same(a[0], b[0]) ? "agree" : shared ? "order" : "differ";
     // Calling only differs when someone wrote calling words; otherwise it follows the word decision.
-    const ca = callSet(rowA).map(w => key(w, lang)), cb = callSet(rowB).map(w => key(w, lang));
+    const ca = keys(callSet(rowA), lang), cb = keys(callSet(rowB), lang);
     const call_differs = !!(rel && rel.elder) && !!(explicitCalls(rowA).length || explicitCalls(rowB).length)
       && !ca.some(x => cb.some(y => same(x, y)));
     return { status, call_differs, review: status === "differ" || call_differs };
