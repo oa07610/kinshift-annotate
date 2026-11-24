@@ -58,7 +58,15 @@
   // Comparable form of one word: normalised native text, the same without spaces (c), and its set
   // of Roman spellings. Two words are the same when they differ only in spaces (پڙڏاڏو, پڙ ڏاڏو)
   // or diacritics. n, with its spaces, stays the id the reviewer's ratings are saved under.
-  function key(w, lang) { const n = nativeNorm(w.native, lang); return { n, c: n.replace(/[\s\u200c\u200d]/g, ""), r: new Set(variants(w.roman)) }; }
+  // Comparison form: also ignores hamza written on a letter (سؤٽ, سوٽ) and a hamza ending a word
+  // (ڀاڻيجيءَ, ڀاڻيجي). Mirrors compact() in merge.py.
+  function compact(n, lang) {
+    let t = n.split(" ").map(x => x.replace(/\u0621+$/, "")).join(" ");
+    t = t.normalize("NFD").replace(/[\u0654\u0655]/g, "").normalize("NFC");
+    if (URDU_LIKE.has(lang)) t = t.replace(/ك/g, "ک").replace(/[يى]/g, "ی").replace(/ه/g, "ہ");
+    return t.replace(/[\s\u200c\u200d]/g, "");
+  }
+  function key(w, lang) { const n = nativeNorm(w.native, lang); return { n, c: compact(n, lang), r: new Set(variants(w.roman)) }; }
   function same(x, y) { return (x.c && x.c === y.c) || (!x.c || !y.c ? [...x.r].some(v => y.r.has(v)) : false); }
   function words(row, lang) { const r = upgrade(row) || {}; return (r.words || []).filter(filled).map(w => key(w, lang)); }
   const explicitCalls = (row) => { const r = upgrade(row) || {}; return r.call_differs === "no" ? [] : (r.call || []).filter(filled); };
