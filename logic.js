@@ -71,8 +71,13 @@
   const HON_NATIVE = / (?:جی|جان)$/, HON_ROMAN = / (?:jee|ji|jaan|jan)$/;
   function key(w, lang) {
     const n = nativeNorm(w.native, lang);
-    if (!URDU_LIKE.has(lang)) return { n, c: compact(n, lang), r: new Set(variants(w.roman)) };
-    return { n, c: compact(n.replace(HON_NATIVE, ""), lang), r: new Set(variants(w.roman).map(v => v.replace(HON_ROMAN, ""))) };
+    if (!URDU_LIKE.has(lang)) return { n, c: compact(n, lang), r: new Set(variants(w.roman)), f: false };
+    const c = compact(n.replace(HON_NATIVE, ""), lang), r = variants(w.roman).map(v => v.replace(HON_ROMAN, ""));
+    if (lang !== "pnb") return { n, c, r: new Set(r), f: false };
+    // Spoken Punjabi says پ where written Punjabi has بھ (pain, bhain: sister); both are the same word.
+    // f: the fold changed something, which lets one more letter differ (پڑا, بھرا). Mirrors merge.py.
+    const fc = c.replace(/بھ/g, "پ");
+    return { n, c: fc, r: new Set(r.map(v => v.replace(/bh/g, "p"))), f: fc !== c };
   }
   function edits(a, b) {
     let prev = Array.from({ length: b.length + 1 }, (_, j) => j);
@@ -89,7 +94,10 @@
   function same(x, y) {
     if (x.c && x.c === y.c) return true;
     const romanShared = [...x.r].some(v => y.r.has(v));
-    if (x.c && y.c) return romanShared && x.c[0] === y.c[0] && x.c.at(-1) === y.c.at(-1) && edits(x.c, y.c) <= 1;
+    if (x.c && y.c) {
+      const close = x.c[0] === y.c[0] && x.c.at(-1) === y.c.at(-1) && edits(x.c, y.c) <= 1;
+      return close && (romanShared || x.f || y.f);   // Punjabi پ/بھ fold: no shared Roman spelling needed
+    }
     return romanShared;
   }
   // One box holding several words (ابا، پیو) is split into its words. Mirrors split_box() in merge.py.
