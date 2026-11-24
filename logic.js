@@ -134,6 +134,12 @@
     };
   }
 
-  const api = { nativeNorm, romanNorm, variants, upgrade, filled, answered, r1Done, compare, agreement, union, callList, progress };
+  // The two annotators to compare: most relatives answered first, ties by handle (mirrors merge.py).
+  function pickAnnotators(list) {
+    const n = (x) => Object.values(x.rows || {}).filter(answered).length;
+    return list.map(x => [x, n(x)]).sort((a, b) => b[1] - a[1] || a[0].handle.localeCompare(b[0].handle)).map(x => x[0]);
+  }
+
+  const api = { pickAnnotators, nativeNorm, romanNorm, variants, upgrade, filled, answered, r1Done, compare, agreement, union, callList, progress };
   if (typeof module !== "undefined") module.exports = api; else root.Logic = api;
 })(typeof window !== "undefined" ? window : globalThis);

@@ -3,7 +3,7 @@
 // to the team's backend automatically. Interface text comes from i18n.js (English and
 // Urdu), the guidelines and onboarding questions from guide.js.
 
-const APP_VERSION = "0.6.4";
+const APP_VERSION = "0.6.5";
 const SCHEMA = "kinshift-annotation/1";
 const D = {};            // loaded data files
 const BATCH = {};        // review batches per round, or null when not ready
@@ -822,10 +822,11 @@ function adminAgreement(accounts, latest) {
   const langs = [...new Set(accounts.map(a => a.language))];
   const rows = [];
   for (const lang of langs) {
-    const ann = accounts.filter(a => a.language === lang && a.role === "annotator" && a.active !== "no" && latest[a.handle]).sort((x, y) => x.handle.localeCompare(y.handle));
+    const rowsOf = (a) => ((latest[a.handle].payload.rounds || {}).r1 || {}).rows || {};
+    const ann = Logic.pickAnnotators(accounts.filter(a => a.language === lang && a.role === "annotator" && a.active !== "no" && latest[a.handle])
+      .map(a => ({ ...a, rows: rowsOf(a) })));
     const reviewers = accounts.filter(a => a.language === lang && a.role === "adjudicator" && a.active !== "no");
     if (ann.length < 2) { rows.push(h("tr", {}, h("td", {}, h("b", {}, D.languages[lang].name)), h("td", { colspan: 7, class: "muted" }, "Waiting for two annotators to submit."))); continue; }
-    const rowsOf = (a) => ((latest[a.handle].payload.rounds || {}).r1 || {}).rows || {};
     const res = Logic.agreement(D.relations, rowsOf(ann[0]), rowsOf(ann[1]), lang);
     const pct = (x) => x == null ? "—" : `${Math.round(100 * x)}%`;
     const send = h("button", { class: "small primary", disabled: !reviewers.length || !res.disagreements.length, onclick: async () => {
@@ -839,7 +840,8 @@ function adminAgreement(accounts, latest) {
       h("td", {}, reviewers.length ? send : h("span", { class: "muted" }, "add a reviewer"))));
   }
   const download = () => {
-    const blob = new Blob([JSON.stringify({ schema: "kinshift-bundle/1", saved_at: new Date().toISOString(), latest })], { type: "application/json" });
+    const blob = new Blob([JSON.stringify({ schema: "kinshift-bundle/1", saved_at: new Date().toISOString(), latest,
+      accounts: accounts.map(({ handle, language, role, active }) => ({ handle, language, role, active })) })], { type: "application/json" });
     const a = h("a", { href: URL.createObjectURL(blob), download: `kinshift_all_${new Date().toISOString().slice(0, 10)}.json` });
     document.body.append(a); a.click(); a.remove();
   };
