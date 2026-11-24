@@ -55,9 +55,11 @@
     return r.call_differs === "no" || (r.call_differs === "yes" && full((r.call || [])[0]));
   }
 
-  // Comparable form of one word: normalised native text and its set of Roman spellings.
-  function key(w, lang) { return { n: nativeNorm(w.native, lang), r: new Set(variants(w.roman)) }; }
-  function same(x, y) { return (x.n && x.n === y.n) || (!x.n || !y.n ? [...x.r].some(v => y.r.has(v)) : false); }
+  // Comparable form of one word: normalised native text, the same without spaces (c), and its set
+  // of Roman spellings. Two words are the same when they differ only in spaces (پڙڏاڏو, پڙ ڏاڏو)
+  // or diacritics. n, with its spaces, stays the id the reviewer's ratings are saved under.
+  function key(w, lang) { const n = nativeNorm(w.native, lang); return { n, c: n.replace(/[\s\u200c\u200d]/g, ""), r: new Set(variants(w.roman)) }; }
+  function same(x, y) { return (x.c && x.c === y.c) || (!x.c || !y.c ? [...x.r].some(v => y.r.has(v)) : false); }
   function words(row, lang) { const r = upgrade(row) || {}; return (r.words || []).filter(filled).map(w => key(w, lang)); }
   const explicitCalls = (row) => { const r = upgrade(row) || {}; return r.call_differs === "no" ? [] : (r.call || []).filter(filled); };
   // Words someone may call this elder: the calling words written, else any of their words.
