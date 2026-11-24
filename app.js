@@ -3,7 +3,7 @@
 // to the team's backend automatically. Interface text comes from i18n.js (English and
 // Urdu), the guidelines and onboarding questions from guide.js.
 
-const APP_VERSION = "0.6.6";
+const APP_VERSION = "0.7.0";
 const SCHEMA = "kinshift-annotation/1";
 const D = {};            // loaded data files
 const BATCH = {};        // review batches per round, or null when not ready
@@ -876,7 +876,8 @@ new ResizeObserver(() => document.documentElement.style.setProperty("--top-h", $
   try {
     const [languages, rounds, relations, config] = await Promise.all(
       ["data/languages.json", "data/rounds.json", "data/r1/relations.json", "data/config.json"].map(p => getJSON(p)));
-    Object.assign(D, { languages, rounds, relations, config });
+    // Relatives marked wordlist: false are no longer asked; answers already saved for them stay in the payload.
+    Object.assign(D, { languages, rounds, config, allRelations: relations, relations: relations.filter(r => r.wordlist !== false) });
     route();
   } catch (e) {
     setMain(h("p", { class: "bad" }, t("load.error")), h("pre", {}, String(e)));
