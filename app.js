@@ -3,7 +3,7 @@
 // to the team's backend automatically. Interface text comes from i18n.js (English and
 // Urdu), the guidelines and onboarding questions from guide.js.
 
-const APP_VERSION = "0.6.5";
+const APP_VERSION = "0.6.6";
 const SCHEMA = "kinshift-annotation/1";
 const D = {};            // loaded data files
 const BATCH = {};        // review batches per round, or null when not ready
@@ -352,7 +352,7 @@ function renderR0(step) {
   if (step === total - 1) return setMain(...head, h("div", { class: "card" }, h("h2", {}, t("r0.done_title")),
     h("p", { style: "margin-top:0" }, t("r0.done_text")),
     h("div", { class: "alt" }, h("a", { class: "btn ghost", href: `#/r0/${step - 1}` }, t("r0.back")),
-      h("a", { class: "btn primary", href: "#/r1" }, t("r0.done_btn")))));
+      S.role === "adjudicator" ? h("a", { class: "btn primary", href: "#/home" }, t("r0.done_btn_home")) : h("a", { class: "btn primary", href: "#/r1" }, t("r0.done_btn")))));
   renderR0Part(data, parts, step, head);
 }
 function renderR0About(data, head) {
