@@ -19,7 +19,7 @@ parts: [
   title: { en: "The task, and reading a relative", ur: "کام، اور رشتہ دار کو سمجھنا" },
   body: {
     en: [
-      "KINSHIFT checks whether AI models know the family words of Pakistani languages. <b>You are the expert:</b> the words you give become the correct answers the AI is tested against. For 150 relatives, give the word people use at home where you grew up. The examples here use Urdu words; <b>always answer with your own language's words.</b>",
+      "KINSHIFT checks whether AI models know the family words of Pakistani languages. <b>You are the expert:</b> the words you give become the correct answers the AI is tested against. For 116 relatives, give the word people use at home where you grew up. The examples here use Urdu words; <b>always answer with your own language's words.</b>",
       "Each relative is written as a path that starts from <b>you</b>, with a small chart of the same path: the diamond is you, squares are men, circles are women, the blue shape is the relative you are asked about, and a dashed line is a marriage.",
       { ul: [
         "<b>Elder and younger compare with the person just before.</b> \"father's elder brother\" is older than <i>your father</i>. \"elder sister\" on its own is older than <i>you</i>.",
@@ -29,7 +29,7 @@ parts: [
       ] },
     ],
     ur: [
-      "KINSHIFT یہ جانچتا ہے کہ کیا AI ماڈل پاکستانی زبانوں کے خاندانی الفاظ جانتے ہیں۔ <b>اس کام کے ماہر آپ ہیں:</b> آپ کے دیے ہوئے الفاظ وہ درست جواب بنیں گے جن پر AI کو پرکھا جائے گا۔ 150 رشتہ داروں کے لیے وہ لفظ لکھیں جو آپ کے علاقے میں لوگ گھر میں بولتے ہیں۔ یہاں مثالیں اردو الفاظ میں ہیں؛ <b>جواب ہمیشہ اپنی زبان کے الفاظ میں دیں۔</b>",
+      "KINSHIFT یہ جانچتا ہے کہ کیا AI ماڈل پاکستانی زبانوں کے خاندانی الفاظ جانتے ہیں۔ <b>اس کام کے ماہر آپ ہیں:</b> آپ کے دیے ہوئے الفاظ وہ درست جواب بنیں گے جن پر AI کو پرکھا جائے گا۔ 116 رشتہ داروں کے لیے وہ لفظ لکھیں جو آپ کے علاقے میں لوگ گھر میں بولتے ہیں۔ یہاں مثالیں اردو الفاظ میں ہیں؛ <b>جواب ہمیشہ اپنی زبان کے الفاظ میں دیں۔</b>",
       "ہر رشتہ دار ایک راستے کی صورت میں لکھا ہوتا ہے جو <b>آپ</b> سے شروع ہوتا ہے، اور ساتھ اسی راستے کا ایک چھوٹا خاکہ ہوتا ہے: ہیرے کی شکل آپ ہیں، چوکور خانے مرد، دائرے عورتیں، نیلی شکل وہ رشتہ دار ہے جس کے بارے میں پوچھا جا رہا ہے، اور ٹوٹی ہوئی لکیر شادی کو ظاہر کرتی ہے۔",
       { ul: [
         "<b>بڑا اور چھوٹا ہمیشہ راستے میں بالکل پہلے والے شخص کے مقابلے میں ہے۔</b> ’والد کا بڑا بھائی‘ <i>آپ کے والد</i> سے بڑا ہے۔ جب صرف ’بڑی بہن‘ لکھا ہو تو وہ <i>آپ</i> سے بڑی ہے۔",
